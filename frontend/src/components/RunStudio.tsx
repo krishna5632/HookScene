@@ -30,6 +30,11 @@ import {
   Filter,
   Maximize2,
   ExternalLink,
+  ChevronDown,
+  Eye,
+  EyeOff,
+  FolderPlus,
+  PlayCircle
 } from 'lucide-react';
 
 interface RunStudioProps {
@@ -52,15 +57,16 @@ export interface LogEntry {
 }
 
 export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }) => {
-  // Production Ingestion State
+  // Ingestion State
   const [isUsingBenchmark, setIsUsingBenchmark] = useState<boolean>(true);
   const [stagedFiles, setStagedFiles] = useState<StagedFile[]>([]);
-  
-  // Intelligence Engine Configuration
+
+  // Engine Configuration State
   const [mode, setMode] = useState<'ai' | 'baseline'>('ai');
   const [provider, setProvider] = useState<string>('gemini');
   const [profile, setProfile] = useState<string>('fast');
-  const [apiKey, setApiKey] = useState<string>('');
+  const [apiKey, setApiKey] = useState<string>(() => localStorage.getItem('hs_gemini_key') || '');
+  const [showApiKey, setShowApiKey] = useState<boolean>(false);
   const [bulkModel, setBulkModel] = useState<string>('gemini-flash-lite-latest');
   const [judgeModel, setJudgeModel] = useState<string>('gemini-flash-lite-latest');
   const [montage, setMontage] = useState<boolean>(true);
@@ -70,16 +76,17 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
   const [elapsed, setElapsed] = useState<number>(0);
   const [activeStage, setActiveStage] = useState<number>(0);
   const [errorMsg, setErrorMsg] = useState<string>('');
-  const [diagnostic, setDiagnostic] = useState<{ title: string; desc: string; type: string } | null>(null);
+  const [completedResult, setCompletedResult] = useState<Dataset | null>(null);
+  const [countdown, setCountdown] = useState<number | null>(null);
 
-  // Structured Professional Telemetry Stream
+  // Telemetry Logs
   const [logs, setLogs] = useState<LogEntry[]>([
     {
       id: 'boot-1',
       timestamp: '00:00:01',
       tag: 'SYSTEM',
       level: 'info',
-      message: 'HookScene Production Intelligence Core v2.4 online.',
+      message: 'HookScene Video Intelligence Engine v2.4 initialized.',
     },
     {
       id: 'boot-2',
@@ -91,7 +98,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
     {
       id: 'boot-3',
       timestamp: '00:00:02',
-      tag: 'FORMAT',
+      tag: 'TARGET',
       level: 'trace',
       message: 'Target Format: 9:16 Vertical Video (TikTok/Reels/Shorts) · 20s–60s Duration.',
     },
@@ -100,7 +107,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
       timestamp: '00:00:02',
       tag: 'BENCHMARK',
       level: 'info',
-      message: 'Standard Benchmark Suite staged: "I Married a Broken Soldier" (50 Episodes, 14,820 Lines).',
+      message: 'Reference Show Staged: "I Married a Broken Soldier" (50 Episodes, 14,820 Lines).',
     },
   ]);
 
@@ -108,13 +115,17 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
   const [logSearch, setLogSearch] = useState<string>('');
   const [copiedLogs, setCopiedLogs] = useState<boolean>(false);
   const [autoScroll, setAutoScroll] = useState<boolean>(true);
-  const [completedResult, setCompletedResult] = useState<Dataset | null>(null);
-  const [countdown, setCountdown] = useState<number | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const logConsoleRef = useRef<HTMLDivElement>(null);
 
-  // Countdown timer for review desk redirect
+  // Save API key to localStorage when typed
+  const handleApiKeyChange = (val: string) => {
+    setApiKey(val);
+    localStorage.setItem('hs_gemini_key', val);
+  };
+
+  // Redirect countdown
   useEffect(() => {
     if (countdown === null) return;
     if (countdown <= 0) {
@@ -151,22 +162,8 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
     }
   };
 
-  const clearLogs = () => {
-    setLogs([
-      {
-        id: `clear-${Date.now()}`,
-        timestamp: new Date().toTimeString().split(' ')[0],
-        tag: 'CONSOLE',
-        level: 'trace',
-        message: 'Telemetry console buffer cleared by user.',
-      },
-    ]);
-  };
-
   const copyLogsToClipboard = () => {
-    const text = logs
-      .map((l) => `[${l.timestamp}] [${l.tag}] ${l.message}`)
-      .join('\n');
+    const text = logs.map((l) => `[${l.timestamp}] [${l.tag}] ${l.message}`).join('\n');
     navigator.clipboard.writeText(text);
     setCopiedLogs(true);
     setTimeout(() => setCopiedLogs(false), 2000);
@@ -176,7 +173,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
     const arr: StagedFile[] = [];
     Array.from(files).forEach((f) => {
       arr.push({ file: f, name: f.name, size: f.size });
-      addLog('INGEST', `Staged custom asset: ${f.name} (${(f.size / 1024).toFixed(1)} KB)`, 'info');
+      addLog('INGEST', `Staged screenplay asset: ${f.name} (${(f.size / 1024).toFixed(1)} KB)`, 'info');
     });
     setStagedFiles((prev) => [...prev, ...arr]);
     setIsUsingBenchmark(false);
@@ -187,16 +184,26 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
       const updated = prev.filter((_, i) => i !== idx);
       if (updated.length === 0) {
         setIsUsingBenchmark(true);
-        addLog('INGEST', 'All custom files removed. Reverted to official 50-episode benchmark series.', 'info');
+        addLog('INGEST', 'All custom files removed. Reverted to official 50-episode benchmark show.', 'info');
       }
       return updated;
     });
   };
 
-  const enableBenchmarkMode = () => {
-    setIsUsingBenchmark(true);
-    setStagedFiles([]);
-    addLog('BENCHMARK', 'Selected official 50-episode reference series: "I Married a Broken Soldier. He Was a Duke"', 'info');
+  const loadSamplePreset = async (fileName: string, label: string) => {
+    try {
+      addLog('PRESET', `Loading sample asset: ${label}...`, 'info');
+      const res = await fetch(`/test_scripts/${fileName}`);
+      if (!res.ok) throw new Error(`Could not fetch ${fileName}`);
+      const blob = await res.blob();
+      const file = new File([blob], fileName, { type: 'text/plain' });
+      setStagedFiles([{ file, name: fileName, size: blob.size }]);
+      setIsUsingBenchmark(false);
+      addLog('PRESET', `Successfully staged ${label} (${(blob.size / 1024).toFixed(1)} KB)`, 'success');
+    } catch (e: any) {
+      addLog('WARN', `Sample asset ${fileName} fallback to local benchmark.`, 'warn');
+      setIsUsingBenchmark(true);
+    }
   };
 
   const readFilePayload = (file: File): Promise<{ name: string; content: string; is_base64: boolean }> => {
@@ -223,17 +230,16 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
 
   const handleRun = async () => {
     if (!isUsingBenchmark && stagedFiles.length === 0) {
-      setErrorMsg('Please upload at least one screenplay asset or select the benchmark series.');
+      setErrorMsg('Please upload at least one screenplay asset or select the benchmark show.');
       return;
     }
     if (mode === 'ai' && !apiKey.trim()) {
-      setErrorMsg('Please enter an API key for the Cognitive Pipeline, or select the Deterministic Baseline engine.');
+      setErrorMsg('Please enter a Gemini or OpenAI API key, or choose the Deterministic Baseline engine.');
       return;
     }
 
     setLoading(true);
     setErrorMsg('');
-    setDiagnostic(null);
     setCompletedResult(null);
     setCountdown(null);
     setActiveStage(1);
@@ -244,38 +250,25 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
       setElapsed(Math.round((Date.now() - t0) / 1000));
     }, 1000);
 
-    // Initial run telemetry
-    addLog('SYSTEM', 'Initializing HookScene Production Campaign Studio...', 'info');
+    addLog('SYSTEM', 'Initializing HookScene Intelligence Pipeline...', 'info');
     addLog(
-      'STRATEGY',
+      'ENGINE',
       mode === 'ai' ? `Cognitive AI Pipeline (${provider.toUpperCase()})` : 'Deterministic Heuristic Baseline',
       'info'
     );
-    addLog(
-      'PARAMS',
-      `Profile: ${profile.toUpperCase()} | Montages: ${montage ? 'ENABLED' : 'DISABLED'} | Boundary: 20s–60s`,
-      'trace'
-    );
-    addLog('STAGE 1', 'Stage 1 Active: Ingesting screenplay dialogue lines and parsing subtitle timestamps...', 'stage');
+    addLog('STAGE 1', 'Stage 1: Parsing screenplay dialogue, speakers, and subtitle timestamps...', 'stage');
 
-    // Dynamic progressive stage simulation while backend executes
     const stepInterval = setInterval(() => {
       setActiveStage((prev) => {
         const next = prev < 5 ? prev + 1 : prev;
         if (next === 2) {
-          addLog('STAGE 2', 'Analyzing 50-episode narrative arc and building spoiler exclusion gates...', 'stage');
-          addLog('SPOILER', 'Blacklisted climactic reveal timestamps in episodes 46–50.', 'info');
+          addLog('STAGE 2', 'Stage 2: Analyzing full-series narrative arc and building spoiler gates...', 'stage');
         } else if (next === 3) {
-          addLog('STAGE 3', 'Scanning dialogue for 6 dramatic signals: Conflict, Surprise, Suspense, Emotion, Action, Relationship...', 'stage');
-          addLog('SIGNAL', 'Identified candidate windows meeting duration constraints (20s–60s) with 3s hook limits.', 'info');
+          addLog('STAGE 3', 'Stage 3: Scanning dialogue for 6 dramatic signals (Conflict, Suspense, Emotion)...', 'stage');
         } else if (next === 4) {
-          addLog('STAGE 4', 'Executing dual-judge rubric scoring (Hook 25%, Cliffhanger 25%, Clarity 20%, Intensity 20%, Relevance 10%)...', 'stage');
-          addLog('EVAL', 'Comparing Judge 1 and Judge 2 confidence scores for candidate divergence check.', 'info');
+          addLog('STAGE 4', 'Stage 4: Executing dual-judge rubric scoring on hook candidates...', 'stage');
         } else if (next === 5) {
-          addLog('STAGE 5', 'Running listwise tournament ranking & suppressing duplicate/overlapping scenes...', 'stage');
-          if (montage) {
-            addLog('MONTAGE', 'Synthesizing multi-episode 2-3 clip emotional arc montages.', 'info');
-          }
+          addLog('STAGE 5', 'Stage 5: Tournament ranking & suppressing duplicate/overlapping scenes...', 'stage');
         }
         return next;
       });
@@ -302,7 +295,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
         },
         show_name: isUsingBenchmark
           ? 'I Married a Broken Soldier. He was a Duke'
-          : stagedFiles[0]?.name.replace(/\.[^/.]+$/, '') || 'Custom Production Series',
+          : stagedFiles[0]?.name.replace(/\.[^/.]+$/, '') || 'Custom Series',
       };
 
       const res = await fetch('/api/run', {
@@ -323,97 +316,40 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
       setActiveStage(6);
 
       const promoCount = result.promos?.length || 0;
-      addLog('SUCCESS', `Extraction complete! Generated ${promoCount} ranked promo candidates.`, 'success');
-      addLog('METRICS', `Run ID: ${result.run_id || 'run-latest'} | Telemetry recorded to SQLite EvalStore.`, 'success');
-      if (result.run_log) {
-        addLog(
-          'TELEMETRY',
-          `Processed ${result.run_log.episodes || 50} episodes (${result.run_log.lines || 14820} lines) in ${result.run_log.seconds || elapsed}s. Valid candidates: ${result.run_log.candidates_valid || promoCount}.`,
-          'info'
-        );
-      }
+      addLog('SUCCESS', `Pipeline finished! Discovered ${promoCount} ranked promo candidates.`, 'success');
+      addLog('METRICS', `Telemetry synced to SQLite EvalStore. Run ID: ${result.run_id || 'run-latest'}`, 'success');
 
       setDataset(result);
       setCompletedResult(result);
-      // Give the user 8 seconds to comfortably review the logs or click to switch immediately
-      setCountdown(8);
+      setCountdown(6);
     } catch (err: any) {
       clearInterval(stepInterval);
       clearInterval(timer);
       setLoading(false);
       addLog('ERROR', `Pipeline execution halted: ${err.message}`, 'error');
       setErrorMsg(err.message);
-
-      if (err.message.includes('404') || err.message.includes('deprecated') || err.message.includes('not found')) {
-        setDiagnostic({
-          title: 'Model Version Deprecated',
-          desc: 'The selected model endpoint returned a 404. Falling back to active model `gemini-flash-lite-latest` will resolve this.',
-          type: 'model_fallback',
-        });
-      }
     }
   };
 
-  // Helper badge styles for log tags
   const getTagBadgeStyle = (tag: string, level: string) => {
     switch (level) {
       case 'error':
-        return 'bg-rose-500/20 text-rose-300 border-rose-500/40';
+        return 'bg-rose-50 text-rose-700 border-rose-200';
       case 'warn':
-        return 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+        return 'bg-amber-50 text-amber-700 border-amber-200';
       case 'success':
-        return 'bg-emerald-500/25 text-emerald-300 border-emerald-500/40';
+        return 'bg-emerald-50 text-emerald-700 border-emerald-200';
       case 'stage':
-        return 'bg-amber-500/20 text-amber-300 border-amber-500/30';
-    }
-    switch (tag) {
-      case 'SYSTEM':
-      case 'DAEMON':
-        return 'bg-sky-500/15 text-sky-300 border-sky-500/30';
-      case 'INGEST':
-      case 'BENCHMARK':
-        return 'bg-purple-500/15 text-purple-300 border-purple-500/30';
-      case 'SIGNAL':
-        return 'bg-amber-500/15 text-amber-300 border-amber-500/30';
-      case 'JUDGE':
-      case 'EVAL':
-        return 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30';
-      case 'RANK':
-      case 'TOURNAMENT':
-        return 'bg-blue-500/15 text-blue-300 border-blue-500/30';
-      case 'SPOILER':
-        return 'bg-rose-500/15 text-rose-300 border-rose-500/30';
-      case 'TELEMETRY':
-      case 'METRICS':
-        return 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+        return 'bg-purple-50 text-purple-700 border-purple-200';
       default:
-        return 'bg-slate-700/50 text-slate-300 border-slate-600/50';
+        return 'bg-neutral-100 text-neutral-700 border-neutral-200';
     }
   };
 
-  const getMessageTextStyle = (level: string) => {
-    switch (level) {
-      case 'error':
-        return 'text-rose-300 font-medium';
-      case 'warn':
-        return 'text-amber-300 font-medium';
-      case 'success':
-        return 'text-emerald-300 font-medium';
-      case 'stage':
-        return 'text-amber-200 font-semibold';
-      case 'trace':
-        return 'text-slate-400';
-      default:
-        return 'text-slate-200';
-    }
-  };
-
-  // Filtered log entries
   const filteredLogs = logs.filter((log) => {
     if (logFilter === 'stages' && !log.tag.includes('STAGE')) return false;
     if (logFilter === 'signals' && !['SIGNAL', 'ARC', 'SPOILER', 'MONTAGE'].includes(log.tag)) return false;
     if (logFilter === 'errors' && log.level !== 'error' && log.level !== 'warn') return false;
-
     if (logSearch.trim()) {
       const q = logSearch.toLowerCase();
       return (
@@ -426,770 +362,568 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
   });
 
   return (
-    <div className="py-8 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pb-24 font-sans">
-      {/* Studio Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-200/80 mb-8 gap-4">
-        <div>
-          <div className="flex items-center gap-2.5 mb-1.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 border border-amber-500/20 flex items-center justify-center shadow-xs">
-              <Film className="w-4 h-4 text-amber-600" />
-            </div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-              Campaign Studio & Execution Console
-            </h1>
-            <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-900 text-amber-400 border border-slate-800">
-              v2.4 Production
+    <div className="space-y-6 pb-20 font-sans select-none">
+      {/* CARD 1: UPLOAD SCREENPLAY ASSET (TwelveLabs Exact Card 1 Design) */}
+      <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 md:p-8 shadow-xs">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-3">
+            <span className="w-6 h-6 rounded-full border border-neutral-300 text-neutral-700 flex items-center justify-center text-xs font-semibold">
+              1
             </span>
+            <h2 className="text-base font-semibold text-neutral-900">
+              Upload a screenplay asset
+            </h2>
           </div>
-          <p className="text-sm text-slate-500 max-w-3xl leading-relaxed">
-            Autonomous promo discovery and dual-judge evaluation workspace. Ingest multi-episode screenplays,
-            configure cognitive or heuristic intelligence parameters, and rank high-converting 9:16 vertical promos.
-          </p>
+          <ChevronDown size={18} className="text-neutral-400" />
         </div>
 
-        {/* Live System Telemetry Pills */}
-        <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg shadow-xs text-slate-700">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>FastAPI Daemon:</span>
-            <span className="font-semibold text-slate-900">Connected</span>
+        {/* Large Minimalist Dropzone Area */}
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => {
+            e.preventDefault();
+            if (e.dataTransfer.files.length) handleCustomFiles(e.dataTransfer.files);
+          }}
+          className="border border-dashed border-neutral-300 hover:border-neutral-500 rounded-2xl py-12 px-6 flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-neutral-50/50 hover:bg-neutral-50"
+        >
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={(e) => e.target.files && handleCustomFiles(e.target.files)}
+            accept=".zip,.txt,.srt,.vtt"
+            multiple
+            className="hidden"
+          />
+
+          <div className="w-10 h-10 rounded-xl bg-white border border-neutral-200 flex items-center justify-center text-neutral-700 shadow-xs mb-3">
+            <UploadCloud size={20} className="text-neutral-700" />
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg shadow-xs text-slate-700">
-            <Video className="w-3.5 h-3.5 text-amber-500" />
-            <span>Target:</span>
-            <span className="font-semibold text-slate-900">9:16 Vertical (20–60s)</span>
+
+          <div className="text-sm font-semibold text-neutral-900 mb-2">
+            Upload screenplay asset
           </div>
+
+          <div className="flex items-center gap-2 mb-4 flex-wrap justify-center">
+            <span className="px-2.5 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-xs font-medium">
+              File size ≤ 20 MB
+            </span>
+            <span className="px-2.5 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-xs font-medium">
+              Target duration 20s–60s
+            </span>
+            <span className="px-2.5 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-xs font-medium">
+              .zip / .txt / .srt
+            </span>
+          </div>
+
+          {/* Preset Buttons Underneath Dropzone */}
+          <div className="flex items-center gap-2 text-xs text-neutral-500 flex-wrap justify-center pt-2">
+            <span>Or import from</span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsUsingBenchmark(true);
+                setStagedFiles([]);
+                addLog('INGEST', 'Staged official 50-episode reference show.', 'info');
+              }}
+              className={`px-3 py-1 rounded-lg border font-medium transition-colors ${
+                isUsingBenchmark
+                  ? 'bg-neutral-900 text-white border-neutral-900'
+                  : 'bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-100'
+              }`}
+            >
+              🎬 50-Episode Benchmark Show
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                loadSamplePreset('new_test_episode_01.txt', 'Episode 01 Test Script');
+              }}
+              className="px-3 py-1 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100 font-medium transition-colors"
+            >
+              ⚡ Ep. 01 Confrontation (.txt)
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                loadSamplePreset('new_test_episode_02.txt', 'Episode 02 Betrayal Script');
+              }}
+              className="px-3 py-1 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100 font-medium transition-colors"
+            >
+              🔥 Ep. 02 Betrayal (.txt)
+            </button>
+          </div>
+        </div>
+
+        {/* Staged Assets List */}
+        <div className="mt-4">
+          {isUsingBenchmark ? (
+            <div className="flex items-center justify-between text-xs font-mono text-neutral-700 bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-2.5">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 size={16} className="text-emerald-600" />
+                <span className="font-semibold text-neutral-900">Loaded:</span>
+                <span>sample_show.zip (50 episodes · 14,820 lines · 190.7 KB)</span>
+              </div>
+              <span className="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded">
+                Verified Ground Truth
+              </span>
+            </div>
+          ) : stagedFiles.length > 0 ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs font-semibold text-neutral-500 pb-1">
+                <span>Staged Assets ({stagedFiles.length})</span>
+                <button
+                  onClick={() => {
+                    setStagedFiles([]);
+                    setIsUsingBenchmark(true);
+                  }}
+                  className="text-rose-600 hover:underline text-xs"
+                >
+                  Clear All
+                </button>
+              </div>
+              {stagedFiles.map((sf, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between text-xs font-mono text-neutral-800 bg-neutral-50 border border-neutral-200 rounded-lg px-3.5 py-2"
+                >
+                  <span className="truncate">
+                    {sf.name} <span className="text-neutral-400 font-sans">({(sf.size / 1024).toFixed(1)} KB)</span>
+                  </span>
+                  <button
+                    onClick={() => removeFile(idx)}
+                    className="text-neutral-400 hover:text-rose-600 p-1"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-xs text-neutral-400 text-center py-2">
+              Nothing loaded yet. Choose the benchmark show or drop your scripts above.
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Horizontal Pipeline Architecture Stage Tracker */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs mb-8">
-        <div className="flex items-center justify-between mb-3 text-xs">
-          <span className="font-bold text-slate-900 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-            <Layers className="w-3.5 h-3.5 text-amber-500" />
-            5-Stage Autonomous Extraction Architecture
-          </span>
-          <span className="text-slate-400 font-mono text-[11px]">
-            {loading ? `Phase ${activeStage} of 5 Active` : 'Engine Ready'}
-          </span>
+      {/* CARD 2: TRY SUGGESTED PROMPTS & WORKFLOWS (TwelveLabs Exact Card 2 Design) */}
+      <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 md:p-8 shadow-xs">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-3">
+            <span className="w-6 h-6 rounded-full border border-neutral-300 text-neutral-700 flex items-center justify-center text-xs font-semibold">
+              2
+            </span>
+            <h2 className="text-base font-semibold text-neutral-900">
+              Try suggested workflows & engine configuration
+            </h2>
+          </div>
+          <ChevronDown size={18} className="text-neutral-400" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        {/* Suggested Prompts 2-Column Grid (TwelveLabs Style) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
           {[
             {
-              step: 1,
-              title: 'Ingestion & Boundaries',
-              desc: 'Timestamp parsing & line-level cut limits',
+              id: 'p1',
+              title: '# Generate 20s–60s viral hooks from dialogue',
+              desc: 'Enforces cold open within first 3 seconds, cuts mid-conflict',
+              action: () => {
+                setMode('ai');
+                setProfile('fast');
+              },
             },
             {
-              step: 2,
-              title: 'Narrative Arc & Spoilers',
-              desc: 'Full-series context & spoiler gating',
+              id: 'p2',
+              title: '⚡ Rule-based baseline (Instant, no key needed)',
+              desc: 'Algorithmic keyword cadence & acoustic boundary cuts in ~5s',
+              action: () => {
+                setMode('baseline');
+              },
             },
             {
-              step: 3,
-              title: 'Multi-Signal Detection',
-              desc: '6 dramatic signals (Conflict, Suspense...)',
+              id: 'p3',
+              title: '🎯 Continuous single cuts (High-Tension drama)',
+              desc: 'Extracts unbroken 35s scenes ending on open cliffhangers',
+              action: () => {
+                setMontage(false);
+              },
             },
             {
-              step: 4,
-              title: 'Dual-Judge Scoring',
-              desc: '5-factor rubric weighted evaluation',
+              id: 'p4',
+              title: '🎬 Multi-scene montages (2–3 Segment hook compilation)',
+              desc: 'Combines cold open hook with second dramatic reveal',
+              action: () => {
+                setMontage(true);
+              },
             },
             {
-              step: 5,
-              title: 'Listwise Tournament',
-              desc: 'Overlap suppression & promo ranking',
+              id: 'p5',
+              title: '📊 Quality & consistency audit (Feature 1–4)',
+              desc: 'Scores candidates across 5 rubric factors with ground truth check',
+              action: () => {
+                setActiveTab('f1_quality');
+              },
             },
-          ].map((st) => {
-            const isDone = activeStage > st.step;
-            const isActive = activeStage === st.step;
-            return (
-              <div
-                key={st.step}
-                className={`p-3 rounded-xl border transition-all ${
-                  isActive
-                    ? 'border-amber-400 bg-amber-50/50 shadow-xs ring-1 ring-amber-400'
-                    : isDone
-                    ? 'border-emerald-200 bg-emerald-50/40 text-slate-800'
-                    : 'border-slate-100 bg-slate-50/60 text-slate-500'
-                }`}
+            {
+              id: 'p6',
+              title: '🔍 Decision traceability & attribution (Feature 6)',
+              desc: 'Inspect exact dialogue lines, judge weights, and signal triggers',
+              action: () => {
+                setActiveTab('f6_explainability');
+              },
+            },
+          ].map((prompt) => (
+            <div
+              key={prompt.id}
+              onClick={prompt.action}
+              className="p-3.5 rounded-xl border border-neutral-200/80 hover:border-neutral-400 bg-neutral-50/40 hover:bg-neutral-50 cursor-pointer transition-all flex flex-col justify-between"
+            >
+              <div className="text-xs font-medium text-neutral-800 mb-1">
+                {prompt.title}
+              </div>
+              <div className="text-[11px] text-neutral-500">
+                {prompt.desc}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Engine Settings Row */}
+        <div className="p-5 rounded-xl border border-neutral-200/80 bg-neutral-50/30 space-y-4">
+          <div className="text-xs font-bold text-neutral-900 uppercase tracking-wider">
+            Engine Controls
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {/* Mode Selector */}
+            <div>
+              <label className="block text-xs font-medium text-neutral-700 mb-1">
+                Engine Mode
+              </label>
+              <div className="flex rounded-lg border border-neutral-200 p-0.5 bg-white">
+                <button
+                  type="button"
+                  onClick={() => setMode('ai')}
+                  className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                    mode === 'ai' ? 'bg-neutral-900 text-white' : 'text-neutral-600 hover:text-neutral-900'
+                  }`}
+                >
+                  AI Pipeline
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode('baseline')}
+                  className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                    mode === 'baseline' ? 'bg-neutral-900 text-white' : 'text-neutral-600 hover:text-neutral-900'
+                  }`}
+                >
+                  Rules Only
+                </button>
+              </div>
+            </div>
+
+            {/* Provider Selector */}
+            <div>
+              <label className="block text-xs font-medium text-neutral-700 mb-1">
+                Model Provider
+              </label>
+              <select
+                value={provider}
+                onChange={(e) => setProvider(e.target.value)}
+                disabled={mode === 'baseline'}
+                className="w-full bg-white border border-neutral-200 rounded-lg px-3 py-1.5 text-xs text-neutral-800 focus:outline-none focus:border-neutral-400 disabled:opacity-50"
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span
-                    className={`w-5 h-5 rounded-full text-[11px] font-bold flex items-center justify-center ${
-                      isActive
-                        ? 'bg-amber-500 text-white'
-                        : isDone
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-slate-200 text-slate-600'
-                    }`}
-                  >
-                    {isDone ? '✓' : st.step}
+                <option value="gemini">Google Gemini (Flash Lite)</option>
+                <option value="openai">OpenAI (GPT-4o-mini)</option>
+                <option value="groq">Groq (Llama 3.3)</option>
+              </select>
+            </div>
+
+            {/* Speed / Depth Profile */}
+            <div>
+              <label className="block text-xs font-medium text-neutral-700 mb-1">
+                Speed & Cost Profile
+              </label>
+              <select
+                value={profile}
+                onChange={(e) => setProfile(e.target.value)}
+                disabled={mode === 'baseline'}
+                className="w-full bg-white border border-neutral-200 rounded-lg px-3 py-1.5 text-xs text-neutral-800 focus:outline-none focus:border-neutral-400 disabled:opacity-50"
+              >
+                <option value="fast">Fast (full show ≤ 3 min)</option>
+                <option value="free_tier">Free Key (≤ 5 episodes, rate-limited)</option>
+                <option value="thorough">Thorough Multi-Judge Evaluation</option>
+              </select>
+            </div>
+          </div>
+
+          {/* API Key Vault Input (Only for AI Mode) */}
+          {mode === 'ai' && (
+            <div className="pt-1">
+              <label className="block text-xs font-medium text-neutral-700 mb-1">
+                API Key (stays local in your browser)
+              </label>
+              <div className="relative">
+                <input
+                  type={showApiKey ? 'text' : 'password'}
+                  value={apiKey}
+                  onChange={(e) => handleApiKeyChange(e.target.value)}
+                  placeholder="Enter Gemini API key (e.g. AIzaSy...)"
+                  className="w-full bg-white border border-neutral-200 rounded-xl px-3.5 py-2.5 text-xs font-mono text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-neutral-500"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowApiKey(!showApiKey)}
+                  className="absolute right-3 top-2.5 text-neutral-400 hover:text-neutral-700"
+                >
+                  {showApiKey ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Action Row */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-2 border-t border-neutral-200 gap-4">
+            <label className="flex items-center gap-2 text-xs font-medium text-neutral-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={montage}
+                onChange={(e) => setMontage(e.target.checked)}
+                className="w-4 h-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-400 accent-neutral-900"
+              />
+              <span>Generate Multi-Scene Montages (2–3 clip compilation)</span>
+            </label>
+
+            <button
+              onClick={handleRun}
+              disabled={loading}
+              className={`px-6 py-2.5 rounded-xl font-semibold text-xs text-white transition-all flex items-center justify-center gap-2 shadow-sm ${
+                loading
+                  ? 'bg-neutral-400 cursor-not-allowed'
+                  : 'bg-black hover:bg-neutral-800 cursor-pointer active:scale-95'
+              }`}
+            >
+              {loading ? (
+                <>
+                  <RefreshCw size={14} className="animate-spin text-amber-400" />
+                  <span>Processing Pipeline ({elapsed}s)...</span>
+                </>
+              ) : (
+                <>
+                  <Play size={14} className="fill-white" />
+                  <span>Execute {mode === 'ai' ? 'AI Pipeline' : 'Rule Baseline'}</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {errorMsg && (
+            <div className="bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs text-rose-700 flex items-center gap-2">
+              <AlertTriangle size={15} className="shrink-0" />
+              <span>{errorMsg}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* CARD 3: EXPLORE MORE EXAMPLES (TwelveLabs Exact Card 3 Design) */}
+      <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 md:p-8 shadow-xs">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-3">
+            <span className="w-6 h-6 rounded-full border border-neutral-300 text-neutral-700 flex items-center justify-center text-xs font-semibold">
+              3
+            </span>
+            <h2 className="text-base font-semibold text-neutral-900">
+              Explore more examples
+            </h2>
+          </div>
+          <span className="text-xs text-neutral-400 font-medium">Click to inspect in Review Desk</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            {
+              id: 'ex1',
+              title: 'Ep. 02: Betrayal & Cold Open',
+              hook: '"I cannot marry you, Juliana."',
+              kind: 'Continuous Single Cut',
+              duration: '35s',
+              score: '91/100',
+              badgeColor: 'bg-amber-100 text-amber-900',
+            },
+            {
+              id: 'ex2',
+              title: 'Ep. 02: Montage & Confrontation',
+              hook: '"I cannot marry you..." + Reveal',
+              kind: 'Multi-Scene Montage',
+              duration: '45s',
+              score: '86/100',
+              badgeColor: 'bg-purple-100 text-purple-900',
+            },
+            {
+              id: 'ex3',
+              title: 'Ep. 01: High-Stakes Confrontation',
+              hook: '"You should turn around, Juliana."',
+              kind: 'Continuous Single Cut',
+              duration: '51s',
+              score: '85/100',
+              badgeColor: 'bg-blue-100 text-blue-900',
+            },
+            {
+              id: 'ex4',
+              title: 'Ep. 11: Theft & Suspense Hook',
+              hook: '"Your husband stole my gold pocket watch!"',
+              kind: 'Continuous Single Cut',
+              duration: '34s',
+              score: '88/100',
+              badgeColor: 'bg-emerald-100 text-emerald-900',
+            },
+          ].map((item) => (
+            <div
+              key={item.id}
+              onClick={() => setActiveTab('review')}
+              className="p-4 rounded-xl border border-neutral-200/80 hover:border-neutral-400 bg-neutral-50/40 hover:bg-neutral-50 cursor-pointer transition-all flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.badgeColor}`}>
+                    {item.score}
                   </span>
-                  <span className="text-[10px] font-mono uppercase tracking-wider font-semibold">
-                    {isActive ? (
-                      <span className="text-amber-600 animate-pulse">Running</span>
-                    ) : isDone ? (
-                      <span className="text-emerald-700">Completed</span>
-                    ) : (
-                      'Standby'
-                    )}
+                  <span className="text-[11px] text-neutral-400 font-mono">
+                    {item.duration}
                   </span>
                 </div>
-                <div className="font-semibold text-xs text-slate-900 truncate">{st.title}</div>
-                <div className="text-[11px] text-slate-500 leading-tight mt-0.5 line-clamp-2">
-                  {st.desc}
+                <div className="font-semibold text-xs text-neutral-900 mb-1">
+                  {item.title}
+                </div>
+                <div className="text-xs text-neutral-600 italic line-clamp-2 mb-3">
+                  {item.hook}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-neutral-200/60 text-[11px] text-neutral-500 font-medium">
+                <span>{item.kind}</span>
+                <span className="text-neutral-900 font-semibold group-hover:underline">Open →</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CARD 4: REAL-TIME TELEMETRY & LOG VIEWER (Clean, Professional, Easy to Read) */}
+      <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 md:p-8 shadow-xs">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <Terminal size={17} className="text-neutral-600" />
+            <h3 className="text-sm font-semibold text-neutral-900">
+              Live Pipeline Telemetry & Execution Log
+            </h3>
+            {loading && (
+              <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                Running Stage {activeStage} of 5
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={copyLogsToClipboard}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-lg border border-neutral-200 text-neutral-600 hover:text-neutral-900 text-xs font-medium hover:bg-neutral-50 transition-colors"
+            >
+              <Copy size={13} />
+              <span>{copiedLogs ? 'Copied!' : 'Copy Logs'}</span>
+            </button>
+            <span className="text-xs font-mono text-neutral-500 bg-neutral-100 px-2 py-1 rounded-lg">
+              ⏱ {elapsed}s
+            </span>
+          </div>
+        </div>
+
+        {/* Stepper Stage Bar */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">
+          {[
+            { id: 1, label: '1. Ingestion' },
+            { id: 2, label: '2. Narrative Arc' },
+            { id: 3, label: '3. Signals Scan' },
+            { id: 4, label: '4. Dual Judge' },
+            { id: 5, label: '5. Tournament' },
+          ].map((st) => {
+            const isDone = activeStage > st.id;
+            const isActive = activeStage === st.id;
+            return (
+              <div
+                key={st.id}
+                className={`p-2 rounded-lg border text-center transition-all ${
+                  isActive
+                    ? 'border-neutral-900 bg-neutral-900 text-white font-semibold'
+                    : isDone
+                    ? 'border-emerald-200 bg-emerald-50 text-emerald-800 font-medium'
+                    : 'border-neutral-100 bg-neutral-50 text-neutral-400'
+                }`}
+              >
+                <div className="text-[11px] truncate">
+                  {isDone ? '✓ ' : ''}{st.label}
                 </div>
               </div>
             );
           })}
         </div>
-      </div>
 
-      {/* Main Studio Control Matrix */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* LEFT COLUMN: INGESTION MATRIX & INTELLIGENCE STRATEGY (7 Cols) */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Card 1: Production Episode Ingestion Matrix */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center">
-                  <FolderArchive className="w-4 h-4" />
-                </div>
-                <div>
-                  <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                    Episode Script Ingestion Deck
-                  </h2>
-                  <p className="text-xs text-slate-500">
-                    Ingest verified benchmark shows or upload custom screenplays and subtitle captions.
-                  </p>
-                </div>
-              </div>
-              <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
-                {isUsingBenchmark ? 'Benchmark Mode' : `${stagedFiles.length} Custom File(s)`}
+        {/* Clean Log Stream Console */}
+        <div
+          ref={logConsoleRef}
+          className="bg-neutral-950 text-neutral-200 rounded-xl p-4 font-mono text-xs max-h-72 overflow-y-auto space-y-1.5 shadow-inner"
+        >
+          {filteredLogs.map((log) => (
+            <div key={log.id} className="flex items-start gap-2.5 leading-relaxed">
+              <span className="text-neutral-500 shrink-0 text-[11px]">{log.timestamp}</span>
+              <span
+                className={`px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 uppercase ${
+                  log.level === 'error'
+                    ? 'bg-rose-900/60 text-rose-300'
+                    : log.level === 'success'
+                    ? 'bg-emerald-900/60 text-emerald-300'
+                    : log.level === 'stage'
+                    ? 'bg-amber-900/60 text-amber-300'
+                    : 'bg-neutral-800 text-neutral-300'
+                }`}
+              >
+                {log.tag}
+              </span>
+              <span
+                className={`flex-1 break-words ${
+                  log.level === 'error'
+                    ? 'text-rose-300'
+                    : log.level === 'success'
+                    ? 'text-emerald-300'
+                    : log.level === 'stage'
+                    ? 'text-amber-200'
+                    : 'text-neutral-300'
+                }`}
+              >
+                {log.message}
               </span>
             </div>
+          ))}
+        </div>
 
-            {/* Ingestion Choice Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Preset A: Official Benchmark Suite */}
-              <div
-                onClick={enableBenchmarkMode}
-                className={`p-4 rounded-xl border text-left cursor-pointer transition-all relative ${
-                  isUsingBenchmark
-                    ? 'border-amber-500 bg-amber-50/40 shadow-xs ring-1 ring-amber-500/50'
-                    : 'border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-300'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-700 border border-amber-500/20">
-                    Production Benchmark
-                  </span>
-                  {isUsingBenchmark && (
-                    <span className="w-4 h-4 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px] font-bold">
-                      ✓
-                    </span>
-                  )}
-                </div>
-                <div className="font-bold text-xs text-slate-900 mb-1">
-                  "I Married a Broken Soldier"
-                </div>
-                <p className="text-[11px] text-slate-500 mb-3 leading-relaxed">
-                  50 full-length episodes (14,820 dialogue lines) with millisecond-aligned timestamps.
-                </p>
-                <div className="flex items-center gap-2 text-[10px] font-mono text-slate-600">
-                  <span className="px-1.5 py-0.5 bg-white border border-slate-200 rounded">50 Episodes</span>
-                  <span className="px-1.5 py-0.5 bg-white border border-slate-200 rounded">190.7 KB ZIP</span>
-                </div>
-              </div>
-
-              {/* Preset B: Custom Asset Ingestion */}
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className={`p-4 rounded-xl border text-left cursor-pointer transition-all relative ${
-                  !isUsingBenchmark
-                    ? 'border-amber-500 bg-amber-50/40 shadow-xs ring-1 ring-amber-500/50'
-                    : 'border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-300'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
-                    Custom Production Assets
-                  </span>
-                  {!isUsingBenchmark && (
-                    <span className="w-4 h-4 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px] font-bold">
-                      ✓
-                    </span>
-                  )}
-                </div>
-                <div className="font-bold text-xs text-slate-900 mb-1">
-                  Upload Scripts or Subtitles
-                </div>
-                <p className="text-[11px] text-slate-500 mb-3 leading-relaxed">
-                  Upload your show's screenplay text files, zipped archive, or subtitle streams (.srt, .vtt).
-                </p>
-                <div className="flex items-center gap-2 text-[10px] font-mono text-slate-600">
-                  <span className="px-1.5 py-0.5 bg-white border border-slate-200 rounded">.ZIP</span>
-                  <span className="px-1.5 py-0.5 bg-white border border-slate-200 rounded">.TXT</span>
-                  <span className="px-1.5 py-0.5 bg-white border border-slate-200 rounded">.SRT</span>
-                  <span className="px-1.5 py-0.5 bg-white border border-slate-200 rounded">.VTT</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Custom Upload Drop Area */}
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                if (e.dataTransfer.files.length) handleCustomFiles(e.dataTransfer.files);
-              }}
-              className="border-2 border-dashed border-slate-200 hover:border-amber-400 rounded-xl p-5 text-center cursor-pointer transition-colors bg-slate-50/40 hover:bg-amber-50/20 flex flex-col items-center justify-center gap-2"
+        {/* Redirect Notice upon completion */}
+        {countdown !== null && (
+          <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs text-emerald-900 font-medium">
+            <span>🎉 Extraction complete! Redirecting to Review Desk in {countdown}s...</span>
+            <button
+              onClick={() => setActiveTab('review')}
+              className="px-3 py-1 bg-emerald-700 text-white rounded-lg font-semibold hover:bg-emerald-800"
             >
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={(e) => e.target.files && handleCustomFiles(e.target.files)}
-                accept=".zip,.txt,.srt,.vtt"
-                multiple
-                className="hidden"
-              />
-              <div className="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 shadow-xs">
-                <UploadCloud className="w-4 h-4 text-amber-500" />
-              </div>
-              <div className="text-xs font-semibold text-slate-800">
-                Drag & drop screenplay files or <span className="text-amber-600 hover:underline">browse local system</span>
-              </div>
-              <div className="text-[11px] text-slate-400">
-                Single or multi-episode ZIP archive, formatted plain text, SRT, or WebVTT captions
-              </div>
-            </div>
-
-            {/* Ingested Assets Queue */}
-            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-3 min-h-[46px] flex flex-col justify-center">
-              {isUsingBenchmark ? (
-                <div className="flex items-center justify-between text-xs font-mono text-slate-700 bg-white border border-slate-200 rounded-lg px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span className="font-semibold text-slate-900">Benchmark Series Loaded:</span>
-                    <span className="text-slate-600">sample_show.zip (50 episodes, 190.7 KB)</span>
-                  </div>
-                  <span className="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                    Validated
-                  </span>
-                </div>
-              ) : stagedFiles.length === 0 ? (
-                <div className="text-center py-2 text-xs font-mono text-slate-400">
-                  No custom assets uploaded yet. Ingestion will use the official 50-episode benchmark series.
-                </div>
-              ) : (
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500 pb-1 border-b border-slate-200">
-                    <span>Staged Files ({stagedFiles.length})</span>
-                    <button
-                      onClick={() => setStagedFiles([])}
-                      className="text-rose-600 hover:underline text-[11px] cursor-pointer"
-                    >
-                      Clear All
-                    </button>
-                  </div>
-                  {stagedFiles.map((sf, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between text-xs font-mono text-slate-800 bg-white border border-slate-200 rounded px-3 py-1.5"
-                    >
-                      <span className="truncate">
-                        {sf.name} <span className="text-slate-400 font-sans">({(sf.size / 1024).toFixed(1)} KB)</span>
-                      </span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeFile(idx);
-                        }}
-                        className="text-slate-400 hover:text-rose-600 transition-colors p-1"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+              Open Desk Now →
+            </button>
           </div>
-
-          {/* Card 2: Strategy & Model Architecture */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center">
-                  <Cpu className="w-4 h-4" />
-                </div>
-                <div>
-                  <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                    Intelligence Strategy & Model Engine
-                  </h2>
-                  <p className="text-xs text-slate-500">
-                    Select cognitive multi-agent evaluation or zero-latency deterministic baseline.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Intelligence Mode Toggle Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={() => setMode('ai')}
-                className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
-                  mode === 'ai'
-                    ? 'bg-amber-50/50 border-amber-500 shadow-xs ring-1 ring-amber-500/50'
-                    : 'bg-white border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-1.5 font-bold text-xs text-slate-900">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Autonomous Cognitive Pipeline</span>
-                  </div>
-                  {mode === 'ai' && (
-                    <span className="w-4 h-4 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px] font-bold">
-                      ✓
-                    </span>
-                  )}
-                </div>
-                <div className="text-[11px] text-slate-600 leading-relaxed mb-2">
-                  Full 5-stage AI intelligence: Narrative Arc Synthesis + 6 Dramatic Signals + Dual-Judge Scoring Rubric.
-                </div>
-                <span className="inline-block text-[10px] font-semibold text-amber-800 bg-amber-100/60 px-2 py-0.5 rounded">
-                  Recommended for Commercial Promos
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setMode('baseline')}
-                className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
-                  mode === 'baseline'
-                    ? 'bg-amber-50/50 border-amber-500 shadow-xs ring-1 ring-amber-500/50'
-                    : 'bg-white border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-1.5 font-bold text-xs text-slate-900">
-                    <Gauge className="w-3.5 h-3.5 text-slate-600" />
-                    <span>Deterministic Heuristic Baseline</span>
-                  </div>
-                  {mode === 'baseline' && (
-                    <span className="w-4 h-4 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px] font-bold">
-                      ✓
-                    </span>
-                  )}
-                </div>
-                <div className="text-[11px] text-slate-600 leading-relaxed mb-2">
-                  Zero-latency algorithmic backstop: Keyword emotional cadence, acoustic boundary cuts. No API key needed.
-                </div>
-                <span className="inline-block text-[10px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
-                  Instant (~5s) Offline Execution
-                </span>
-              </button>
-            </div>
-
-            {/* Inference Matrix Parameters */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Foundation Model Provider
-                </label>
-                <select
-                  value={provider}
-                  onChange={(e) => setProvider(e.target.value)}
-                  className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-amber-500 cursor-pointer shadow-xs"
-                >
-                  <option value="gemini">Google Gemini 2.0 / Flash (High Throughput)</option>
-                  <option value="openai">OpenAI (GPT-4o / GPT-4o-mini)</option>
-                  <option value="anthropic">Anthropic (Claude 3.5 Sonnet / Haiku)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Execution Profile & Depth
-                </label>
-                <select
-                  value={profile}
-                  onChange={(e) => setProfile(e.target.value)}
-                  className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-amber-500 cursor-pointer shadow-xs"
-                >
-                  <option value="fast">Fast Production (~2 min / 50 episodes)</option>
-                  <option value="thorough">Exhaustive Analysis (Maximum Candidate Recall)</option>
-                </select>
-              </div>
-            </div>
-
-            {/* API Key Vault Input (Only for AI Mode) */}
-            {mode === 'ai' && (
-              <div className="pt-1">
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  <span className="flex items-center gap-1.5">
-                    <Lock className="w-3.5 h-3.5 text-slate-400" />
-                    Inference Key Vault (Session In-Memory Only)
-                  </span>
-                </label>
-                <div className="relative">
-                  <input
-                    type="password"
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    placeholder="Enter your Gemini or OpenAI API Key..."
-                    className="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:bg-white transition-colors"
-                  />
-                  <div className="absolute right-3 top-2.5 text-[10px] font-mono text-slate-400 pointer-events-none">
-                    Never Persisted to Disk
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Advanced Settings: Montage Synthesis */}
-            <div className="pt-1 flex items-center justify-between border-t border-slate-100">
-              <label className="flex items-center gap-2.5 text-xs font-medium text-slate-700 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={montage}
-                  onChange={(e) => setMontage(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-300 text-amber-500 focus:ring-amber-400 accent-amber-500 cursor-pointer"
-                />
-                <span>Synthesize Multi-Episode Narrative Montages (2–3 Segment Arcs)</span>
-              </label>
-              <span className="text-[11px] text-slate-400 font-mono">Vertical 9:16</span>
-            </div>
-
-            {/* Error Message Alert */}
-            {errorMsg && (
-              <div className="bg-rose-50 border border-rose-200 rounded-xl p-3.5 text-xs text-rose-800 flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-                <div>
-                  <div className="font-semibold">Pipeline Execution Blocked</div>
-                  <div>{errorMsg}</div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: MISSION CONTROL, TELEMETRY & EXECUTION (5 Cols) */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Mission Control Deck */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <div
-                  className={`w-2.5 h-2.5 rounded-full ${
-                    loading ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'
-                  }`}
-                ></div>
-                <h3 className="font-bold text-xs uppercase tracking-wider text-slate-900">
-                  Execution Mission Control
-                </h3>
-              </div>
-              <span className="text-xs font-mono font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg">
-                ⏱ {elapsed}s elapsed
-              </span>
-            </div>
-
-            {/* Real-Time Stepper Progress Bars */}
-            <div className="space-y-3.5">
-              {[
-                { id: 1, label: '1. Ingestion & Boundary Cuts' },
-                { id: 2, label: '2. Narrative Arc & Spoiler Guard' },
-                { id: 3, label: '3. Multi-Signal Dramatic Scan' },
-                { id: 4, label: '4. Dual-Judge Weighted Rubric' },
-                { id: 5, label: '5. Listwise Tournament & Rank' },
-              ].map((st) => {
-                const isDone = activeStage > st.id;
-                const isActive = activeStage === st.id;
-                const pct = isDone ? 100 : isActive ? 55 : 0;
-
-                return (
-                  <div key={st.id} className="space-y-1">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className={`font-medium ${isActive ? 'text-amber-800 font-semibold' : 'text-slate-700'}`}>
-                        {st.label}
-                      </span>
-                      <span className="text-[11px] font-mono">
-                        {isDone ? (
-                          <span className="text-emerald-600 font-semibold flex items-center gap-1">
-                            <Check className="w-3 h-3" /> Done
-                          </span>
-                        ) : isActive ? (
-                          <span className="text-amber-600 font-semibold animate-pulse">Processing...</span>
-                        ) : (
-                          <span className="text-slate-400">Waiting</span>
-                        )}
-                      </span>
-                    </div>
-                    <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full transition-all duration-400 ${
-                          isDone ? 'bg-emerald-500' : isActive ? 'bg-amber-500' : 'bg-transparent'
-                        }`}
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* UPGRADED PROFESSIONAL TELEMETRY STREAM CONSOLE */}
-            <div className="bg-[#090D16] rounded-xl border border-slate-800 text-xs shadow-inner overflow-hidden flex flex-col">
-              {/* Terminal Window Header Bar */}
-              <div className="bg-[#0F172A] px-3.5 py-2.5 border-b border-slate-800/80 flex items-center justify-between flex-wrap gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
-                  </div>
-                  <span className="font-mono text-[11px] font-bold text-slate-300 ml-1 flex items-center gap-1.5">
-                    <Terminal className="w-3.5 h-3.5 text-amber-400" />
-                    LIVE TELEMETRY STREAM
-                  </span>
-                  <span
-                    className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-semibold ${
-                      loading
-                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse'
-                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                    }`}
-                  >
-                    {loading ? 'RUNNING' : 'ONLINE'}
-                  </span>
-                </div>
-
-                {/* Console Action Buttons */}
-                <div className="flex items-center gap-1 text-[11px] font-mono text-slate-400">
-                  <button
-                    onClick={copyLogsToClipboard}
-                    className="flex items-center gap-1 px-2 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer"
-                    title="Copy telemetry logs to clipboard"
-                  >
-                    {copiedLogs ? (
-                      <>
-                        <Check className="w-3 h-3 text-emerald-400" />
-                        <span className="text-emerald-400 text-[10px]">Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3 h-3" />
-                        <span className="text-[10px]">Copy</span>
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={clearLogs}
-                    className="flex items-center gap-1 px-2 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer"
-                    title="Clear console"
-                  >
-                    <Trash2 className="w-3 h-3 text-slate-400" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Terminal Sub-Bar: Filters & Search */}
-              <div className="bg-[#0B1120] px-3 py-1.5 border-b border-slate-800/60 flex items-center justify-between gap-2 flex-wrap text-[10px] font-mono">
-                <div className="flex items-center gap-1">
-                  <span className="text-slate-500 mr-1 flex items-center gap-1">
-                    <Filter className="w-2.5 h-2.5" /> Filter:
-                  </span>
-                  {(['all', 'stages', 'signals', 'errors'] as const).map((f) => (
-                    <button
-                      key={f}
-                      onClick={() => setLogFilter(f)}
-                      className={`px-2 py-0.5 rounded capitalize transition-colors cursor-pointer ${
-                        logFilter === f
-                          ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40'
-                          : 'text-slate-400 hover:text-slate-200'
-                      }`}
-                    >
-                      {f} {f === 'all' && `(${logs.length})`}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={logSearch}
-                    onChange={(e) => setLogSearch(e.target.value)}
-                    placeholder="Search logs..."
-                    className="w-28 sm:w-36 bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-[10px] font-mono text-slate-300 placeholder-slate-500 focus:outline-none focus:border-amber-500"
-                  />
-                  {logSearch && (
-                    <button
-                      onClick={() => setLogSearch('')}
-                      className="absolute right-1 top-0.5 text-slate-500 hover:text-slate-300 text-[10px]"
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Formatted Log Row Container */}
-              <div
-                ref={logConsoleRef}
-                className="font-mono text-[11px] leading-relaxed h-72 overflow-y-auto p-2.5 space-y-1 divide-y divide-slate-800/30 selection:bg-amber-500/30"
-              >
-                {filteredLogs.length === 0 ? (
-                  <div className="py-8 text-center text-slate-500 text-xs">
-                    No log entries match active filter "{logFilter}".
-                  </div>
-                ) : (
-                  filteredLogs.map((log, idx) => (
-                    <div
-                      key={log.id}
-                      className="flex items-start gap-2.5 pt-1.5 pb-1 px-1.5 hover:bg-slate-800/30 rounded transition-colors group"
-                    >
-                      {/* Line Number */}
-                      <span className="text-slate-600 select-none text-[10px] w-6 text-right shrink-0 font-mono">
-                        {idx + 1}
-                      </span>
-
-                      {/* Timestamp */}
-                      <span className="text-slate-500 text-[10px] shrink-0 font-mono font-medium">
-                        {log.timestamp}
-                      </span>
-
-                      {/* Tag Badge */}
-                      <span
-                        className={`px-1.5 py-0.5 rounded text-[9px] uppercase font-bold tracking-wider shrink-0 border ${getTagBadgeStyle(
-                          log.tag,
-                          log.level
-                        )}`}
-                      >
-                        {log.tag}
-                      </span>
-
-                      {/* Message Content */}
-                      <span className={`text-[11px] leading-relaxed break-words flex-1 ${getMessageTextStyle(log.level)}`}>
-                        {log.message}
-                      </span>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {/* Terminal Footer Bar */}
-              <div className="bg-[#0F172A] px-3.5 py-1.5 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                  STDOUT: 200 OK · {logs.length} events logged
-                </span>
-                <label className="flex items-center gap-1.5 cursor-pointer text-slate-400 hover:text-slate-200">
-                  <input
-                    type="checkbox"
-                    checked={autoScroll}
-                    onChange={(e) => setAutoScroll(e.target.checked)}
-                    className="w-3 h-3 rounded accent-amber-500 cursor-pointer"
-                  />
-                  <span>Auto-Scroll</span>
-                </label>
-              </div>
-            </div>
-
-            {/* POST-RUN COMPLETION BANNER WITH USER CONTROL (No Sudden Abrupt Redirect) */}
-            {completedResult && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 space-y-2.5 animate-fadeIn">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-emerald-900 font-bold text-xs">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Extraction Campaign Complete!</span>
-                  </div>
-                  <span className="text-[11px] font-bold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded">
-                    {completedResult.promos?.length || 0} Promos Extracted
-                  </span>
-                </div>
-                <p className="text-xs text-emerald-800 leading-relaxed">
-                  All candidate scenes have been evaluated across the 5-factor rubric and saved to the Review Desk.
-                  {countdown !== null && countdown > 0 ? (
-                    <span className="font-semibold block mt-1">
-                      Auto-redirecting to Review Desk in {countdown}s...
-                    </span>
-                  ) : null}
-                </p>
-                <div className="flex items-center gap-2 pt-1">
-                  <button
-                    onClick={() => setActiveTab('review')}
-                    className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
-                  >
-                    <span>View in Review Desk Now</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                  {countdown !== null && (
-                    <button
-                      onClick={() => setCountdown(null)}
-                      className="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-medium text-xs px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-                    >
-                      Stay Here & Inspect Logs
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Primary Action Button */}
-            <div>
-              <button
-                onClick={handleRun}
-                disabled={loading}
-                className="w-full py-3.5 px-5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer bg-slate-900 hover:bg-slate-800 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 text-amber-400 animate-spin" />
-                    <span>Executing Campaign (Stage {activeStage} / 5)...</span>
-                  </>
-                ) : (
-                  <>
-                    <Zap className="w-4 h-4 text-amber-400 fill-current" />
-                    <span>Execute Promo Extraction Campaign</span>
-                  </>
-                )}
-              </button>
-              <div className="mt-2 text-center text-[11px] text-slate-400 font-mono">
-                {isUsingBenchmark
-                  ? 'Target: 50 Episodes Benchmark Show · Standard 9:16 Video Cuts'
-                  : `Target: ${stagedFiles.length} Custom Ingested File(s)`}
-              </div>
-            </div>
-
-            {/* Diagnostic Alert Card if error occurs */}
-            {diagnostic && (
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-2">
-                <div className="flex items-center gap-2 text-amber-900 font-bold text-xs">
-                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>{diagnostic.title}</span>
-                </div>
-                <p className="text-xs text-amber-800 leading-relaxed">{diagnostic.desc}</p>
-                <div className="pt-1">
-                  <button
-                    onClick={() => {
-                      setBulkModel('gemini-flash-lite-latest');
-                      setJudgeModel('gemini-flash-lite-latest');
-                      handleRun();
-                    }}
-                    className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-                  >
-                    Auto-Recover with Active Model
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
