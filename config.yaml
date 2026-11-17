@@ -1,0 +1,145 @@
+# SnipDeck settings, read by src/snipdeck/providers/base.py (providers, stages, profiles) and
+# src/snipdeck/core/pipeline.py (rules, weights). Models are swapped here, never in code.
+
+# Any OpenAI-compatible endpoint. The key is read from the env var named in api_key_env (or from .env).
+providers:
+  gemini:
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+    api_key_env: GEMINI_API_KEY
+    min_interval_s: 0.3        # minimum gap between call starts
+    concurrency: 8             # calls in flight at once
+    timeout: 300               # seconds per call
+    retries: 3                 # attempts per model before moving to its fallback
+  groq:
+    base_url: https://api.groq.com/openai/v1
+    api_key_env: GROQ_API_KEY
+    min_interval_s: 3
+  openrouter:
+    base_url: https://openrouter.ai/api/v1
+    api_key_env: OPENROUTER_API_KEY
+    min_interval_s: 4
+  openai:                      # also works for a company gateway: change base_url
+    base_url: https://api.openai.com/v1
+    api_key_env: OPENAI_API_KEY
+  anthropic:                   # Claude via Anthropic's OpenAI-compatible endpoint; see providers/anthropic_compat.py
+    base_url: https://api.anthropic.com/v1/
+    api_key_env: ANTHROPIC_API_KEY
+    json_mode: false           # the compat layer returns 400 on response_format: json_object; prompts ask for JSON
+    max_tokens: 8192            # required by the compat layer on every request
+    min_interval_s: 0.2
+    concurrency: 4
+    timeout: 300
+    retries: 3
+
+# The model for each step (see src/snipdeck/core/stages.py). Candidates makes one call per episode, so it uses a
+# cheaper model with low reasoning effort; the other steps make a few calls each and use the stronger model.
+stages:
+  summary:    {provider: gemini, model: gemini-flash-lite-latest, temperature: 0.0, fallback_models: [gemini-3-flash-preview, gemini-3.1-flash-lite]}
+  candidates: {provider: gemini, model: gemini-flash-lite-latest, temperature: 0.0, fallback_models: [gemini-3-flash-preview, gemini-3.1-flash-lite]}
+  score:      {provider: gemini, model: gemini-flash-lite-latest, temperature: 0.0, fallback_models: [gemini-3-flash-preview, gemini-3.1-flash-lite]}
+  rank:       {provider: gemini, model: gemini-flash-lite-latest, temperature: 0.0, fallback_models: [gemini-3-flash-preview, gemini-3.1-flash-lite]}
+  montage:    {provider: gemini, model: gemini-flash-lite-latest, temperature: 0.2, fallback_models: [gemini-3-flash-preview, gemini-3.1-flash-lite]}
+  eval_judge: {provider: gemini, model: gemini-flash-lite-latest, temperature: 0.0, fallback_models: [gemini-3-flash-preview, gemini-3.1-flash-lite]}
+
+# Rules enforced by code. Clip shape: src/snipdeck/core/validate.py. Selection and penalties: final_order and
+# select_diverse in src/snipdeck/core/stages.py.
+rules:
+  # clip shape
+  min_len_s: 20
+  max_len_s: 60
+  hook_window_s: 3.0         # the hook line must start within this many seconds of the clip start
+  lead_in_s: 0.3             # start this long before the hook line
+  tail_s: 0.4                # keep this long after the cliffhanger line
+  react_s: 3.0               # silent reaction beats (camera/action/SFX) kept after the cliffhanger line
+  # candidates
+  episodes_per_batch: 1
+  candidates_per_episode: 3  # the repair call tops an episode up to this many valid candidates
+  heuristic_per_episode: 1   # keyword-rule picks added per episode when they don't overlap a model pick
+  # scoring and ranking
+  score_batch: 40            # clips per scoring call
+  score_passes: 2            # each clip is scored in this many differently shuffled batches, then averaged
+  top_n_for_ranking: 40      # clips sent to the ranking calls
+  rank_runs: 3               # shuffled ranking calls, combined by Borda count
+  final_llm_weight: 0.6      # final = 0.6 * rank + 0.4 * judge composite, before penalties
+  # spoilers (decided per show by vote; the judge's per-clip flag is kept as judge_spoiler)
+  spoiler_source: vote       # or judge_or_vote: also penalise clips the judge flags
+  spoiler_votes: 3           # the main summary call + 2 short passes; an episode counts if most passes name it
+  spoiler_vote_temperature: 0.5
+  late_payoff_episodes: null # or a fixed list, e.g. [41, 42, 43, 44, 47], to override the vote
+  # penalties and the attention term
+  penalty_spoiler: 0.15
+  penalty_policy: 0.25
+  penalty_needs_context: 0.10
+  penalty_late_episode: 0.10 # grows linearly from 0 at episode 1 to this value at the last episode
+  attention_weight: 0.15     # final += w * (0.7 * hook_attention + 0.3 * hold - center), see attention.py
+  attention_center: 0.55     # about the average clip's attention
+  # final list
+  min_hook_score: 2.5        # clips below this judge hook score are dropped
+  drop_needs_context: true   # clips the judge says a stranger can't follow are dropped
+  drop_ad_policy: false      # ad-policy risk is penalised and flagged, not dropped
+  final_n: 30
+  max_per_episode: 2
+  mmr_same_episode: 0.35     # diversity penalty for a second pick from the same episode
+  mmr_same_hook_type: 0.15   # diversity penalty for repeating a hook type
+  mmr_lambda: 0.35
+  # montages
+  montage_pool: 12
+  montage_count: 8
+  montage_keep: 5
+  montage_min_composite: 0.5
+  seed: 7
+
+# Weights of the six judge scores in the composite.
+weights:
+  hook_3s: 3.0
+  cliffhanger: 3.0
+  standalone: 2.0
+  intensity: 1.0
+  plot_relevance: 1.0
+  trope_fit: 1.0
+
+# Speed profiles, merged over everything above (scripts/run.py --profile; the Speed menu on the website).
+# thorough = the settings used for results/official-run-C.
+default_profile: thorough
+profiles:
+  thorough: {}
+  fast:                        # judges use low reasoning effort and score once
+    stages:
+      summary: {reasoning_effort: low}
+      score:   {reasoning_effort: low}
+      rank:    {reasoning_effort: low}
+      montage: {reasoning_effort: low}
+    rules:
+      score_passes: 1
+  free_tier:                   # free Gemini keys: one call at a time, a shorter timeout, lighter fallback models
+    providers:
+      gemini: {concurrency: 1, min_interval_s: 7, timeout: 90, retries: 2}
+    stages:
+      summary: {reasoning_effort: low, fallback_models: [gemini-3.7-flash, gemini-3.5-flash-lite]}
+      score:   {reasoning_effort: low, fallback_models: [gemini-3.7-flash, gemini-3.5-flash-lite]}
+      rank:    {reasoning_effort: low, fallback_models: [gemini-3.7-flash, gemini-3.5-flash-lite]}
+      montage: {reasoning_effort: low, fallback_models: [gemini-3.7-flash, gemini-3.5-flash-lite]}
+    rules:
+      score_passes: 1
+  anthropic:                   # run every stage on Claude instead of Gemini (no reasoning_effort: unsupported)
+    stages:
+      summary:    {provider: anthropic, model: claude-haiku-4-5, fallback_models: []}
+      candidates: {provider: anthropic, model: claude-haiku-4-5, reasoning_effort: null, fallback_models: []}
+      score:      {provider: anthropic, model: claude-sonnet-4-5, fallback_models: []}
+      rank:       {provider: anthropic, model: claude-sonnet-4-5, fallback_models: []}
+      montage:    {provider: anthropic, model: claude-sonnet-4-5, fallback_models: []}
+
+# Configurable Model Pricing (USD per 1 Million tokens)
+pricing:
+  gemini-flash-lite-latest: {input_per_m: 0.10, output_per_m: 0.40}
+  gemini-2.0-flash: {input_per_m: 0.10, output_per_m: 0.40}
+  gemini-2.0-flash-lite: {input_per_m: 0.075, output_per_m: 0.30}
+  gemini-3-flash-preview: {input_per_m: 0.10, output_per_m: 0.40}
+  gemini-3.1-flash-lite: {input_per_m: 0.075, output_per_m: 0.30}
+  gemini-1.5-flash: {input_per_m: 0.075, output_per_m: 0.30}
+  gpt-4o-mini: {input_per_m: 0.15, output_per_m: 0.60}
+  gpt-4o: {input_per_m: 2.50, output_per_m: 10.00}
+  claude-haiku-4-5: {input_per_m: 0.80, output_per_m: 4.00}
+  claude-sonnet-4-5: {input_per_m: 3.00, output_per_m: 15.00}
+  llama-3.3-70b-versatile: {input_per_m: 0.59, output_per_m: 0.79}
+
