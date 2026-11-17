@@ -156,107 +156,12 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
       {/* Header */}
       <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-[#18181B] tracking-tight">
             Promo Analytics & Feature Intelligence Hub
           </h1>
-          <p className="text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
+          <p className="text-sm text-[#71717A] mt-1 max-w-3xl leading-relaxed">
             Direct access to all 6 core features: hard-rule compliance, failure analysis, run consistency, edge-case test suite, performance & cost telemetry, and candidate explainability.
           </p>
-        </div>
-      </div>
-
-      {/* Sticky Feature Sub-Navbar (1-Click Access to Every Feature - TwelveLabs Unified Theme) */}
-      <div className="sticky top-[53px] z-30 bg-white/95 backdrop-blur-md border border-[#E5E5EA] rounded-2xl p-2 mb-8 shadow-xs flex items-center justify-between gap-3 overflow-x-auto">
-        <div className="flex items-center gap-1.5 flex-nowrap text-xs">
-          <button
-            onClick={() => handleSelectFeature('all')}
-            className={`px-3.5 py-2 rounded-xl font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              selectedFeature === 'all'
-                ? 'bg-[#18181B] text-white shadow-xs'
-                : 'text-[#27272A] hover:bg-[#E4E4E8] bg-[#F0F0F2] border border-[#E0E0E4]'
-            }`}
-          >
-            All Features (Overview)
-          </button>
-
-          <button
-            onClick={() => handleSelectFeature('f1')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              selectedFeature === 'f1'
-                ? 'bg-[#18181B] text-white shadow-xs'
-                : 'text-[#27272A] hover:bg-[#E4E4E8] bg-[#F0F0F2] border border-[#E0E0E4]'
-            }`}
-          >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>F1 · Quality Eval</span>
-          </button>
-
-          <button
-            onClick={() => handleSelectFeature('f2')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              selectedFeature === 'f2'
-                ? 'bg-[#18181B] text-white shadow-xs'
-                : 'text-[#27272A] hover:bg-[#E4E4E8] bg-[#F0F0F2] border border-[#E0E0E4]'
-            }`}
-          >
-            <AlertTriangle className="w-3.5 h-3.5" />
-            <span>F2 · Failure Analysis</span>
-          </button>
-
-          <button
-            onClick={() => handleSelectFeature('f3')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              selectedFeature === 'f3'
-                ? 'bg-[#18181B] text-white shadow-xs'
-                : 'text-[#27272A] hover:bg-[#E4E4E8] bg-[#F0F0F2] border border-[#E0E0E4]'
-            }`}
-          >
-            <GitCompare className="w-3.5 h-3.5" />
-            <span>F3 · Consistency</span>
-          </button>
-
-          <button
-            onClick={() => handleSelectFeature('f4')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              selectedFeature === 'f4'
-                ? 'bg-[#18181B] text-white shadow-xs'
-                : 'text-[#27272A] hover:bg-[#E4E4E8] bg-[#F0F0F2] border border-[#E0E0E4]'
-            }`}
-          >
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>F4 · Edge Tests</span>
-          </button>
-
-          <button
-            onClick={() => handleSelectFeature('f5')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              selectedFeature === 'f5'
-                ? 'bg-[#18181B] text-white shadow-xs'
-                : 'text-[#27272A] hover:bg-[#E4E4E8] bg-[#F0F0F2] border border-[#E0E0E4]'
-            }`}
-          >
-            <Zap className="w-3.5 h-3.5" />
-            <span>F5 · Cost & Perf</span>
-          </button>
-
-          <button
-            onClick={() => handleSelectFeature('f6')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              selectedFeature === 'f6'
-                ? 'bg-[#18181B] text-white shadow-xs'
-                : 'text-[#27272A] hover:bg-[#E4E4E8] bg-[#F0F0F2] border border-[#E0E0E4]'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>F6 · Explainability</span>
-          </button>
-        </div>
-
-        <div className="flex items-center gap-2 text-xs text-[#71717A] whitespace-nowrap hidden md:flex">
-          <span>Active:</span>
-          <span className="font-mono font-bold text-[#18181B] bg-[#ECECEE] px-2.5 py-1 rounded-lg border border-[#D1D1D6] uppercase">
-            {selectedFeature === 'all' ? 'All (Stacked)' : selectedFeature}
-          </span>
         </div>
       </div>
 
