@@ -36,14 +36,14 @@ interface ReviewDeskProps {
 
 const SIGNALS = [
   { id: 'all', label: 'All Categories' },
-  { id: 'romance', label: 'Romance', icon: '💖', bg: 'bg-[#FCE7F3]', text: 'text-[#BE185D]' },
-  { id: 'action', label: 'Action', icon: '🔥', bg: 'bg-[#FFEDD5]', text: 'text-[#C2410C]' },
-  { id: 'conflict', label: 'Conflict', icon: '🔷', bg: 'bg-[#E0F2FE]', text: 'text-[#0369A1]' },
-  { id: 'drama', label: 'Drama', icon: '🎭', bg: 'bg-[#F3E8FF]', text: 'text-[#7E22CE]' },
-  { id: 'suspense', label: 'Suspense', icon: '➕', bg: 'bg-[#DCFCE7]', text: 'text-[#15803D]' },
-  { id: 'mystery', label: 'Mystery', icon: '🔷', bg: 'bg-[#E0F2FE]', text: 'text-[#0369A1]' },
-  { id: 'cliffhanger', label: 'Cliffhanger', icon: '🎭', bg: 'bg-[#FEF3C7]', text: 'text-[#B45309]' },
-  { id: 'emotion', label: 'Emotion', icon: '💔', bg: 'bg-[#FCE7F3]', text: 'text-[#BE185D]' },
+  { id: 'romance', label: 'Romance', icon: '💖', bg: 'bg-[#ECECEE]', text: 'text-[#27272A]' },
+  { id: 'action', label: 'Action', icon: '🔥', bg: 'bg-[#ECECEE]', text: 'text-[#27272A]' },
+  { id: 'conflict', label: 'Conflict', icon: '🔷', bg: 'bg-[#ECECEE]', text: 'text-[#27272A]' },
+  { id: 'drama', label: 'Drama', icon: '🎭', bg: 'bg-[#ECECEE]', text: 'text-[#27272A]' },
+  { id: 'suspense', label: 'Suspense', icon: '➕', bg: 'bg-[#ECECEE]', text: 'text-[#27272A]' },
+  { id: 'mystery', label: 'Mystery', icon: '🔷', bg: 'bg-[#ECECEE]', text: 'text-[#27272A]' },
+  { id: 'cliffhanger', label: 'Cliffhanger', icon: '🎭', bg: 'bg-[#ECECEE]', text: 'text-[#27272A]' },
+  { id: 'emotion', label: 'Emotion', icon: '💔', bg: 'bg-[#ECECEE]', text: 'text-[#27272A]' },
 ];
 
 export const ReviewDesk: React.FC<ReviewDeskProps> = ({
@@ -53,7 +53,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
   setActiveTab,
 }) => {
   const [selectedPid, setSelectedPid] = useState<string>('');
-  const [filter, setFilter] = useState<string>('all');
+  const [filter, setFilter] = useState<'all' | 'single' | 'montage' | 'attention' | 'flagged' | 'disputed' | 'approved' | 'rejected'>('all');
   const [selectedSignal, setSelectedSignal] = useState<string>('all');
   const [selectedEpisode, setSelectedEpisode] = useState<string>('all');
   const [search, setSearch] = useState<string>('');
@@ -167,7 +167,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
     return filteredPromos[selectedIndex] || allPromos.find((p) => p.pid === selectedPid) || allPromos[0] || null;
   }, [filteredPromos, selectedIndex, allPromos, selectedPid]);
 
-  // Video playback tick simulation
+  // Video playback simulation
   useEffect(() => {
     let interval: any = null;
     if (isPlaying) {
@@ -218,7 +218,6 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
     if (!selectedPromo) return;
     const pid = selectedPromo.pid;
     if (decisions[pid] === 'reject') {
-      // Toggle off rejection
       setDecisions((prev) => ({ ...prev, [pid]: '' }));
       fetch('/api/reviews/decision', {
         method: 'POST',
@@ -323,67 +322,67 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
   const promoScore = selectedPromo?.score_100 || Math.round((selectedPromo?.composite || 0.85) * 100);
 
   return (
-    <div className="max-w-[1440px] mx-auto px-6 py-6 pb-20">
-      {/* 1. TOP HEADER & METRIC CARDS */}
-      <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
+    <div className="space-y-6 pb-20 font-sans select-none">
+      {/* 1. TOP HEADER & METRIC CARDS (TwelveLabs Unified Theme) */}
+      <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl font-extrabold text-[#111827] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#18181B] tracking-tight">
             Promo Review
           </h1>
-          <p className="text-sm font-normal text-[#64748B] mt-1">
+          <p className="text-xs font-normal text-[#71717A] mt-1">
             {dataset?.show || 'I Married a Broken Soldier. He was a Duke'} • 50 Episodes
           </p>
         </div>
 
-        {/* 3 Metric Cards matching reference image */}
+        {/* 3 Metric Cards in TwelveLabs rounded card aesthetic */}
         <div className="flex items-center gap-3">
           {/* Card 1: Candidates */}
-          <div className="bg-white border border-[#E5E7EB] rounded-2xl px-5 py-3 shadow-xs flex items-center gap-3.5 min-w-[136px]">
-            <Film className="w-5 h-5 text-slate-800" />
+          <div className="bg-white border border-[#E5E5EA] rounded-2xl px-5 py-3 shadow-xs flex items-center gap-3.5 min-w-[136px]">
+            <Film className="w-5 h-5 text-[#18181B]" />
             <div>
-              <div className="text-2xl font-bold font-mono text-[#111827] leading-none">
+              <div className="text-2xl font-bold font-mono text-[#18181B] leading-none">
                 {totalCount.toString().padStart(2, '0')}
               </div>
-              <div className="text-[11px] font-medium text-[#64748B] mt-1">Candidates</div>
+              <div className="text-[11px] font-medium text-[#71717A] mt-1">Candidates</div>
             </div>
           </div>
 
           {/* Card 2: High Attention */}
-          <div className="bg-white border border-[#E5E7EB] rounded-2xl px-5 py-3 shadow-xs flex items-center gap-3.5 min-w-[136px]">
-            <Star className="w-5 h-5 text-[#F59E0B] fill-[#F59E0B]" />
+          <div className="bg-white border border-[#E5E5EA] rounded-2xl px-5 py-3 shadow-xs flex items-center gap-3.5 min-w-[136px]">
+            <Star className="w-5 h-5 text-[#B45309] fill-[#F59E0B]" />
             <div>
-              <div className="text-2xl font-bold font-mono text-[#111827] leading-none">
+              <div className="text-2xl font-bold font-mono text-[#18181B] leading-none">
                 {highAttentionCount.toString().padStart(2, '0')}
               </div>
-              <div className="text-[11px] font-medium text-[#64748B] mt-1">High Attention</div>
+              <div className="text-[11px] font-medium text-[#71717A] mt-1">High Attention</div>
             </div>
           </div>
 
           {/* Card 3: Pending Export */}
-          <div className="bg-white border border-[#E5E7EB] rounded-2xl px-5 py-3 shadow-xs flex items-center gap-3.5 min-w-[136px]">
-            <CheckCircle2 className="w-5 h-5 text-[#16A34A] fill-[#16A34A] text-white" />
+          <div className="bg-white border border-[#E5E5EA] rounded-2xl px-5 py-3 shadow-xs flex items-center gap-3.5 min-w-[136px]">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 fill-emerald-100" />
             <div>
-              <div className="text-2xl font-bold font-mono text-[#111827] leading-none">
+              <div className="text-2xl font-bold font-mono text-[#18181B] leading-none">
                 {approvedCount.toString().padStart(2, '0')}
               </div>
-              <div className="text-[11px] font-medium text-[#64748B] mt-1">Pending Export</div>
+              <div className="text-[11px] font-medium text-[#71717A] mt-1">Pending Export</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 2. FILTER AND SEARCH TOOLBAR (Pill buttons matching reference image) */}
-      <div className="flex items-center justify-between gap-3 flex-wrap mb-5">
+      {/* 2. FILTER AND SEARCH TOOLBAR (TwelveLabs Minimalist Input Style) */}
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2.5 flex-wrap flex-1 min-w-[280px]">
           {/* Search Input */}
           <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E8E93]" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by dialogue, episode..."
-              className="bg-white border border-[#E5E7EB] rounded-full pl-9 pr-4 py-1.5 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#E8A72D] w-56 sm:w-64 shadow-xs"
+              className="bg-[#F8F8FA] border border-[#E5E5EA] hover:border-[#D1D1D6] rounded-xl pl-9 pr-4 py-2 text-xs text-[#18181B] placeholder-[#8E8E93] focus:outline-none focus:border-[#18181B] focus:bg-white w-56 sm:w-64 shadow-xs transition-colors"
             />
           </div>
 
@@ -392,7 +391,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
             <select
               value={selectedEpisode}
               onChange={(e) => setSelectedEpisode(e.target.value)}
-              className="bg-white border border-[#E5E7EB] rounded-full px-4 py-1.5 text-xs font-medium text-slate-700 shadow-xs cursor-pointer focus:outline-none focus:border-[#E8A72D] pr-7 appearance-none"
+              className="bg-[#F8F8FA] border border-[#E5E5EA] hover:border-[#D1D1D6] rounded-xl px-4 py-2 text-xs font-medium text-[#27272A] shadow-xs cursor-pointer focus:outline-none focus:border-[#18181B] focus:bg-white pr-7 appearance-none transition-colors"
             >
               <option value="all">All Episodes</option>
               {episodesList.map((ep) => (
@@ -401,7 +400,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                 </option>
               ))}
             </select>
-            <ChevronDown className="w-3 h-3 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <ChevronDown className="w-3 h-3 text-[#8E8E93] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
           {/* Category Signal Filter Dropdown */}
@@ -409,7 +408,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
             <select
               value={selectedSignal}
               onChange={(e) => setSelectedSignal(e.target.value)}
-              className="bg-white border border-[#E5E7EB] rounded-full px-4 py-1.5 text-xs font-medium text-slate-700 shadow-xs cursor-pointer focus:outline-none focus:border-[#E8A72D] pr-7 appearance-none"
+              className="bg-[#F8F8FA] border border-[#E5E5EA] hover:border-[#D1D1D6] rounded-xl px-4 py-2 text-xs font-medium text-[#27272A] shadow-xs cursor-pointer focus:outline-none focus:border-[#18181B] focus:bg-white pr-7 appearance-none transition-colors"
             >
               {SIGNALS.map((sig) => (
                 <option key={sig.id} value={sig.id}>
@@ -417,7 +416,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                 </option>
               ))}
             </select>
-            <ChevronDown className="w-3 h-3 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <ChevronDown className="w-3 h-3 text-[#8E8E93] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
           {/* Sort By Dropdown */}
@@ -425,19 +424,19 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="bg-white border border-[#E5E7EB] rounded-full px-4 py-1.5 text-xs font-medium text-slate-700 shadow-xs cursor-pointer focus:outline-none focus:border-[#E8A72D] pr-7 appearance-none"
+              className="bg-[#F8F8FA] border border-[#E5E5EA] hover:border-[#D1D1D6] rounded-xl px-4 py-2 text-xs font-medium text-[#27272A] shadow-xs cursor-pointer focus:outline-none focus:border-[#18181B] focus:bg-white pr-7 appearance-none transition-colors"
             >
               <option value="score">Sort by: Score</option>
               <option value="attention">Sort by: Attention</option>
               <option value="episode">Sort by: Episode</option>
               <option value="duration">Sort by: Duration</option>
             </select>
-            <ChevronDown className="w-3 h-3 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <ChevronDown className="w-3 h-3 text-[#8E8E93] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
         </div>
 
         {/* Pagination on Right */}
-        <div className="flex items-center gap-2 text-xs font-medium text-[#64748B]">
+        <div className="flex items-center gap-2 text-xs font-medium text-[#71717A]">
           <span>
             {filteredPromos.length > 0 ? selectedIndex + 1 : 0} of {filteredPromos.length}
           </span>
@@ -445,14 +444,14 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
             <button
               onClick={() => selectedIndex > 0 && setSelectedPid(filteredPromos[selectedIndex - 1].pid)}
               disabled={selectedIndex <= 0}
-              className="p-1 rounded-md bg-white border border-[#E5E7EB] hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+              className="p-1.5 rounded-lg bg-[#F8F8FA] border border-[#E5E5EA] hover:bg-[#ECECEE] text-[#18181B] disabled:opacity-40 cursor-pointer transition-colors"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => selectedIndex < filteredPromos.length - 1 && setSelectedPid(filteredPromos[selectedIndex + 1].pid)}
               disabled={selectedIndex >= filteredPromos.length - 1}
-              className="p-1 rounded-md bg-white border border-[#E5E7EB] hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+              className="p-1.5 rounded-lg bg-[#F8F8FA] border border-[#E5E5EA] hover:bg-[#ECECEE] text-[#18181B] disabled:opacity-40 cursor-pointer transition-colors"
             >
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
@@ -463,7 +462,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
       {/* 3. MAIN WORKSPACE (2-COLUMN LAYOUT) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* LEFT PANEL: RANKED CANDIDATE CARDS (38% width) */}
-        <div className="lg:col-span-5 xl:col-span-4 space-y-3 max-h-[820px] overflow-y-auto pr-1">
+        <div className="lg:col-span-5 xl:col-span-4 space-y-3 max-h-[820px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-neutral-300">
           {filteredPromos.map((p, idx) => {
             const isSelected = p.pid === selectedPid;
             const s = p.segments[0];
@@ -475,59 +474,63 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
               <div
                 key={p.pid}
                 onClick={() => setSelectedPid(p.pid)}
-                className={`bg-white rounded-xl p-3.5 border transition-all cursor-pointer relative shadow-xs ${
+                className={`bg-white rounded-2xl p-4 border transition-all cursor-pointer relative shadow-xs ${
                   isSelected
-                    ? 'border-2 border-[#F59E0B]'
-                    : 'border-[#E5E7EB] hover:border-slate-300'
+                    ? 'border-2 border-[#18181B] ring-1 ring-[#18181B]/15 shadow-sm'
+                    : 'border-[#E5E5EA] hover:border-[#8E8E93]'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
-                  {/* Left: Warm Amber/Yellow Rank Square & Episode Duration */}
+                  {/* Left: Rank Pill & Episode Duration */}
                   <div className="flex items-center gap-2 flex-wrap">
-                    <div className="w-7 h-7 rounded-lg bg-[#FBBF24] text-slate-950 font-extrabold text-xs flex items-center justify-center flex-shrink-0">
+                    <div className={`w-7 h-7 rounded-lg font-bold text-xs flex items-center justify-center flex-shrink-0 ${
+                      isSelected
+                        ? 'bg-[#18181B] text-white'
+                        : 'bg-[#ECECEE] text-[#18181B]'
+                    }`}>
                       #{p.rank || idx + 1}
                     </div>
-                    <span className="text-xs text-[#64748B] font-medium">
+                    <span className="text-xs text-[#71717A] font-medium">
                       Ep. {s.episode.toString().padStart(2, '0')} • {Math.round(p.duration)}s
                     </span>
                     {p.kind === 'montage' || (p.segments && p.segments.length > 1) ? (
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 border border-purple-200">
+                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-[#F0F0F2] text-[#18181B] border border-[#E0E0E4]">
                         Montage ({p.segments?.length || 2} clips)
                       </span>
                     ) : (
-                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                      <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-[#ECECEE] text-[#52525A]">
                         Single Cut
                       </span>
                     )}
                   </div>
 
-                  {/* Top Right: Mint Green Score Badge */}
+                  {/* Top Right: Score Badge in TwelveLabs Sleek Pill */}
                   <div className="flex items-center gap-1.5">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#DCFCE7] text-[#047857] font-mono font-bold text-xs">
-                      <TrendingUp className="w-3 h-3 text-[#047857]" />
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-[#ECECEE] text-[#18181B] font-mono font-bold text-xs border border-[#E0E0E4]">
+                      <TrendingUp className="w-3 h-3 text-[#18181B]" />
                       <span>{scoreVal}/100</span>
                     </span>
                   </div>
                 </div>
 
                 {/* Hook Line Quote */}
-                <div className="mt-2 mb-2.5">
-                  <h3 className="font-bold text-sm text-[#111827] line-clamp-1 leading-snug">
+                <div className="mt-2.5 mb-3">
+                  <h3 className="font-semibold text-sm text-[#18181B] line-clamp-2 leading-snug tracking-tight">
                     "{getHookText(p)}"
                   </h3>
                 </div>
 
-                {/* Bottom Row: Exact Category Pills & Selection Dot */}
+                {/* Bottom Row: Subtle Category Pills & Selection Indicator */}
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {/* Primary Signal Pill */}
-                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium ${sig.bg} ${sig.text}`}>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-[#ECECEE] text-[#27272A]">
                       <span>{sig.icon}</span>
                       <span>{sig.label}</span>
                     </span>
 
                     {/* Secondary High Intensity Pill */}
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#EDE9FE] text-[#6D28D9]">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-[#F0F0F2] text-[#27272A]">
                       <span>⚡</span>
                       <span>High Intensity</span>
                     </span>
@@ -535,31 +538,31 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
 
                   {/* Status Indicator */}
                   {isSelected && (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setWorkspaceView('trace');
                         }}
-                        className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 px-2 py-0.5 rounded-md border border-amber-300 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#18181B] bg-[#ECECEE] hover:bg-[#E0E0E4] px-2.5 py-0.5 rounded-md border border-[#D1D1D6] transition-colors cursor-pointer"
                         title="View Feature 6 Decision Trace"
                       >
-                        <Sparkles className="w-3 h-3 text-amber-700" />
+                        <Sparkles className="w-3 h-3 text-[#18181B]" />
                         <span>Trace</span>
                       </button>
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-[#D97706]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]"></span>
+                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#18181B]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#18181B]"></span>
                         <span>Selected</span>
                       </span>
                     </div>
                   )}
                   {!isSelected && decisionState === 'accept' && (
-                    <span className="inline-flex items-center gap-0.5 text-xs font-medium text-[#16A34A]">
+                    <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-emerald-700">
                       <Check className="w-3 h-3" /> Approved
                     </span>
                   )}
                   {!isSelected && decisionState === 'reject' && (
-                    <span className="inline-flex items-center gap-0.5 text-xs font-medium text-[#DC2626]">
+                    <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-rose-700">
                       <X className="w-3 h-3" /> Rejected
                     </span>
                   )}
@@ -570,30 +573,30 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
         </div>
 
         {/* RIGHT PANEL: SELECTED PROMO DETAILS & SCREENPLAY REVIEW (62% width) */}
-        <div className="lg:col-span-7 xl:col-span-8 bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs space-y-5">
+        <div className="lg:col-span-7 xl:col-span-8 bg-white border border-[#E5E5EA] rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
           {selectedPromo ? (
             <>
               {/* Header: Promo #, Hook Title, Episode, and Overall Score */}
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div>
-                  <div className="inline-flex items-center gap-1 text-xs font-semibold text-[#D97706]">
-                    <Star className="w-3.5 h-3.5 fill-current text-[#F59E0B]" />
+                  <div className="inline-flex items-center gap-1 text-xs font-semibold text-[#71717A]">
+                    <Star className="w-3.5 h-3.5 fill-current text-[#B45309]" />
                     <span>Promo #{selectedPromo.rank || selectedIndex + 1}</span>
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-[#111827] mt-1 tracking-tight">
+                  <h2 className="text-xl sm:text-2xl font-bold text-[#18181B] mt-1 tracking-tight leading-snug">
                     "{getHookText(selectedPromo)}"
                   </h2>
-                  <div className="flex items-center gap-2 text-xs font-medium text-[#64748B] mt-1 flex-wrap">
+                  <div className="flex items-center gap-2 text-xs font-medium text-[#71717A] mt-1.5 flex-wrap">
                     <span className="flex items-center gap-1">
                       📁 Episode {s0?.episode.toString().padStart(2, '0') || '02'}
                     </span>
                     <span>•</span>
                     <span>Duration: {Math.round(selectedPromo.duration)} seconds</span>
                     <span>•</span>
-                    <span className={`px-2 py-0.5 rounded text-[11px] font-bold border ${
+                    <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border ${
                       selectedPromo.kind === 'montage' || (selectedPromo.segments && selectedPromo.segments.length > 1)
-                        ? 'bg-purple-50 text-purple-700 border-purple-200'
-                        : 'bg-slate-100 text-slate-700 border-slate-200'
+                        ? 'bg-[#F0F0F2] text-[#18181B] border-[#E0E0E4]'
+                        : 'bg-[#ECECEE] text-[#52525A] border-[#D1D1D6]'
                     }`}>
                       {selectedPromo.kind === 'montage' || (selectedPromo.segments && selectedPromo.segments.length > 1)
                         ? `Montage (${selectedPromo.segments?.length || 2} Segments)`
@@ -602,37 +605,37 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                   </div>
                 </div>
 
-                {/* Score Pill in Mint Green & Feature 6 Switcher Button */}
+                {/* Score Pill in TwelveLabs Sleek Gray */}
                 <div className="flex items-center gap-2 flex-wrap">
                   <button
                     onClick={() => setWorkspaceView(workspaceView === 'trace' ? 'review' : 'trace')}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                    className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border ${
                       workspaceView === 'trace'
-                        ? 'bg-amber-500 text-slate-950 border-amber-600 shadow-sm ring-2 ring-amber-300'
-                        : 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100 hover:border-amber-400'
+                        ? 'bg-[#18181B] text-white border-[#18181B] shadow-xs'
+                        : 'bg-[#F0F0F2] hover:bg-[#E4E4E8] text-[#27272A] border-[#E0E0E4]'
                     }`}
                     title="Click to view full Feature 6 Explainability Decision Trace"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+                    <Sparkles className="w-3.5 h-3.5" />
                     <span>{workspaceView === 'trace' ? '← Back to Screenplay' : '✦ Feature 6: Explain Decision'}</span>
                   </button>
 
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#DCFCE7] text-[#047857] font-mono font-bold text-lg">
-                    <TrendingUp className="w-4 h-4 text-[#047857]" />
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#ECECEE] text-[#18181B] font-mono font-bold text-lg border border-[#E0E0E4]">
+                    <TrendingUp className="w-4 h-4 text-[#18181B]" />
                     <span>{promoScore}/100</span>
                   </div>
                 </div>
               </div>
 
               {/* View Switcher Tabs: Video/Teleprompter vs Feature 6 Explainability */}
-              <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-2 text-xs">
+              <div className="flex items-center justify-between border-b border-[#E5E5EA] pb-3 text-xs">
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setWorkspaceView('review')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-semibold transition-all cursor-pointer ${
                       workspaceView === 'review'
-                        ? 'bg-slate-900 text-white shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200'
+                        ? 'bg-[#18181B] text-white shadow-xs'
+                        : 'text-[#27272A] hover:bg-[#F0F0F2] border border-[#E5E5EA]'
                     }`}
                   >
                     <Film className="w-3.5 h-3.5" />
@@ -641,44 +644,44 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
 
                   <button
                     onClick={() => setWorkspaceView('trace')}
-                    className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-bold transition-all cursor-pointer border ${
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-semibold transition-all cursor-pointer border ${
                       workspaceView === 'trace'
-                        ? 'bg-amber-500 text-slate-950 border-amber-600 shadow-sm ring-2 ring-amber-300'
-                        : 'text-amber-900 bg-amber-50 hover:bg-amber-100 border-amber-300'
+                        ? 'bg-[#18181B] text-white shadow-xs'
+                        : 'text-[#27272A] hover:bg-[#F0F0F2] border-[#E5E5EA]'
                     }`}
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-amber-700" />
-                    <span>✦ Feature 6: Decision Trace & AI Reasoning</span>
-                    <span className="bg-amber-200 text-amber-950 text-[10px] px-1.5 py-0.2 rounded-full font-extrabold">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Feature 6: Decision Trace & AI Reasoning</span>
+                    <span className="bg-[#ECECEE] text-[#18181B] text-[10px] px-1.5 py-0.5 rounded-md font-bold">
                       6 Audits
                     </span>
                   </button>
                 </div>
 
-                <div className="text-[11px] text-slate-500 hidden sm:flex items-center gap-2">
-                  <span>Candidate: <code className="font-mono text-slate-700 font-bold">{selectedPromo.pid}</code></span>
+                <div className="text-[11px] text-[#71717A] hidden sm:flex items-center gap-2">
+                  <span>Candidate: <code className="font-mono text-[#18181B] font-bold">{selectedPromo.pid}</code></span>
                 </div>
               </div>
 
               {workspaceView === 'trace' ? (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-xl p-3.5">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-700">
-                        <Sparkles className="w-4 h-4 text-amber-700" />
+                  <div className="flex items-center justify-between bg-[#F8F8FA] border border-[#E5E5EA] rounded-2xl p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-[#ECECEE] flex items-center justify-center text-[#18181B]">
+                        <Sparkles className="w-4 h-4" />
                       </div>
                       <div>
-                        <span className="text-xs font-bold text-slate-900 block">
+                        <span className="text-xs font-bold text-[#18181B] block">
                           Feature 6 Active: Full AI Decision Trace & Explainability Engine
                         </span>
-                        <span className="text-[11px] text-slate-600">
-                          Complete audit of selection rationale, 6 dramatic signals, rubric judging breakdown, verbatim screenplay proof, and judge consensus.
+                        <span className="text-[11px] text-[#71717A]">
+                          Audit of selection rationale, 6 dramatic signals, rubric judging breakdown, and judge consensus.
                         </span>
                       </div>
                     </div>
                     <button
                       onClick={() => setWorkspaceView('review')}
-                      className="text-xs font-bold text-amber-950 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-lg border border-amber-300 transition-colors cursor-pointer"
+                      className="text-xs font-semibold text-[#18181B] bg-white hover:bg-[#ECECEE] px-3.5 py-1.5 rounded-xl border border-[#D1D1D6] transition-colors cursor-pointer shadow-xs"
                     >
                       ← Return to Video & Screenplay
                     </button>
@@ -696,244 +699,242 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
               ) : (
                 <>
                   {/* Video Preview Player & Why This Promo Works Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
-                {/* 16:9 Video Player matching reference image style */}
-                <div className="md:col-span-7 relative bg-[#1E1E24] rounded-xl overflow-hidden aspect-[16/10] flex flex-col justify-between shadow-sm">
-                  {/* Period Drama Cinematic Backdrop matching Reference */}
-                  <div className="absolute inset-0 bg-cover bg-center flex items-center justify-center overflow-hidden bg-stone-900">
-                    <img
-                      src="/duke_juliana_preview.jpg"
-                      alt="Duke and Juliana promo scene"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        // Fallback gracefully if image fails
-                        (e.target as HTMLElement).style.display = 'none';
-                      }}
-                    />
-                  </div>
-
-                  {/* Centered Play Button Overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center z-20">
-                    <button
-                      onClick={() => setIsPlaying(!isPlaying)}
-                      className="w-12 h-12 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center shadow-lg transform transition-transform hover:scale-105 cursor-pointer border border-white/20"
-                    >
-                      {isPlaying ? (
-                        <Pause className="w-5 h-5 fill-current" />
-                      ) : (
-                        <Play className="w-5 h-5 fill-current ml-0.5" />
-                      )}
-                    </button>
-                  </div>
-
-                  {/* Video Top Details */}
-                  <div className="relative z-10 p-2.5 flex justify-between items-center text-[10px] font-mono text-white/80">
-                    <span className="bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded">
-                      E{s0?.episode.toString().padStart(2, '0')} · {s0 ? fmtTime(s0.start) : '0:00'}
-                    </span>
-                    <span className="bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded text-[#F59E0B]">
-                      Safe 3s Cut
-                    </span>
-                  </div>
-
-                  {/* Video Bottom Player Controls Bar */}
-                  <div className="relative z-10 p-2.5 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex items-center justify-between text-xs text-white">
-                    <div className="flex items-center gap-1.5 font-mono text-[11px]">
-                      <span>{fmtTime(playbackTime)}</span>
-                      <span>/</span>
-                      <span className="text-slate-400">{fmtTime(selectedPromo.duration)}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2.5 text-white/90">
-                      <Volume2 className="w-4 h-4 cursor-pointer hover:text-white" />
-                      <Maximize2 className="w-4 h-4 cursor-pointer hover:text-white" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Column: "Why this promo works?" & Rubric Scores Grid */}
-                <div className="md:col-span-5 space-y-3">
-                  {/* Why this promo works? Callout Card in Cream / Amber Tint */}
-                  <div className="bg-[#FFFBEB] border border-[#FEF3C7] rounded-xl p-3.5 space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-[#111827]">
-                      <Lightbulb className="w-3.5 h-3.5 text-[#E8A72D] fill-[#E8A72D]" />
-                      <span>Why this promo works?</span>
-                    </div>
-                    <p className="text-xs text-[#475569] leading-relaxed">
-                      {selectedPromo.why || 'A sudden rejection creates immediate emotional conflict and ends with a cliffhanger.'}
-                    </p>
-                  </div>
-
-                  {/* 5 Compact Rubric Score Cards matching the reference layout */}
-                  <div className="space-y-2">
-                    {/* Top Row: Hook, Cliffhanger, Clarity (3 cards) */}
-                    <div className="grid grid-cols-3 gap-2">
-                      {/* Hook */}
-                      <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 flex items-center gap-2">
-                        <Target className="w-4 h-4 text-slate-700 flex-shrink-0" />
-                        <div>
-                          <div className="text-[10px] text-slate-500 font-medium">Hook</div>
-                          <div className="text-xs font-bold font-mono text-slate-900">
-                            {selectedPromo.scores?.hook_3s?.toFixed(0) || '5'} / 5
-                          </div>
-                        </div>
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+                    {/* 16:9 Video Player matching TwelveLabs dark minimalist player */}
+                    <div className="md:col-span-7 relative bg-[#0F0F11] border border-[#27272A] rounded-2xl overflow-hidden aspect-[16/10] flex flex-col justify-between shadow-xs">
+                      {/* Period Drama Cinematic Backdrop */}
+                      <div className="absolute inset-0 bg-cover bg-center flex items-center justify-center overflow-hidden bg-stone-900">
+                        <img
+                          src="/duke_juliana_preview.jpg"
+                          alt="Duke and Juliana promo scene"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = 'none';
+                          }}
+                        />
                       </div>
 
-                      {/* Cliffhanger */}
-                      <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 flex items-center gap-2">
-                        <span className="text-sm font-bold text-slate-700 flex-shrink-0">?</span>
-                        <div>
-                          <div className="text-[10px] text-slate-500 font-medium">Cliffhanger</div>
-                          <div className="text-xs font-bold font-mono text-slate-900">
-                            {selectedPromo.scores?.cliffhanger?.toFixed(0) || '5'} / 5
-                          </div>
-                        </div>
+                      {/* Centered Play Button Overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center z-20">
+                        <button
+                          onClick={() => setIsPlaying(!isPlaying)}
+                          className="w-12 h-12 rounded-full bg-black/80 hover:bg-black text-white flex items-center justify-center shadow-md transform transition-transform hover:scale-105 cursor-pointer border border-white/20"
+                        >
+                          {isPlaying ? (
+                            <Pause className="w-5 h-5 fill-current" />
+                          ) : (
+                            <Play className="w-5 h-5 fill-current ml-0.5" />
+                          )}
+                        </button>
                       </div>
 
-                      {/* Clarity */}
-                      <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-slate-700 flex-shrink-0" />
-                        <div>
-                          <div className="text-[10px] text-slate-500 font-medium">Clarity</div>
-                          <div className="text-xs font-bold font-mono text-slate-900">
-                            {selectedPromo.scores?.standalone?.toFixed(0) || '4'} / 5
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Bottom Row: Intensity, Relevance (2 cards) */}
-                    <div className="grid grid-cols-2 gap-2">
-                      {/* Intensity */}
-                      <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-slate-700 flex-shrink-0" />
-                        <div>
-                          <div className="text-[10px] text-slate-500 font-medium">Intensity</div>
-                          <div className="text-xs font-bold font-mono text-slate-900">
-                            {selectedPromo.scores?.intensity?.toFixed(0) || '5'} / 5
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Relevance */}
-                      <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 flex items-center gap-2">
-                        <Star className="w-4 h-4 text-slate-700 flex-shrink-0" />
-                        <div>
-                          <div className="text-[10px] text-slate-500 font-medium">Relevance</div>
-                          <div className="text-xs font-bold font-mono text-slate-900">
-                            {selectedPromo.scores?.plot_relevance?.toFixed(0) || '4'} / 5
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Feature 6 Action Button */}
-                    <button
-                      onClick={() => setWorkspaceView('trace')}
-                      className="w-full mt-2.5 py-2 px-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer border border-amber-600"
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-slate-950" />
-                      <span>✦ View Full Feature 6 Decision Trace (6 Audits) →</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Timeline Horizontal Solid Amber Bar */}
-              <div className="space-y-1.5 pt-1">
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1.5 font-semibold text-[#111827]">
-                    <Clock className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Timeline</span>
-                  </div>
-                  <span className="font-mono text-xs text-[#64748B]">
-                    {s0 ? fmtTime(s0.start) : '00:00:00'} – {sEnd ? fmtTime(sEnd.end) : '00:00:45'} ({Math.round(selectedPromo.duration)}s)
-                  </span>
-                </div>
-
-                {/* Bright Solid Amber Bar matching reference image */}
-                <div className="relative w-full h-2 bg-[#F1F5F9] rounded-full overflow-hidden">
-                  <div
-                    className="absolute top-0 bottom-0 bg-[#F59E0B] rounded-full transition-all"
-                    style={{ left: `${startPct}%`, width: `${widthPct}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Screenplay Preview matching reference image */}
-              <div className="space-y-2 pt-1">
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1.5 font-semibold text-[#111827]">
-                    <FileText className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Screenplay Preview</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs text-[#64748B]">
-                    <span className="inline-flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-[#FBBF24]"></span>
-                      <span>Hook (0–3s)</span>
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-[#F97316]"></span>
-                      <span>Cliffhanger</span>
-                    </span>
-                  </div>
-                </div>
-
-                {/* Screenplay Box */}
-                <div className="bg-[#F8FAFC] border border-[#E5E7EB] rounded-xl p-3.5 max-h-48 overflow-y-auto font-mono text-xs space-y-2">
-                  {excerptLines.length === 0 ? (
-                    <div className="space-y-1.5">
-                      <div className="p-1 rounded text-slate-900 flex items-center gap-3">
-                        <span className="text-slate-400 select-none w-4 text-right">1</span>
-                        <span className="bg-[#FEF08A] px-1 py-0.5 rounded text-slate-950 font-medium">
-                          JULIANA: I cannot marry you, Juliana.
+                      {/* Video Top Details */}
+                      <div className="relative z-10 p-3 flex justify-between items-center text-[10px] font-mono text-white/90">
+                        <span className="bg-black/60 backdrop-blur-xs px-2.5 py-1 rounded-md">
+                          E{s0?.episode.toString().padStart(2, '0')} · {s0 ? fmtTime(s0.start) : '0:00'}
+                        </span>
+                        <span className="bg-black/60 backdrop-blur-xs px-2.5 py-1 rounded-md text-amber-400 font-semibold">
+                          Safe 3s Cut
                         </span>
                       </div>
-                      <div className="p-1 text-slate-700 flex items-center gap-3">
-                        <span className="text-slate-400 select-none w-4 text-right">2</span>
-                        <span>DUKE: What?!</span>
-                      </div>
-                      <div className="p-1 text-slate-700 flex items-center gap-3">
-                        <span className="text-slate-400 select-none w-4 text-right">3</span>
-                        <span>JULIANA: This is not the end...</span>
+
+                      {/* Video Bottom Player Controls Bar */}
+                      <div className="relative z-10 p-3 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex items-center justify-between text-xs text-white">
+                        <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                          <span>{fmtTime(playbackTime)}</span>
+                          <span>/</span>
+                          <span className="text-white/60">{fmtTime(selectedPromo.duration)}</span>
+                        </div>
+
+                        <div className="flex items-center gap-3 text-white/90">
+                          <Volume2 className="w-4 h-4 cursor-pointer hover:text-white" />
+                          <Maximize2 className="w-4 h-4 cursor-pointer hover:text-white" />
+                        </div>
                       </div>
                     </div>
-                  ) : (
-                    excerptLines.map((lineStr, idx) => {
-                      const isHook = selectedPromo.hook_line_id && lineStr.includes(selectedPromo.hook_line_id);
-                      const isCliff = selectedPromo.cliffhanger_line_id && lineStr.includes(selectedPromo.cliffhanger_line_id);
-                      const lineIdMatch = lineStr.match(/\bE\d+_L\d+\b/);
-                      const lineId = lineIdMatch ? lineIdMatch[0] : '';
-                      const isHighlighted = highlightedLine && lineId === highlightedLine;
 
-                      return (
-                        <div
-                          key={idx}
-                          id={lineId ? `screenplay-line-${lineId}` : undefined}
-                          className={`flex items-start gap-3 p-1 rounded transition-all ${
-                            isHighlighted ? 'ring-2 ring-amber-500 bg-amber-100/90 shadow-xs' : ''
-                          }`}
-                        >
-                          <span className="text-slate-400 select-none w-4 text-right flex-shrink-0">
-                            {idx + 1}
-                          </span>
-                          {isHook ? (
-                            <span className="bg-[#FEF08A] px-1.5 py-0.5 rounded text-slate-950 font-medium">
-                              {lineStr}
-                            </span>
-                          ) : isCliff ? (
-                            <span className="bg-[#FED7AA] px-1.5 py-0.5 rounded text-slate-950 font-medium">
-                              {lineStr}
-                            </span>
-                          ) : (
-                            <span className="text-slate-700">{lineStr}</span>
-                          )}
+                    {/* Right Column: "Why this promo works?" & Rubric Scores Grid */}
+                    <div className="md:col-span-5 space-y-3.5">
+                      {/* Why this promo works? Callout Card */}
+                      <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-2xl p-4 space-y-1.5 shadow-xs">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#18181B] uppercase tracking-wider">
+                          <Lightbulb className="w-3.5 h-3.5 text-[#B45309]" />
+                          <span>Why this promo works?</span>
                         </div>
-                      );
-                    })
-                  )}
-                </div>
-              </div>
+                        <p className="text-xs text-[#3F3F46] leading-relaxed">
+                          {selectedPromo.why || 'A sudden rejection creates immediate emotional conflict and ends with a cliffhanger.'}
+                        </p>
+                      </div>
+
+                      {/* 5 Compact Rubric Score Cards in TwelveLabs subtle gray */}
+                      <div className="space-y-2">
+                        {/* Top Row: Hook, Cliffhanger, Clarity (3 cards) */}
+                        <div className="grid grid-cols-3 gap-2">
+                          {/* Hook */}
+                          <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-2.5 flex items-center gap-2">
+                            <Target className="w-3.5 h-3.5 text-[#71717A] flex-shrink-0" />
+                            <div>
+                              <div className="text-[10px] text-[#71717A] font-medium uppercase">Hook</div>
+                              <div className="text-xs font-bold font-mono text-[#18181B]">
+                                {selectedPromo.scores?.hook_3s?.toFixed(0) || '5'} / 5
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Cliffhanger */}
+                          <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-2.5 flex items-center gap-2">
+                            <span className="text-xs font-bold text-[#71717A] flex-shrink-0">?</span>
+                            <div>
+                              <div className="text-[10px] text-[#71717A] font-medium uppercase">Cliff</div>
+                              <div className="text-xs font-bold font-mono text-[#18181B]">
+                                {selectedPromo.scores?.cliffhanger?.toFixed(0) || '5'} / 5
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Clarity */}
+                          <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-2.5 flex items-center gap-2">
+                            <FileText className="w-3.5 h-3.5 text-[#71717A] flex-shrink-0" />
+                            <div>
+                              <div className="text-[10px] text-[#71717A] font-medium uppercase">Clarity</div>
+                              <div className="text-xs font-bold font-mono text-[#18181B]">
+                                {selectedPromo.scores?.standalone?.toFixed(0) || '4'} / 5
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Bottom Row: Intensity, Relevance (2 cards) */}
+                        <div className="grid grid-cols-2 gap-2">
+                          {/* Intensity */}
+                          <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-2.5 flex items-center gap-2">
+                            <Sparkles className="w-3.5 h-3.5 text-[#71717A] flex-shrink-0" />
+                            <div>
+                              <div className="text-[10px] text-[#71717A] font-medium uppercase">Intensity</div>
+                              <div className="text-xs font-bold font-mono text-[#18181B]">
+                                {selectedPromo.scores?.intensity?.toFixed(0) || '5'} / 5
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Relevance */}
+                          <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-2.5 flex items-center gap-2">
+                            <Star className="w-3.5 h-3.5 text-[#71717A] flex-shrink-0" />
+                            <div>
+                              <div className="text-[10px] text-[#71717A] font-medium uppercase">Relevance</div>
+                              <div className="text-xs font-bold font-mono text-[#18181B]">
+                                {selectedPromo.scores?.plot_relevance?.toFixed(0) || '4'} / 5
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Feature 6 Action Button */}
+                        <button
+                          onClick={() => setWorkspaceView('trace')}
+                          className="w-full mt-2 py-2 px-3 rounded-xl bg-[#18181B] hover:bg-black text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer"
+                        >
+                          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                          <span>View Feature 6 Decision Trace (6 Audits) →</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Timeline Scrubber Bar */}
+                  <div className="space-y-1.5 pt-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5 font-semibold text-[#18181B]">
+                        <Clock className="w-3.5 h-3.5 text-[#71717A]" />
+                        <span>Timeline</span>
+                      </div>
+                      <span className="font-mono text-xs text-[#71717A]">
+                        {s0 ? fmtTime(s0.start) : '00:00:00'} – {sEnd ? fmtTime(sEnd.end) : '00:00:45'} ({Math.round(selectedPromo.duration)}s)
+                      </span>
+                    </div>
+
+                    <div className="relative w-full h-2 bg-[#ECECEE] rounded-full overflow-hidden">
+                      <div
+                        className="absolute top-0 bottom-0 bg-[#18181B] rounded-full transition-all"
+                        style={{ left: `${startPct}%`, width: `${widthPct}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Screenplay Preview Box */}
+                  <div className="space-y-2 pt-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5 font-semibold text-[#18181B]">
+                        <FileText className="w-3.5 h-3.5 text-[#71717A]" />
+                        <span>Screenplay Preview</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-xs text-[#71717A]">
+                        <span className="inline-flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-[#18181B]"></span>
+                          <span>Hook (0–3s)</span>
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-[#8E8E93]"></span>
+                          <span>Cliffhanger</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Screenplay Box in TwelveLabs Clean Gray */}
+                    <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-2xl p-4 max-h-48 overflow-y-auto font-mono text-xs space-y-2 scrollbar-thin scrollbar-thumb-neutral-300">
+                      {excerptLines.length === 0 ? (
+                        <div className="space-y-1.5">
+                          <div className="p-1 rounded text-[#18181B] flex items-center gap-3">
+                            <span className="text-[#8E8E93] select-none w-4 text-right">1</span>
+                            <span className="bg-[#ECECEE] px-1.5 py-0.5 rounded text-[#18181B] font-medium">
+                              JULIANA: I cannot marry you, Juliana.
+                            </span>
+                          </div>
+                          <div className="p-1 text-[#52525A] flex items-center gap-3">
+                            <span className="text-[#8E8E93] select-none w-4 text-right">2</span>
+                            <span>DUKE: What?!</span>
+                          </div>
+                          <div className="p-1 text-[#52525A] flex items-center gap-3">
+                            <span className="text-[#8E8E93] select-none w-4 text-right">3</span>
+                            <span>JULIANA: This is not the end...</span>
+                          </div>
+                        </div>
+                      ) : (
+                        excerptLines.map((lineStr, idx) => {
+                          const isHook = selectedPromo.hook_line_id && lineStr.includes(selectedPromo.hook_line_id);
+                          const isCliff = selectedPromo.cliffhanger_line_id && lineStr.includes(selectedPromo.cliffhanger_line_id);
+                          const lineIdMatch = lineStr.match(/\bE\d+_L\d+\b/);
+                          const lineId = lineIdMatch ? lineIdMatch[0] : '';
+                          const isHighlighted = highlightedLine && lineId === highlightedLine;
+
+                          return (
+                            <div
+                              key={idx}
+                              id={lineId ? `screenplay-line-${lineId}` : undefined}
+                              className={`flex items-start gap-3 p-1 rounded transition-all ${
+                                isHighlighted ? 'ring-2 ring-[#18181B] bg-[#ECECEE] shadow-xs' : ''
+                              }`}
+                            >
+                              <span className="text-[#8E8E93] select-none w-4 text-right flex-shrink-0">
+                                {idx + 1}
+                              </span>
+                              {isHook ? (
+                                <span className="bg-[#ECECEE] px-1.5 py-0.5 rounded text-[#18181B] font-medium border border-[#D1D1D6]">
+                                  {lineStr}
+                                </span>
+                              ) : isCliff ? (
+                                <span className="bg-[#F0F0F2] px-1.5 py-0.5 rounded text-[#18181B] font-medium border border-[#D1D1D6]">
+                                  {lineStr}
+                                </span>
+                              ) : (
+                                <span className="text-[#52525A]">{lineStr}</span>
+                              )}
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
 
                   {/* FEATURE 6: EXPLAINABILITY & DECISION TRACEABILITY */}
                   <div id="feature6-panel" className="pt-2">
@@ -946,36 +947,36 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                 </>
               )}
 
-              {/* Action / Decision Footer matching reference image */}
-              <div className="pt-2 flex items-center justify-between gap-4 flex-wrap">
+              {/* Action / Decision Footer matching TwelveLabs Theme */}
+              <div className="pt-2 flex items-center justify-between gap-4 flex-wrap border-t border-[#E5E5EA]">
                 {/* Keyboard Shortcuts Hint */}
-                <div className="flex items-center gap-2.5 text-xs text-[#64748B]">
+                <div className="flex items-center gap-3 text-xs text-[#71717A]">
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 rounded bg-[#0F172A] text-white font-mono text-[10px] font-bold">J</kbd>
+                    <kbd className="px-1.5 py-0.5 rounded bg-[#18181B] text-white font-mono text-[10px] font-bold">J</kbd>
                     <span>Previous</span>
                   </span>
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 rounded bg-[#0F172A] text-white font-mono text-[10px] font-bold">K</kbd>
+                    <kbd className="px-1.5 py-0.5 rounded bg-[#18181B] text-white font-mono text-[10px] font-bold">K</kbd>
                     <span>Next</span>
                   </span>
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 rounded bg-[#0F172A] text-white font-mono text-[10px] font-bold">A</kbd>
+                    <kbd className="px-1.5 py-0.5 rounded bg-[#18181B] text-white font-mono text-[10px] font-bold">A</kbd>
                     <span>Approve</span>
                   </span>
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 rounded bg-[#0F172A] text-white font-mono text-[10px] font-bold">R</kbd>
+                    <kbd className="px-1.5 py-0.5 rounded bg-[#18181B] text-white font-mono text-[10px] font-bold">R</kbd>
                     <span>Reject</span>
                   </span>
                 </div>
 
-                {/* Approve & Reject Buttons (Exact Match to Reference Image) */}
+                {/* Approve & Reject Buttons (TwelveLabs Modern Styling) */}
                 <div className="flex items-center gap-2.5">
                   <button
                     onClick={handleOpenReject}
-                    className={`inline-flex items-center gap-1.5 px-6 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    className={`inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                       decisions[selectedPromo.pid] === 'reject'
-                        ? 'bg-red-600 text-white shadow-xs'
-                        : 'bg-[#FEF2F2] text-[#DC2626] border border-[#FECACA] hover:bg-red-100'
+                        ? 'bg-rose-600 text-white shadow-xs'
+                        : 'bg-[#FEF2F2] text-[#DC2626] border border-[#FECACA] hover:bg-rose-100'
                     }`}
                   >
                     <X className="w-3.5 h-3.5" />
@@ -984,10 +985,10 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
 
                   <button
                     onClick={handleApprove}
-                    className={`inline-flex items-center gap-1.5 px-6 py-2 rounded-lg text-xs font-semibold text-white shadow-xs transition-all cursor-pointer ${
+                    className={`inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl text-xs font-semibold text-white shadow-xs transition-all cursor-pointer ${
                       decisions[selectedPromo.pid] === 'accept'
                         ? 'bg-emerald-700 ring-2 ring-emerald-400'
-                        : 'bg-[#22C55E] hover:bg-[#16A34A]'
+                        : 'bg-[#18181B] hover:bg-black'
                     }`}
                   >
                     <Check className="w-3.5 h-3.5" />
@@ -997,7 +998,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
               </div>
             </>
           ) : (
-            <div className="text-center py-20 text-slate-400 font-mono text-xs">
+            <div className="text-center py-20 text-[#8E8E93] font-mono text-xs">
               No candidate selected.
             </div>
           )}
@@ -1007,20 +1008,20 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
       {/* Human Editorial Rejection Reason Modal (Feature 2) */}
       {rejectModalOpen && selectedPromo && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xl max-w-md w-full p-6 text-slate-800 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+          <div className="bg-white rounded-2xl border border-[#E5E5EA] shadow-xl max-w-md w-full p-6 text-[#18181B] animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E5E5EA] mb-4">
               <div>
-                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-[#18181B] flex items-center gap-2">
                   <X className="w-4 h-4 text-red-600" />
                   Editorial Rejection Feedback
                 </h3>
-                <p className="text-[11px] text-slate-500 mt-0.5">
+                <p className="text-[11px] text-[#71717A] mt-0.5">
                   Candidate #{selectedPromo.rank} · PID: {selectedPromo.pid} · Ep. {selectedPromo.segments[0]?.episode}
                 </p>
               </div>
               <button
                 onClick={() => setRejectModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                className="text-[#8E8E93] hover:text-[#18181B] p-1 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1028,13 +1029,13 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-xs font-semibold text-[#52525A] mb-1.5">
                   Rejection Reason Category <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={rejectionCategory}
                   onChange={(e) => setRejectionCategory(e.target.value)}
-                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-amber-400 cursor-pointer"
+                  className="w-full text-xs bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-2.5 font-medium text-[#18181B] focus:outline-none focus:border-[#18181B] cursor-pointer"
                 >
                   <option value="weak_hook">Weak hook (Opening 0–3s lacks scroll-stopping grip)</option>
                   <option value="weak_cliffhanger">Weak cliffhanger (Cutoff lacks unresolved tension)</option>
@@ -1050,35 +1051,35 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Reviewer Notes / Critique <span className="text-slate-400 font-normal">(Optional)</span>
+                <label className="block text-xs font-semibold text-[#52525A] mb-1.5">
+                  Reviewer Notes / Critique <span className="text-[#8E8E93] font-normal">(Optional)</span>
                 </label>
                 <textarea
                   rows={3}
                   placeholder="Explain why this promo doesn't work for social feeds..."
                   value={rejectionComment}
                   onChange={(e) => setRejectionComment(e.target.value)}
-                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-amber-400 resize-none font-sans"
+                  className="w-full text-xs bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-3 text-[#18181B] placeholder-[#8E8E93] focus:outline-none focus:border-[#18181B] resize-none font-sans"
                 />
               </div>
 
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100 text-[11px] text-slate-500 leading-relaxed">
-                <span className="font-semibold text-slate-700">Audit Separation:</span> Human editorial rejections are stored separately from automated validation failures in the Failure Analysis dashboard.
+              <div className="p-3 bg-[#F8F8FA] rounded-xl border border-[#E5E5EA] text-[11px] text-[#71717A] leading-relaxed">
+                <span className="font-semibold text-[#18181B]">Audit Separation:</span> Human editorial rejections are stored separately from automated validation failures in the Failure Analysis dashboard.
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2.5 mt-5 pt-3 border-t border-slate-100">
+            <div className="flex items-center justify-end gap-2.5 mt-5 pt-3 border-t border-[#E5E5EA]">
               <button
                 type="button"
                 onClick={() => setRejectModalOpen(false)}
-                className="px-3 py-1.5 text-xs text-slate-600 hover:text-slate-800 font-medium cursor-pointer"
+                className="px-4 py-2 text-xs text-[#71717A] hover:text-[#18181B] font-medium cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleConfirmReject}
-                className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                className="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer"
               >
                 Confirm Rejection
               </button>
