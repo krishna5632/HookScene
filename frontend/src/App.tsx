@@ -52,7 +52,6 @@ export const App: React.FC = () => {
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        onOpenApiKeyModal={() => setActiveTab('run')}
       />
 
       {/* Main Workspace Column */}
