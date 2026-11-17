@@ -364,17 +364,17 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
   return (
     <div className="space-y-6 pb-20 font-sans select-none">
       {/* CARD 1: UPLOAD SCREENPLAY ASSET (TwelveLabs Exact Card 1 Design) */}
-      <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 md:p-8 shadow-xs">
-        <div className="flex items-center justify-between mb-5">
+      <div className="bg-white rounded-3xl border border-[#E5E5EA] p-6 md:p-8 shadow-xs">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <span className="w-6 h-6 rounded-full border border-neutral-300 text-neutral-700 flex items-center justify-center text-xs font-semibold">
+            <span className="w-6 h-6 rounded-full border border-[#D1D1D6] text-[#18181B] flex items-center justify-center text-xs font-semibold">
               1
             </span>
-            <h2 className="text-base font-semibold text-neutral-900">
+            <h2 className="text-[17px] font-semibold text-[#18181B] tracking-tight">
               Upload a screenplay asset
             </h2>
           </div>
-          <ChevronDown size={18} className="text-neutral-400" />
+          <ChevronDown size={18} className="text-[#8E8E93]" />
         </div>
 
         {/* Large Minimalist Dropzone Area */}
@@ -385,7 +385,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             e.preventDefault();
             if (e.dataTransfer.files.length) handleCustomFiles(e.dataTransfer.files);
           }}
-          className="border border-dashed border-neutral-300 hover:border-neutral-500 rounded-2xl py-12 px-6 flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-neutral-50/50 hover:bg-neutral-50"
+          className="border border-dashed border-[#D1D1D6] hover:border-[#8E8E93] rounded-2xl py-14 px-6 flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-[#F8F8FA] hover:bg-[#F3F3F5]"
         >
           <input
             type="file"
@@ -396,28 +396,29 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             className="hidden"
           />
 
-          <div className="w-10 h-10 rounded-xl bg-white border border-neutral-200 flex items-center justify-center text-neutral-700 shadow-xs mb-3">
-            <UploadCloud size={20} className="text-neutral-700" />
+          {/* Simple clean upward arrow (TwelveLabs style) */}
+          <div className="w-10 h-10 rounded-xl bg-white border border-[#E5E5EA] flex items-center justify-center text-[#18181B] shadow-xs mb-3">
+            <UploadCloud size={20} className="text-[#18181B]" />
           </div>
 
-          <div className="text-sm font-semibold text-neutral-900 mb-2">
+          <div className="text-[15px] font-semibold text-[#18181B] mb-2 tracking-tight">
             Upload screenplay asset
           </div>
 
           <div className="flex items-center gap-2 mb-4 flex-wrap justify-center">
-            <span className="px-2.5 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-xs font-medium">
+            <span className="px-2.5 py-1 rounded-md bg-[#ECECEE] text-[#52525A] text-xs font-medium">
               File size ≤ 20 MB
             </span>
-            <span className="px-2.5 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-xs font-medium">
-              Target duration 20s–60s
+            <span className="px-2.5 py-1 rounded-md bg-[#ECECEE] text-[#52525A] text-xs font-medium">
+              Duration 20s–60s
             </span>
-            <span className="px-2.5 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-xs font-medium">
+            <span className="px-2.5 py-1 rounded-md bg-[#ECECEE] text-[#52525A] text-xs font-medium">
               .zip / .txt / .srt
             </span>
           </div>
 
           {/* Preset Buttons Underneath Dropzone */}
-          <div className="flex items-center gap-2 text-xs text-neutral-500 flex-wrap justify-center pt-2">
+          <div className="flex items-center gap-2 text-xs text-[#71717A] flex-wrap justify-center pt-2">
             <span>Or import from</span>
             <button
               type="button"
@@ -427,10 +428,10 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
                 setStagedFiles([]);
                 addLog('INGEST', 'Staged official 50-episode reference show.', 'info');
               }}
-              className={`px-3 py-1 rounded-lg border font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-lg border font-medium transition-colors ${
                 isUsingBenchmark
-                  ? 'bg-neutral-900 text-white border-neutral-900'
-                  : 'bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-100'
+                  ? 'bg-[#18181B] text-white border-[#18181B]'
+                  : 'bg-white border-[#D1D1D6] text-[#27272A] hover:bg-[#ECECEE]'
               }`}
             >
               🎬 50-Episode Benchmark Show
@@ -441,7 +442,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
                 e.stopPropagation();
                 loadSamplePreset('new_test_episode_01.txt', 'Episode 01 Test Script');
               }}
-              className="px-3 py-1 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100 font-medium transition-colors"
+              className="px-3 py-1.5 rounded-lg border border-[#D1D1D6] bg-white text-[#27272A] hover:bg-[#ECECEE] font-medium transition-colors"
             >
               ⚡ Ep. 01 Confrontation (.txt)
             </button>
@@ -451,7 +452,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
                 e.stopPropagation();
                 loadSamplePreset('new_test_episode_02.txt', 'Episode 02 Betrayal Script');
               }}
-              className="px-3 py-1 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100 font-medium transition-colors"
+              className="px-3 py-1.5 rounded-lg border border-[#D1D1D6] bg-white text-[#27272A] hover:bg-[#ECECEE] font-medium transition-colors"
             >
               🔥 Ep. 02 Betrayal (.txt)
             </button>
@@ -461,10 +462,10 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
         {/* Staged Assets List */}
         <div className="mt-4">
           {isUsingBenchmark ? (
-            <div className="flex items-center justify-between text-xs font-mono text-neutral-700 bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-2.5">
+            <div className="flex items-center justify-between text-xs font-mono text-[#27272A] bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl px-4 py-2.5">
               <div className="flex items-center gap-2">
                 <CheckCircle2 size={16} className="text-emerald-600" />
-                <span className="font-semibold text-neutral-900">Loaded:</span>
+                <span className="font-semibold text-[#18181B]">Loaded:</span>
                 <span>sample_show.zip (50 episodes · 14,820 lines · 190.7 KB)</span>
               </div>
               <span className="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded">
@@ -473,7 +474,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             </div>
           ) : stagedFiles.length > 0 ? (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs font-semibold text-neutral-500 pb-1">
+              <div className="flex items-center justify-between text-xs font-semibold text-[#71717A] pb-1">
                 <span>Staged Assets ({stagedFiles.length})</span>
                 <button
                   onClick={() => {
@@ -488,14 +489,14 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
               {stagedFiles.map((sf, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between text-xs font-mono text-neutral-800 bg-neutral-50 border border-neutral-200 rounded-lg px-3.5 py-2"
+                  className="flex items-center justify-between text-xs font-mono text-[#18181B] bg-[#F8F8FA] border border-[#E5E5EA] rounded-lg px-3.5 py-2"
                 >
                   <span className="truncate">
-                    {sf.name} <span className="text-neutral-400 font-sans">({(sf.size / 1024).toFixed(1)} KB)</span>
+                    {sf.name} <span className="text-[#8E8E93] font-sans">({(sf.size / 1024).toFixed(1)} KB)</span>
                   </span>
                   <button
                     onClick={() => removeFile(idx)}
-                    className="text-neutral-400 hover:text-rose-600 p-1"
+                    className="text-[#8E8E93] hover:text-rose-600 p-1"
                   >
                     <X size={14} />
                   </button>
@@ -503,7 +504,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
               ))}
             </div>
           ) : (
-            <div className="text-xs text-neutral-400 text-center py-2">
+            <div className="text-xs text-[#8E8E93] text-center py-2">
               Nothing loaded yet. Choose the benchmark show or drop your scripts above.
             </div>
           )}
@@ -511,17 +512,17 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
       </div>
 
       {/* CARD 2: TRY SUGGESTED PROMPTS & WORKFLOWS (TwelveLabs Exact Card 2 Design) */}
-      <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 md:p-8 shadow-xs">
-        <div className="flex items-center justify-between mb-5">
+      <div className="bg-white rounded-3xl border border-[#E5E5EA] p-6 md:p-8 shadow-xs">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <span className="w-6 h-6 rounded-full border border-neutral-300 text-neutral-700 flex items-center justify-center text-xs font-semibold">
+            <span className="w-6 h-6 rounded-full border border-[#D1D1D6] text-[#18181B] flex items-center justify-center text-xs font-semibold">
               2
             </span>
-            <h2 className="text-base font-semibold text-neutral-900">
-              Try suggested workflows & engine configuration
+            <h2 className="text-[17px] font-semibold text-[#18181B] tracking-tight">
+              Try suggested prompts
             </h2>
           </div>
-          <ChevronDown size={18} className="text-neutral-400" />
+          <ChevronDown size={18} className="text-[#8E8E93]" />
         </div>
 
         {/* Suggested Prompts 2-Column Grid (TwelveLabs Style) */}
@@ -529,8 +530,8 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
           {[
             {
               id: 'p1',
-              title: '# Generate 20s–60s viral hooks from dialogue',
-              desc: 'Enforces cold open within first 3 seconds, cuts mid-conflict',
+              title: '# Generate hashtags and topics from dialogue hooks',
+              desc: 'Enforces 3s cold open, conflict detection, and viral potential',
               action: () => {
                 setMode('ai');
                 setProfile('fast');
@@ -538,15 +539,15 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             },
             {
               id: 'p2',
-              title: '⚡ Rule-based baseline (Instant, no key needed)',
-              desc: 'Algorithmic keyword cadence & acoustic boundary cuts in ~5s',
+              title: 'Summarize this episode into 20s–60s promo candidates',
+              desc: 'Algorithmic keyword cadence & acoustic boundary cuts',
               action: () => {
                 setMode('baseline');
               },
             },
             {
               id: 'p3',
-              title: '🎯 Continuous single cuts (High-Tension drama)',
+              title: 'What are highlighted moments of this video series?',
               desc: 'Extracts unbroken 35s scenes ending on open cliffhangers',
               action: () => {
                 setMontage(false);
@@ -554,7 +555,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             },
             {
               id: 'p4',
-              title: '🎬 Multi-scene montages (2–3 Segment hook compilation)',
+              title: 'Chapterize this video into high-tension narrative clips',
               desc: 'Combines cold open hook with second dramatic reveal',
               action: () => {
                 setMontage(true);
@@ -562,7 +563,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             },
             {
               id: 'p5',
-              title: '📊 Quality & consistency audit (Feature 1–4)',
+              title: 'Classify this video based on YouTube categories. Output as JSON format',
               desc: 'Scores candidates across 5 rubric factors with ground truth check',
               action: () => {
                 setActiveTab('f1_quality');
@@ -570,7 +571,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             },
             {
               id: 'p6',
-              title: '🔍 Decision traceability & attribution (Feature 6)',
+              title: 'Which audience is the video suitable for, and why?',
               desc: 'Inspect exact dialogue lines, judge weights, and signal triggers',
               action: () => {
                 setActiveTab('f6_explainability');
@@ -580,12 +581,12 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             <div
               key={prompt.id}
               onClick={prompt.action}
-              className="p-3.5 rounded-xl border border-neutral-200/80 hover:border-neutral-400 bg-neutral-50/40 hover:bg-neutral-50 cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-xl border border-[#E5E5EA] hover:border-[#8E8E93] bg-[#FAFAFC] hover:bg-white cursor-pointer transition-all flex flex-col justify-between"
             >
-              <div className="text-xs font-medium text-neutral-800 mb-1">
+              <div className="text-[13px] font-medium text-[#27272A] mb-1">
                 {prompt.title}
               </div>
-              <div className="text-[11px] text-neutral-500">
+              <div className="text-[11px] text-[#71717A]">
                 {prompt.desc}
               </div>
             </div>
@@ -593,23 +594,23 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
         </div>
 
         {/* Engine Settings Row */}
-        <div className="p-5 rounded-xl border border-neutral-200/80 bg-neutral-50/30 space-y-4">
-          <div className="text-xs font-bold text-neutral-900 uppercase tracking-wider">
-            Engine Controls
+        <div className="p-5 rounded-2xl border border-[#E5E5EA] bg-[#F8F8FA] space-y-4">
+          <div className="text-xs font-bold text-[#18181B] uppercase tracking-wider">
+            Engine Controls & Configuration
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {/* Mode Selector */}
             <div>
-              <label className="block text-xs font-medium text-neutral-700 mb-1">
+              <label className="block text-xs font-medium text-[#52525A] mb-1">
                 Engine Mode
               </label>
-              <div className="flex rounded-lg border border-neutral-200 p-0.5 bg-white">
+              <div className="flex rounded-lg border border-[#D1D1D6] p-0.5 bg-white">
                 <button
                   type="button"
                   onClick={() => setMode('ai')}
                   className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                    mode === 'ai' ? 'bg-neutral-900 text-white' : 'text-neutral-600 hover:text-neutral-900'
+                    mode === 'ai' ? 'bg-[#18181B] text-white' : 'text-[#52525A] hover:text-[#18181B]'
                   }`}
                 >
                   AI Pipeline
@@ -618,7 +619,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
                   type="button"
                   onClick={() => setMode('baseline')}
                   className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                    mode === 'baseline' ? 'bg-neutral-900 text-white' : 'text-neutral-600 hover:text-neutral-900'
+                    mode === 'baseline' ? 'bg-[#18181B] text-white' : 'text-[#52525A] hover:text-[#18181B]'
                   }`}
                 >
                   Rules Only
@@ -628,14 +629,14 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
 
             {/* Provider Selector */}
             <div>
-              <label className="block text-xs font-medium text-neutral-700 mb-1">
+              <label className="block text-xs font-medium text-[#52525A] mb-1">
                 Model Provider
               </label>
               <select
                 value={provider}
                 onChange={(e) => setProvider(e.target.value)}
                 disabled={mode === 'baseline'}
-                className="w-full bg-white border border-neutral-200 rounded-lg px-3 py-1.5 text-xs text-neutral-800 focus:outline-none focus:border-neutral-400 disabled:opacity-50"
+                className="w-full bg-white border border-[#D1D1D6] rounded-lg px-3 py-1.5 text-xs text-[#18181B] focus:outline-none focus:border-[#8E8E93] disabled:opacity-50"
               >
                 <option value="gemini">Google Gemini (Flash Lite)</option>
                 <option value="openai">OpenAI (GPT-4o-mini)</option>
@@ -645,14 +646,14 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
 
             {/* Speed / Depth Profile */}
             <div>
-              <label className="block text-xs font-medium text-neutral-700 mb-1">
+              <label className="block text-xs font-medium text-[#52525A] mb-1">
                 Speed & Cost Profile
               </label>
               <select
                 value={profile}
                 onChange={(e) => setProfile(e.target.value)}
                 disabled={mode === 'baseline'}
-                className="w-full bg-white border border-neutral-200 rounded-lg px-3 py-1.5 text-xs text-neutral-800 focus:outline-none focus:border-neutral-400 disabled:opacity-50"
+                className="w-full bg-white border border-[#D1D1D6] rounded-lg px-3 py-1.5 text-xs text-[#18181B] focus:outline-none focus:border-[#8E8E93] disabled:opacity-50"
               >
                 <option value="fast">Fast (full show ≤ 3 min)</option>
                 <option value="free_tier">Free Key (≤ 5 episodes, rate-limited)</option>
@@ -664,7 +665,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
           {/* API Key Vault Input (Only for AI Mode) */}
           {mode === 'ai' && (
             <div className="pt-1">
-              <label className="block text-xs font-medium text-neutral-700 mb-1">
+              <label className="block text-xs font-medium text-[#52525A] mb-1">
                 API Key (stays local in your browser)
               </label>
               <div className="relative">
@@ -673,12 +674,12 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
                   value={apiKey}
                   onChange={(e) => handleApiKeyChange(e.target.value)}
                   placeholder="Enter Gemini API key (e.g. AIzaSy...)"
-                  className="w-full bg-white border border-neutral-200 rounded-xl px-3.5 py-2.5 text-xs font-mono text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-neutral-500"
+                  className="w-full bg-white border border-[#D1D1D6] rounded-xl px-3.5 py-2.5 text-xs font-mono text-[#18181B] placeholder-[#8E8E93] focus:outline-none focus:border-[#18181B]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowApiKey(!showApiKey)}
-                  className="absolute right-3 top-2.5 text-neutral-400 hover:text-neutral-700"
+                  className="absolute right-3 top-2.5 text-[#8E8E93] hover:text-[#18181B]"
                 >
                   {showApiKey ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
@@ -687,13 +688,13 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
           )}
 
           {/* Action Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-2 border-t border-neutral-200 gap-4">
-            <label className="flex items-center gap-2 text-xs font-medium text-neutral-700 cursor-pointer">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-2 border-t border-[#E5E5EA] gap-4">
+            <label className="flex items-center gap-2 text-xs font-medium text-[#27272A] cursor-pointer">
               <input
                 type="checkbox"
                 checked={montage}
                 onChange={(e) => setMontage(e.target.checked)}
-                className="w-4 h-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-400 accent-neutral-900"
+                className="w-4 h-4 rounded border-[#D1D1D6] text-[#18181B] focus:ring-black accent-black"
               />
               <span>Generate Multi-Scene Montages (2–3 clip compilation)</span>
             </label>
@@ -701,10 +702,10 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             <button
               onClick={handleRun}
               disabled={loading}
-              className={`px-6 py-2.5 rounded-xl font-semibold text-xs text-white transition-all flex items-center justify-center gap-2 shadow-sm ${
+              className={`px-6 py-2.5 rounded-xl font-semibold text-xs text-white transition-all flex items-center justify-center gap-2 shadow-xs ${
                 loading
-                  ? 'bg-neutral-400 cursor-not-allowed'
-                  : 'bg-black hover:bg-neutral-800 cursor-pointer active:scale-95'
+                  ? 'bg-[#8E8E93] cursor-not-allowed'
+                  : 'bg-[#18181B] hover:bg-black cursor-pointer active:scale-95'
               }`}
             >
               {loading ? (
@@ -731,83 +732,69 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
       </div>
 
       {/* CARD 3: EXPLORE MORE EXAMPLES (TwelveLabs Exact Card 3 Design) */}
-      <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 md:p-8 shadow-xs">
-        <div className="flex items-center justify-between mb-5">
+      <div className="bg-white rounded-3xl border border-[#E5E5EA] p-6 md:p-8 shadow-xs">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <span className="w-6 h-6 rounded-full border border-neutral-300 text-neutral-700 flex items-center justify-center text-xs font-semibold">
-              3
-            </span>
-            <h2 className="text-base font-semibold text-neutral-900">
+            <h2 className="text-[17px] font-semibold text-[#18181B] tracking-tight">
               Explore more examples
             </h2>
           </div>
-          <span className="text-xs text-neutral-400 font-medium">Click to inspect in Review Desk</span>
+          <span className="text-xs text-[#8E8E93] font-medium">Click to inspect in Review Desk</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             {
               id: 'ex1',
-              title: 'Ep. 02: Betrayal & Cold Open',
-              hook: '"I cannot marry you, Juliana."',
+              title: 'Create a police report with exact timestamps',
+              desc: 'Ep. 02: "I cannot marry you, Juliana." (35s)',
               kind: 'Continuous Single Cut',
-              duration: '35s',
               score: '91/100',
-              badgeColor: 'bg-amber-100 text-amber-900',
             },
             {
               id: 'ex2',
-              title: 'Ep. 02: Montage & Confrontation',
-              hook: '"I cannot marry you..." + Reveal',
+              title: 'Make content based recommendations',
+              desc: 'Ep. 02: Betrayal & Gold Gown Montage (45s)',
               kind: 'Multi-Scene Montage',
-              duration: '45s',
               score: '86/100',
-              badgeColor: 'bg-purple-100 text-purple-900',
             },
             {
               id: 'ex3',
-              title: 'Ep. 01: High-Stakes Confrontation',
-              hook: '"You should turn around, Juliana."',
+              title: 'Generate video description that fits your needs',
+              desc: 'Ep. 01: High-Stakes Confrontation (51s)',
               kind: 'Continuous Single Cut',
-              duration: '51s',
               score: '85/100',
-              badgeColor: 'bg-blue-100 text-blue-900',
             },
             {
               id: 'ex4',
-              title: 'Ep. 11: Theft & Suspense Hook',
-              hook: '"Your husband stole my gold pocket watch!"',
+              title: 'Understand the visual elements on a deeper level',
+              desc: 'Ep. 11: Theft & Suspense Hook (34s)',
               kind: 'Continuous Single Cut',
-              duration: '34s',
               score: '88/100',
-              badgeColor: 'bg-emerald-100 text-emerald-900',
             },
           ].map((item) => (
             <div
               key={item.id}
               onClick={() => setActiveTab('review')}
-              className="p-4 rounded-xl border border-neutral-200/80 hover:border-neutral-400 bg-neutral-50/40 hover:bg-neutral-50 cursor-pointer transition-all flex flex-col justify-between"
+              className="p-5 rounded-2xl border border-[#EAEAEF] hover:border-[#8E8E93] bg-[#F8F8FA] hover:bg-white cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.badgeColor}`}>
-                    {item.score}
-                  </span>
-                  <span className="text-[11px] text-neutral-400 font-mono">
-                    {item.duration}
-                  </span>
+                {/* Yellow/Amber square icon matching TwelveLabs screenshot */}
+                <div className="w-8 h-8 rounded-lg bg-[#FEF3C7] border border-[#FDE68A] flex items-center justify-center text-[#B45309] mb-3">
+                  <PlayCircle size={17} />
                 </div>
-                <div className="font-semibold text-xs text-neutral-900 mb-1">
+
+                <div className="font-semibold text-[13px] text-[#18181B] mb-1.5 leading-snug">
                   {item.title}
                 </div>
-                <div className="text-xs text-neutral-600 italic line-clamp-2 mb-3">
-                  {item.hook}
+                <div className="text-xs text-[#71717A] mb-3">
+                  {item.desc}
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-neutral-200/60 text-[11px] text-neutral-500 font-medium">
+              <div className="flex items-center justify-between pt-2 border-t border-[#E5E5EA] text-[11px] text-[#71717A]">
                 <span>{item.kind}</span>
-                <span className="text-neutral-900 font-semibold group-hover:underline">Open →</span>
+                <span className="font-semibold text-[#18181B]">{item.score}</span>
               </div>
             </div>
           ))}

@@ -4,9 +4,10 @@
 
 @layer base {
   body {
-    background-color: #F8FAFC;
-    color: #111827;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #FAFAFC;
+    color: #18181B;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.012em;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

@@ -3,23 +3,25 @@ import { ActiveTab } from '../types';
 import {
   Plus,
   Rocket,
-  Film,
+  Home,
+  Box,
+  Search,
   Sparkles,
-  BarChart2,
+  SlidersHorizontal,
+  Scan,
+  Shapes,
+  Lock,
+  Sliders,
+  HelpCircle,
+  PanelLeftClose,
+  PanelLeftOpen,
   ShieldCheck,
   AlertTriangle,
   GitCompare,
   CheckCircle2,
   Cpu,
   Layers,
-  Lock,
-  Settings,
-  HelpCircle,
-  PanelLeftClose,
-  PanelLeftOpen,
-  FileText,
-  Sliders,
-  PlayCircle
+  FileText
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -35,32 +37,51 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
-  const navItems = [
+  // Group 1: Overview & Data
+  const mainItems = [
     {
       id: 'review' as ActiveTab,
-      label: 'Review Desk',
-      icon: Film,
-      badge: 'Main',
-    },
-    {
-      id: 'run' as ActiveTab,
-      label: 'Run Studio',
-      icon: Sparkles,
-      badge: 'Engine',
+      label: 'Overview',
+      icon: Home,
     },
     {
       id: 'analytics' as ActiveTab,
-      label: 'Analytics',
-      icon: BarChart2,
+      label: 'My Data',
+      icon: Box,
     },
   ];
 
-  const auditItems = [
+  // Group 2: Core Operations (TwelveLabs Search, Analyze, Segment, Embed, Examples)
+  const intelligenceItems = [
+    {
+      id: 'review' as ActiveTab,
+      label: 'Search',
+      icon: Search,
+    },
+    {
+      id: 'run' as ActiveTab,
+      label: 'Analyze',
+      icon: Sparkles,
+    },
     {
       id: 'f1_quality' as ActiveTab,
-      label: 'Quality Audit (F1)',
-      icon: ShieldCheck,
+      label: 'Segment',
+      icon: SlidersHorizontal,
     },
+    {
+      id: 'f6_explainability' as ActiveTab,
+      label: 'Embed',
+      icon: Scan,
+    },
+    {
+      id: 'method' as ActiveTab,
+      label: 'Examples',
+      icon: Shapes,
+    },
+  ];
+
+  // Group 3: Comprehensive Evaluation & Audits (F1-F5)
+  const auditItems = [
     {
       id: 'f2_failures' as ActiveTab,
       label: 'Format Rules (F2)',
@@ -78,220 +99,229 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'f5_performance' as ActiveTab,
-      label: 'Cost & Tokens (F5)',
+      label: 'Cost & Latency (F5)',
       icon: Cpu,
-    },
-    {
-      id: 'f6_explainability' as ActiveTab,
-      label: 'Decision Trace (F6)',
-      icon: Layers,
-    },
-    {
-      id: 'method' as ActiveTab,
-      label: 'Architecture',
-      icon: FileText,
     },
   ];
 
   return (
     <aside
-      className={`h-screen bg-white border-r border-neutral-200/80 flex flex-col transition-all duration-300 z-30 select-none ${
+      className={`h-screen bg-[#F0F0F2] border-r border-[#E0E0E4] flex flex-col transition-all duration-200 z-30 select-none font-sans ${
         collapsed ? 'w-20' : 'w-64'
       }`}
     >
-      {/* Brand Logo Header */}
-      <div className="h-16 px-5 flex items-center justify-between border-b border-neutral-100">
+      {/* 1. BRAND LOGO HEADER (TwelveLabs Stepped Mark + Logo) */}
+      <div className="h-16 px-6 flex items-center justify-between">
         <div
           onClick={() => setActiveTab('review')}
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-2.5 cursor-pointer group"
         >
-          {/* Geometric AI Logo Mark (TwelveLabs style) */}
-          <div className="w-8 h-8 rounded-xl bg-black flex items-center justify-center text-white font-black text-sm tracking-tighter shadow-sm group-hover:scale-105 transition-transform">
-            <span className="text-amber-400 mr-0.5">H</span>S
-          </div>
+          {/* Digitized Stepped Mark (exact TwelveLabs horse/creature style) */}
+          <svg
+            className="w-7 h-7 text-[#18181B]"
+            viewBox="0 0 28 28"
+            fill="currentColor"
+          >
+            {/* Stepped barcode lines mimicking TwelveLabs logo */}
+            <rect x="2" y="6" width="6" height="2.2" rx="0.5" />
+            <rect x="5" y="9.5" width="8" height="2.2" rx="0.5" />
+            <rect x="3" y="13" width="12" height="2.2" rx="0.5" />
+            <rect x="7" y="16.5" width="9" height="2.2" rx="0.5" />
+            <rect x="11" y="20" width="5" height="2.2" rx="0.5" />
+            <rect x="18" y="7" width="5" height="2.2" rx="0.5" />
+            <rect x="19" y="10.5" width="4" height="2.2" rx="0.5" />
+            <rect x="20" y="14" width="3" height="2.2" rx="0.5" />
+          </svg>
+
           {!collapsed && (
-            <div className="flex flex-col">
-              <span className="font-bold text-neutral-900 tracking-tight text-[15px] leading-tight">
-                HookScene
-              </span>
-              <span className="text-[10px] text-neutral-400 font-medium uppercase tracking-wider">
-                Video Intelligence
-              </span>
-            </div>
+            <span className="font-bold text-[#18181B] tracking-tight text-[17px] leading-none">
+              HookScene
+            </span>
           )}
         </div>
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 transition-colors"
+          className="text-[#71717A] hover:text-[#18181B] p-1 rounded-lg hover:bg-[#E4E4E8] transition-colors"
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          {collapsed ? <PanelLeftOpen size={17} /> : <PanelLeftClose size={17} />}
+          {collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
         </button>
       </div>
 
-      {/* Top Action Buttons (TwelveLabs "+ New" & "Get Started") */}
-      <div className="p-3.5 space-y-2 border-b border-neutral-100">
+      {/* 2. TOP ACTION BUTTONS: "New +" & "Get Started 🚀" */}
+      <div className="px-5 pt-1 pb-4 space-y-2.5">
+        {/* Prominent Deep Black "New +" Button */}
         <button
           onClick={() => setActiveTab('run')}
-          className={`w-full bg-black hover:bg-neutral-800 text-white rounded-xl py-2.5 px-3.5 flex items-center justify-between text-sm font-medium shadow-sm transition-all ${
+          className={`w-full bg-[#18181B] hover:bg-[#000000] text-white rounded-2xl py-3 px-5 flex items-center justify-between text-[15px] font-semibold shadow-xs transition-all ${
             collapsed ? 'justify-center px-0' : ''
           }`}
-          title="Start a new extraction run"
+          title="Start new analysis"
         >
-          <span className="flex items-center gap-2">
-            <Plus size={16} className="text-amber-400" />
-            {!collapsed && <span>New Run</span>}
-          </span>
-          {!collapsed && (
-            <span className="text-[11px] bg-neutral-800 text-neutral-300 px-1.5 py-0.5 rounded font-mono">
-              +
-            </span>
-          )}
+          {!collapsed && <span>New</span>}
+          <Plus size={18} className="text-white stroke-[2.5]" />
         </button>
 
+        {/* Medium-Gray "Get Started 🚀" Active Pill */}
         {!collapsed && (
           <button
             onClick={() => setActiveTab('run')}
-            className={`w-full rounded-xl py-2 px-3 flex items-center gap-2.5 text-xs font-semibold transition-colors ${
+            className={`w-full rounded-xl py-2 px-4 flex items-center justify-between text-[14px] font-semibold transition-colors ${
               activeTab === 'run'
-                ? 'bg-neutral-100 text-neutral-900 font-bold'
-                : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900'
+                ? 'bg-[#BDC0C8] text-[#111113] shadow-xs'
+                : 'bg-transparent text-[#27272A] hover:bg-[#E4E4E8]'
             }`}
           >
-            <Rocket size={15} className="text-neutral-500" />
             <span>Get Started</span>
+            <Rocket size={16} className="text-[#18181B]" />
           </button>
         )}
       </div>
 
-      {/* Navigation Links Scrollable Area */}
-      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-5 scrollbar-thin scrollbar-thumb-neutral-200">
-        {/* Core Workspace Section */}
-        <div>
-          {!collapsed && (
-            <div className="px-3 pb-1.5 text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
-              Workspace
-            </div>
-          )}
-          <div className="space-y-0.5">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all ${
-                    isActive
-                      ? 'bg-neutral-900 text-white font-semibold shadow-xs'
-                      : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50'
-                  } ${collapsed ? 'justify-center px-0' : ''}`}
-                  title={item.label}
-                >
-                  <Icon
-                    size={17}
-                    className={
-                      isActive
-                        ? 'text-amber-400'
-                        : 'text-neutral-500 group-hover:text-neutral-900'
-                    }
-                  />
-                  {!collapsed && (
-                    <span className="flex-1 text-left truncate">{item.label}</span>
-                  )}
-                  {!collapsed && item.badge && !isActive && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-500 font-medium">
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+      {/* 3. NAVIGATION ITEMS LIST (Label on LEFT, Icon on RIGHT) */}
+      <div className="flex-1 overflow-y-auto px-5 py-2 space-y-6 scrollbar-thin scrollbar-thumb-neutral-300">
+        {/* Section 1: Overview & My Data */}
+        <div className="space-y-1">
+          {mainItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.label}
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-[14px] transition-colors group ${
+                  isActive
+                    ? 'bg-[#BDC0C8] text-[#111113] font-semibold shadow-xs'
+                    : 'text-[#27272A] hover:text-[#000000] hover:bg-[#E4E4E8] font-normal'
+                } ${collapsed ? 'justify-center px-0' : ''}`}
+                title={item.label}
+              >
+                {!collapsed && <span>{item.label}</span>}
+                <Icon
+                  size={18}
+                  className={`shrink-0 ${
+                    isActive ? 'text-[#111113]' : 'text-[#3F3F46] group-hover:text-[#18181B]'
+                  }`}
+                />
+              </button>
+            );
+          })}
         </div>
 
-        {/* Audit & Intelligence Features (F1–F6) */}
-        <div>
-          {!collapsed && (
-            <div className="px-3 pb-1.5 text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
-              Audit & Intelligence
+        {/* Section 2: Core Capabilities (Search, Analyze, Segment, Embed, Examples) */}
+        <div className="space-y-1">
+          {intelligenceItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.label}
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-[14px] transition-colors group ${
+                  isActive
+                    ? 'bg-[#BDC0C8] text-[#111113] font-semibold shadow-xs'
+                    : 'text-[#27272A] hover:text-[#000000] hover:bg-[#E4E4E8] font-normal'
+                } ${collapsed ? 'justify-center px-0' : ''}`}
+                title={item.label}
+              >
+                {!collapsed && <span>{item.label}</span>}
+                <Icon
+                  size={18}
+                  className={`shrink-0 ${
+                    isActive ? 'text-[#111113]' : 'text-[#3F3F46] group-hover:text-[#18181B]'
+                  }`}
+                />
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Section 3: Deep Audit & Ground Truth Features */}
+        {!collapsed && (
+          <div className="space-y-1 pt-2 border-t border-[#E0E0E4]/60">
+            <div className="px-3.5 pb-1 text-[11px] font-bold tracking-wider text-[#71717A] uppercase">
+              Audits & Tests
             </div>
-          )}
-          <div className="space-y-0.5">
             {auditItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
               return (
                 <button
-                  key={item.id}
+                  key={item.label}
                   onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-[13px] font-medium transition-all ${
+                  className={`w-full flex items-center justify-between px-3.5 py-1.5 rounded-xl text-[13px] transition-colors group ${
                     isActive
-                      ? 'bg-neutral-900 text-white font-semibold shadow-xs'
-                      : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50'
-                  } ${collapsed ? 'justify-center px-0' : ''}`}
+                      ? 'bg-[#BDC0C8] text-[#111113] font-semibold shadow-xs'
+                      : 'text-[#3F3F46] hover:text-[#000000] hover:bg-[#E4E4E8] font-normal'
+                  }`}
                   title={item.label}
                 >
+                  <span className="truncate">{item.label}</span>
                   <Icon
                     size={16}
-                    className={
-                      isActive ? 'text-amber-400' : 'text-neutral-400'
-                    }
+                    className={`shrink-0 ${
+                      isActive ? 'text-[#111113]' : 'text-[#52525B] group-hover:text-[#18181B]'
+                    }`}
                   />
-                  {!collapsed && (
-                    <span className="flex-1 text-left truncate">{item.label}</span>
-                  )}
                 </button>
               );
             })}
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Bottom Footer Section (TwelveLabs API Keys, Settings, Docs, User) */}
-      <div className="p-3 border-t border-neutral-100 space-y-1">
+      {/* 4. BOTTOM FOOTER SECTION (API Keys, Settings, Help, Collapse) */}
+      <div className="px-5 py-4 border-t border-[#E0E0E4] space-y-1">
         <button
           onClick={() => {
             if (onOpenApiKeyModal) onOpenApiKeyModal();
             else setActiveTab('run');
           }}
-          className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-[13px] font-medium text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 transition-colors ${
+          className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-[14px] text-[#27272A] hover:text-[#000000] hover:bg-[#E4E4E8] font-normal transition-colors group ${
             collapsed ? 'justify-center px-0' : ''
           }`}
-          title="API Keys & Engine Provider"
+          title="API Keys Vault"
         >
-          <Lock size={16} className="text-neutral-400" />
           {!collapsed && <span>API Keys</span>}
+          <Lock size={17} className="text-[#3F3F46] group-hover:text-[#18181B]" />
+        </button>
+
+        <button
+          onClick={() => setActiveTab('run')}
+          className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-[14px] text-[#27272A] hover:text-[#000000] hover:bg-[#E4E4E8] font-normal transition-colors group ${
+            collapsed ? 'justify-center px-0' : ''
+          }`}
+          title="Engine Settings"
+        >
+          {!collapsed && <span>Settings</span>}
+          <Sliders size={17} className="text-[#3F3F46] group-hover:text-[#18181B]" />
         </button>
 
         <a
           href="https://github.com/krishna5632/HookScene"
           target="_blank"
           rel="noreferrer"
-          className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-[13px] font-medium text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 transition-colors ${
+          className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-[14px] text-[#27272A] hover:text-[#000000] hover:bg-[#E4E4E8] font-normal transition-colors group ${
             collapsed ? 'justify-center px-0' : ''
           }`}
-          title="GitHub Repository & Specification"
+          title="Documentation & GitHub Repo"
         >
-          <HelpCircle size={16} className="text-neutral-400" />
-          {!collapsed && <span>Docs & Repo</span>}
+          {!collapsed && <span>Help</span>}
+          <HelpCircle size={17} className="text-[#3F3F46] group-hover:text-[#18181B]" />
         </a>
 
-        {/* Collapse toggle at very bottom */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-[13px] font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 transition-colors ${
+          className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-[14px] text-[#27272A] hover:text-[#000000] hover:bg-[#E4E4E8] font-normal transition-colors group ${
             collapsed ? 'justify-center px-0' : ''
           }`}
         >
+          {!collapsed && <span>Collapse</span>}
           {collapsed ? (
-            <PanelLeftOpen size={16} className="text-neutral-400" />
+            <PanelLeftOpen size={17} className="text-[#3F3F46]" />
           ) : (
-            <>
-              <PanelLeftClose size={16} className="text-neutral-400" />
-              <span>Collapse</span>
-            </>
+            <PanelLeftClose size={17} className="text-[#3F3F46]" />
           )}
         </button>
       </div>
