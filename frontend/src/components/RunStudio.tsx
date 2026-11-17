@@ -511,7 +511,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
         </div>
       </div>
 
-      {/* CARD 2: TRY SUGGESTED PROMPTS & WORKFLOWS (TwelveLabs Exact Card 2 Design) */}
+      {/* CARD 2: ENGINE CONFIGURATION & PIPELINE EXECUTION */}
       <div className="bg-white rounded-3xl border border-[#E5E5EA] p-6 md:p-8 shadow-xs">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -519,78 +519,10 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
               2
             </span>
             <h2 className="text-[17px] font-semibold text-[#18181B] tracking-tight">
-              Try suggested prompts
+              Engine Configuration & Execution
             </h2>
           </div>
           <ChevronDown size={18} className="text-[#8E8E93]" />
-        </div>
-
-        {/* Suggested Prompts 2-Column Grid (TwelveLabs Style) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-          {[
-            {
-              id: 'p1',
-              title: '# Generate hashtags and topics from dialogue hooks',
-              desc: 'Enforces 3s cold open, conflict detection, and viral potential',
-              action: () => {
-                setMode('ai');
-                setProfile('fast');
-              },
-            },
-            {
-              id: 'p2',
-              title: 'Summarize this episode into 20s–60s promo candidates',
-              desc: 'Algorithmic keyword cadence & acoustic boundary cuts',
-              action: () => {
-                setMode('baseline');
-              },
-            },
-            {
-              id: 'p3',
-              title: 'What are highlighted moments of this video series?',
-              desc: 'Extracts unbroken 35s scenes ending on open cliffhangers',
-              action: () => {
-                setMontage(false);
-              },
-            },
-            {
-              id: 'p4',
-              title: 'Chapterize this video into high-tension narrative clips',
-              desc: 'Combines cold open hook with second dramatic reveal',
-              action: () => {
-                setMontage(true);
-              },
-            },
-            {
-              id: 'p5',
-              title: 'Classify this video based on YouTube categories. Output as JSON format',
-              desc: 'Scores candidates across 5 rubric factors with ground truth check',
-              action: () => {
-                setActiveTab('f1_quality');
-              },
-            },
-            {
-              id: 'p6',
-              title: 'Which audience is the video suitable for, and why?',
-              desc: 'Inspect exact dialogue lines, judge weights, and signal triggers',
-              action: () => {
-                setActiveTab('f6_explainability');
-              },
-            },
-          ].map((prompt) => (
-            <div
-              key={prompt.id}
-              onClick={prompt.action}
-              className="p-4 rounded-xl border border-[#E5E5EA] hover:border-[#8E8E93] bg-[#FAFAFC] hover:bg-white cursor-pointer transition-all flex flex-col justify-between"
-            >
-              <div className="text-[13px] font-medium text-[#27272A] mb-1">
-                {prompt.title}
-              </div>
-              <div className="text-[11px] text-[#71717A]">
-                {prompt.desc}
-              </div>
-            </div>
-          ))}
         </div>
 
         {/* Engine Settings Row */}
