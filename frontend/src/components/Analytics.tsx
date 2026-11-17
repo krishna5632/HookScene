@@ -612,17 +612,17 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto overflow-y-auto max-h-[460px] border-t border-slate-200">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px]">
+              <thead className="sticky top-0 z-10 bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px] shadow-xs">
                 <tr>
-                  <th className="py-2.5 px-3">Run & PID</th>
-                  <th className="py-2.5 px-3">Episode</th>
-                  <th className="py-2.5 px-3">Category</th>
-                  <th className="py-2.5 px-3">Source</th>
-                  <th className="py-2.5 px-3">Description & Critique</th>
-                  <th className="py-2.5 px-3">Reviewer Comment</th>
-                  <th className="py-2.5 px-3">Timestamp</th>
+                  <th className="py-2.5 px-3 bg-slate-50">Run & PID</th>
+                  <th className="py-2.5 px-3 bg-slate-50">Episode</th>
+                  <th className="py-2.5 px-3 bg-slate-50">Category</th>
+                  <th className="py-2.5 px-3 bg-slate-50">Source</th>
+                  <th className="py-2.5 px-3 bg-slate-50">Description & Critique</th>
+                  <th className="py-2.5 px-3 bg-slate-50">Reviewer Comment</th>
+                  <th className="py-2.5 px-3 bg-slate-50">Timestamp</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -857,18 +857,18 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
 
           {/* Tab 1: Matched Common Candidates */}
           {consistencyTab === 'matched' && (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto overflow-y-auto max-h-[460px]">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px]">
+                <thead className="sticky top-0 z-10 bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px] shadow-xs">
                   <tr>
-                    <th className="py-2.5 px-3">Run A ({runA})</th>
-                    <th className="py-2.5 px-3">Run B ({runB})</th>
-                    <th className="py-2.5 px-3">Episode</th>
-                    <th className="py-2.5 px-3">Line Spans (A vs B)</th>
-                    <th className="py-2.5 px-3">Temporal IoU</th>
-                    <th className="py-2.5 px-3">Rank (A &rarr; B)</th>
-                    <th className="py-2.5 px-3">Score (A &rarr; B)</th>
-                    <th className="py-2.5 px-3">Timing Deltas (&Delta;Start, &Delta;End)</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Run A ({runA})</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Run B ({runB})</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Episode</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Line Spans (A vs B)</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Temporal IoU</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Rank (A &rarr; B)</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Score (A &rarr; B)</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Timing Deltas (&Delta;Start, &Delta;End)</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-mono text-slate-700">
@@ -920,15 +920,15 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
 
           {/* Tab 2: Newly Appearing Candidates */}
           {consistencyTab === 'new' && (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto overflow-y-auto max-h-[460px]">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px]">
+                <thead className="sticky top-0 z-10 bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px] shadow-xs">
                   <tr>
-                    <th className="py-2.5 px-3">PID</th>
-                    <th className="py-2.5 px-3">Episode</th>
-                    <th className="py-2.5 px-3">Rank in {runB}</th>
-                    <th className="py-2.5 px-3">Score</th>
-                    <th className="py-2.5 px-3">Hook Dialogue Preview</th>
+                    <th className="py-2.5 px-3 bg-slate-50">PID</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Episode</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Rank in {runB}</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Score</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Hook Dialogue Preview</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -956,15 +956,15 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
 
           {/* Tab 3: Missing Candidates */}
           {consistencyTab === 'missing' && (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto overflow-y-auto max-h-[460px]">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px]">
+                <thead className="sticky top-0 z-10 bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px] shadow-xs">
                   <tr>
-                    <th className="py-2.5 px-3">PID</th>
-                    <th className="py-2.5 px-3">Episode</th>
-                    <th className="py-2.5 px-3">Rank in {runA}</th>
-                    <th className="py-2.5 px-3">Score</th>
-                    <th className="py-2.5 px-3">Hook Dialogue Preview</th>
+                    <th className="py-2.5 px-3 bg-slate-50">PID</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Episode</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Rank in {runA}</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Score</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Hook Dialogue Preview</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700">
