@@ -70,16 +70,16 @@ export const Architecture: React.FC = () => {
     <div className="max-w-[1400px] mx-auto py-8 px-4 sm:px-6 pb-20">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-2xl font-bold text-[#18181B] tracking-tight">
           Pipeline Architecture & Engineering
         </h1>
-        <p className="text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
+        <p className="text-sm text-[#71717A] mt-1 max-w-3xl leading-relaxed">
           A hybrid neuro-symbolic design: language models identify emotional peaks while deterministic code strictly enforces editorial hard rules.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left: 6-Stage Flow */}
+        {/* Left: 6-Stage Flow (TwelveLabs Theme) */}
         <div className="lg:col-span-7 space-y-3">
           {STAGES.map((st) => {
             const isSelected = st.id === selectedId;
@@ -87,26 +87,26 @@ export const Architecture: React.FC = () => {
               <div
                 key={st.id}
                 onClick={() => setSelectedId(st.id)}
-                className={`p-4 rounded-xl border transition-all cursor-pointer ${
+                className={`p-4.5 rounded-2xl border transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-amber-50/40 border-[#E8A72D] shadow-xs translate-x-1'
-                    : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+                    ? 'bg-white border-2 border-[#18181B] ring-1 ring-[#18181B]/15 shadow-sm'
+                    : 'bg-white border-[#E5E5EA] hover:border-[#8E8E93] shadow-xs'
                 }`}
               >
-                <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2.5">
-                    <span className={`font-mono text-xs font-bold px-2 py-0.5 rounded ${
-                      isSelected ? 'bg-[#E8A72D] text-slate-950' : 'bg-slate-100 text-slate-700'
+                    <span className={`font-mono text-xs font-bold px-2.5 py-1 rounded-lg ${
+                      isSelected ? 'bg-[#18181B] text-white' : 'bg-[#ECECEE] text-[#18181B]'
                     }`}>
                       {st.num}
                     </span>
-                    <h3 className="font-semibold text-sm text-slate-900">{st.title}</h3>
+                    <h3 className="font-semibold text-sm text-[#18181B]">{st.title}</h3>
                   </div>
-                  <span className="text-[11px] font-mono font-medium text-slate-500 bg-slate-50 px-2 py-0.5 rounded border border-slate-200">
+                  <span className="text-[11px] font-mono font-medium text-[#27272A] bg-[#F0F0F2] px-2.5 py-1 rounded-md border border-[#E0E0E4]">
                     {st.role}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 leading-relaxed pl-9">
+                <p className="text-xs text-[#71717A] leading-relaxed pl-10">
                   {st.desc}
                 </p>
               </div>
@@ -116,36 +116,36 @@ export const Architecture: React.FC = () => {
 
         {/* Right: Stage Deep-Dive */}
         <div className="lg:col-span-5">
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4 sticky top-24">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <span className="text-xs font-mono font-bold text-slate-950 bg-[#E8A72D] px-2.5 py-0.5 rounded">
+          <div className="bg-white border border-[#E5E5EA] rounded-3xl p-7 shadow-xs space-y-4 sticky top-24">
+            <div className="flex items-center justify-between border-b border-[#E5E5EA] pb-3">
+              <span className="text-xs font-mono font-bold text-white bg-[#18181B] px-3 py-1 rounded-lg">
                 STAGE {activeStage.num}
               </span>
-              <span className="text-xs font-mono text-slate-600 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded">
+              <span className="text-xs font-mono text-[#27272A] bg-[#F0F0F2] border border-[#E0E0E4] px-2.5 py-1 rounded-lg">
                 {activeStage.role}
               </span>
             </div>
 
-            <h2 className="text-lg font-bold text-slate-900 leading-tight">
+            <h2 className="text-lg font-bold text-[#18181B] leading-tight">
               {activeStage.title}
             </h2>
 
-            <div className="space-y-3 text-xs leading-relaxed text-slate-600">
+            <div className="space-y-3 text-xs leading-relaxed text-[#3F3F46]">
               <p>{activeStage.desc}</p>
-              <div className="p-3.5 bg-amber-50/60 rounded-lg border border-amber-200">
-                <span className="font-mono text-[10px] font-bold uppercase text-amber-800 block mb-1">
+              <div className="p-4 bg-[#F8F8FA] rounded-2xl border border-[#E5E5EA]">
+                <span className="font-mono text-[10px] font-bold uppercase text-[#18181B] block mb-1">
                   Enforcement Principle:
                 </span>
-                <span className="font-medium text-amber-950">{activeStage.rule}</span>
+                <span className="font-medium text-[#27272A]">{activeStage.rule}</span>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-mono text-slate-400">
+            <div className="pt-2 border-t border-[#E5E5EA] flex items-center justify-between text-xs font-mono text-[#71717A]">
               <span className="flex items-center gap-1.5">
-                <Cpu className="w-3.5 h-3.5 text-slate-500" />
+                <Cpu className="w-3.5 h-3.5 text-[#18181B]" />
                 Neuro-symbolic execution
               </span>
-              <span className="text-emerald-600 font-semibold flex items-center gap-1">
+              <span className="text-emerald-700 font-semibold flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 Deterministic
               </span>
