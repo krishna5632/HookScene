@@ -548,11 +548,13 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
               <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-2">
                 Breakdown by Run
               </span>
-              <div className="space-y-1.5 font-mono text-[11px]">
+              <div className="space-y-2 text-xs">
                 {Object.entries(failureSummary?.breakdown_by_run || {}).map(([rId, counts]) => (
-                  <div key={rId} className="flex justify-between items-center text-slate-600">
-                    <span className="font-medium text-slate-800">{rId}:</span>
-                    <span>
+                  <div key={rId} className="flex justify-between items-center text-slate-600 gap-2">
+                    <span className="font-semibold text-slate-800 truncate" title={rId}>
+                      {getRunLabel(rId)}:
+                    </span>
+                    <span className="font-mono text-[11px] shrink-0">
                       <span className="text-sky-700 font-semibold">{counts.automatic} auto</span> ·{' '}
                       <span className="text-amber-700 font-semibold">{counts.human} human</span> ·{' '}
                       <span className="font-bold text-slate-900">{counts.total} total</span>
@@ -1035,7 +1037,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
 
         <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
           <span>{comparison?.disclaimer || 'Consistency reflects algorithmic repeatability across runs, not correctness.'}</span>
-          <span className="font-semibold text-indigo-700">SnipDeck Reproducibility Engine</span>
+          <span className="font-semibold text-indigo-700">HookScene Consistency Engine</span>
         </div>
       </section>
     )}

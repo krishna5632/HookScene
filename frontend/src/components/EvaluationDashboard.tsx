@@ -416,7 +416,7 @@ export const EvaluationDashboard: React.FC = () => {
                   Deterministic Rule Evaluation
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Reuses SnipDeck core validation pipeline without duplicated code
+                  Reuses HookScene core validation pipeline without duplicated code
                 </p>
               </div>
               <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -512,7 +512,7 @@ export const EvaluationDashboard: React.FC = () => {
           </div>
 
           <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-mono">
-            <span>Evaluator Engine: SnipDeck Core Rule Validator</span>
+            <span>Evaluator Engine: HookScene Core Rule Validator</span>
             <span className="text-emerald-700 font-semibold">100% Deterministic Guarantee</span>
           </div>
         </div>
