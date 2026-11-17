@@ -1,0 +1,9 @@
+{
+  "results/official-run-C": {
+    "rule_checks": {
+      "promos": 32,
+      "pass_rate": 1.0,
+      "failures": []
+    }
+  }
+}
