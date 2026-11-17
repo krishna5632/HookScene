@@ -329,7 +329,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
           <h1 className="text-2xl sm:text-3xl font-bold text-[#18181B] tracking-tight">
             Promo Review
           </h1>
-          <p className="text-xs font-normal text-[#71717A] mt-1">
+          <p className="text-sm font-normal text-[#52525A] mt-1">
             {dataset?.show || 'I Married a Broken Soldier. He was a Duke'} • 50 Episodes
           </p>
         </div>
@@ -343,7 +343,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
               <div className="text-2xl font-bold font-mono text-[#18181B] leading-none">
                 {totalCount.toString().padStart(2, '0')}
               </div>
-              <div className="text-[11px] font-medium text-[#71717A] mt-1">Candidates</div>
+              <div className="text-xs font-medium text-[#52525A] mt-1">Candidates</div>
             </div>
           </div>
 
@@ -354,7 +354,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
               <div className="text-2xl font-bold font-mono text-[#18181B] leading-none">
                 {highAttentionCount.toString().padStart(2, '0')}
               </div>
-              <div className="text-[11px] font-medium text-[#71717A] mt-1">High Attention</div>
+              <div className="text-xs font-medium text-[#52525A] mt-1">High Attention</div>
             </div>
           </div>
 
@@ -365,7 +365,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
               <div className="text-2xl font-bold font-mono text-[#18181B] leading-none">
                 {approvedCount.toString().padStart(2, '0')}
               </div>
-              <div className="text-[11px] font-medium text-[#71717A] mt-1">Pending Export</div>
+              <div className="text-xs font-medium text-[#52525A] mt-1">Pending Export</div>
             </div>
           </div>
         </div>
@@ -490,15 +490,15 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                     }`}>
                       #{p.rank || idx + 1}
                     </div>
-                    <span className="text-xs text-[#71717A] font-medium">
+                    <span className="text-xs text-[#52525A] font-semibold">
                       Ep. {s.episode.toString().padStart(2, '0')} • {Math.round(p.duration)}s
                     </span>
                     {p.kind === 'montage' || (p.segments && p.segments.length > 1) ? (
-                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-[#F0F0F2] text-[#18181B] border border-[#E0E0E4]">
+                      <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-[#F0F0F2] text-[#18181B] border border-[#E0E0E4]">
                         Montage ({p.segments?.length || 2} clips)
                       </span>
                     ) : (
-                      <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-[#ECECEE] text-[#52525A]">
+                      <span className="text-xs font-medium px-2.5 py-0.5 rounded-md bg-[#ECECEE] text-[#52525A]">
                         Single Cut
                       </span>
                     )}
@@ -515,7 +515,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
 
                 {/* Hook Line Quote */}
                 <div className="mt-2.5 mb-3">
-                  <h3 className="font-semibold text-sm text-[#18181B] line-clamp-2 leading-snug tracking-tight">
+                  <h3 className="font-semibold text-[15px] text-[#18181B] line-clamp-2 leading-snug tracking-tight">
                     "{getHookText(p)}"
                   </h3>
                 </div>
@@ -524,13 +524,13 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {/* Primary Signal Pill */}
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-[#ECECEE] text-[#27272A]">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-medium bg-[#ECECEE] text-[#27272A]">
                       <span>{sig.icon}</span>
                       <span>{sig.label}</span>
                     </span>
 
                     {/* Secondary High Intensity Pill */}
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-[#F0F0F2] text-[#27272A]">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-medium bg-[#F0F0F2] text-[#27272A]">
                       <span>⚡</span>
                       <span>High Intensity</span>
                     </span>
@@ -544,7 +544,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                           e.stopPropagation();
                           setWorkspaceView('trace');
                         }}
-                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#18181B] bg-[#ECECEE] hover:bg-[#E0E0E4] px-2.5 py-0.5 rounded-md border border-[#D1D1D6] transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-[#18181B] bg-[#ECECEE] hover:bg-[#E0E0E4] px-2.5 py-0.5 rounded-md border border-[#D1D1D6] transition-colors cursor-pointer"
                         title="View Feature 6 Decision Trace"
                       >
                         <Sparkles className="w-3 h-3 text-[#18181B]" />
@@ -586,14 +586,14 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                   <h2 className="text-xl sm:text-2xl font-bold text-[#18181B] mt-1 tracking-tight leading-snug">
                     "{getHookText(selectedPromo)}"
                   </h2>
-                  <div className="flex items-center gap-2 text-xs font-medium text-[#71717A] mt-1.5 flex-wrap">
+                  <div className="flex items-center gap-2 text-sm font-medium text-[#52525A] mt-1.5 flex-wrap">
                     <span className="flex items-center gap-1">
                       📁 Episode {s0?.episode.toString().padStart(2, '0') || '02'}
                     </span>
                     <span>•</span>
                     <span>Duration: {Math.round(selectedPromo.duration)} seconds</span>
                     <span>•</span>
-                    <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border ${
+                    <span className={`px-2.5 py-0.5 rounded-md text-xs font-semibold border ${
                       selectedPromo.kind === 'montage' || (selectedPromo.segments && selectedPromo.segments.length > 1)
                         ? 'bg-[#F0F0F2] text-[#18181B] border-[#E0E0E4]'
                         : 'bg-[#ECECEE] text-[#52525A] border-[#D1D1D6]'
@@ -609,14 +609,14 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                 <div className="flex items-center gap-2 flex-wrap">
                   <button
                     onClick={() => setWorkspaceView(workspaceView === 'trace' ? 'review' : 'trace')}
-                    className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border ${
+                    className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-sm font-semibold transition-all cursor-pointer border ${
                       workspaceView === 'trace'
                         ? 'bg-[#18181B] text-white border-[#18181B] shadow-xs'
                         : 'bg-[#F0F0F2] hover:bg-[#E4E4E8] text-[#27272A] border-[#E0E0E4]'
                     }`}
                     title="Click to view full Feature 6 Explainability Decision Trace"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <Sparkles className="w-4 h-4" />
                     <span>{workspaceView === 'trace' ? '← Back to Screenplay' : '✦ Feature 6: Explain Decision'}</span>
                   </button>
 
@@ -758,10 +758,10 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                       {/* Why this promo works? Callout Card */}
                       <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-2xl p-4 space-y-1.5 shadow-xs">
                         <div className="flex items-center gap-1.5 text-xs font-bold text-[#18181B] uppercase tracking-wider">
-                          <Lightbulb className="w-3.5 h-3.5 text-[#B45309]" />
+                          <Lightbulb className="w-4 h-4 text-[#B45309]" />
                           <span>Why this promo works?</span>
                         </div>
-                        <p className="text-xs text-[#3F3F46] leading-relaxed">
+                        <p className="text-[13px] text-[#27272A] leading-relaxed">
                           {selectedPromo.why || 'A sudden rejection creates immediate emotional conflict and ends with a cliffhanger.'}
                         </p>
                       </div>
@@ -772,10 +772,10 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                         <div className="grid grid-cols-3 gap-2">
                           {/* Hook */}
                           <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-2.5 flex items-center gap-2">
-                            <Target className="w-3.5 h-3.5 text-[#71717A] flex-shrink-0" />
+                            <Target className="w-4 h-4 text-[#52525A] flex-shrink-0" />
                             <div>
-                              <div className="text-[10px] text-[#71717A] font-medium uppercase">Hook</div>
-                              <div className="text-xs font-bold font-mono text-[#18181B]">
+                              <div className="text-[11px] text-[#52525A] font-semibold uppercase tracking-wider">Hook</div>
+                              <div className="text-sm font-bold font-mono text-[#18181B]">
                                 {selectedPromo.scores?.hook_3s?.toFixed(0) || '5'} / 5
                               </div>
                             </div>
@@ -783,10 +783,10 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
 
                           {/* Cliffhanger */}
                           <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-2.5 flex items-center gap-2">
-                            <span className="text-xs font-bold text-[#71717A] flex-shrink-0">?</span>
+                            <span className="text-sm font-bold text-[#52525A] flex-shrink-0">?</span>
                             <div>
-                              <div className="text-[10px] text-[#71717A] font-medium uppercase">Cliff</div>
-                              <div className="text-xs font-bold font-mono text-[#18181B]">
+                              <div className="text-[11px] text-[#52525A] font-semibold uppercase tracking-wider">Cliff</div>
+                              <div className="text-sm font-bold font-mono text-[#18181B]">
                                 {selectedPromo.scores?.cliffhanger?.toFixed(0) || '5'} / 5
                               </div>
                             </div>
@@ -794,10 +794,10 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
 
                           {/* Clarity */}
                           <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-2.5 flex items-center gap-2">
-                            <FileText className="w-3.5 h-3.5 text-[#71717A] flex-shrink-0" />
+                            <FileText className="w-4 h-4 text-[#52525A] flex-shrink-0" />
                             <div>
-                              <div className="text-[10px] text-[#71717A] font-medium uppercase">Clarity</div>
-                              <div className="text-xs font-bold font-mono text-[#18181B]">
+                              <div className="text-[11px] text-[#52525A] font-semibold uppercase tracking-wider">Clarity</div>
+                              <div className="text-sm font-bold font-mono text-[#18181B]">
                                 {selectedPromo.scores?.standalone?.toFixed(0) || '4'} / 5
                               </div>
                             </div>
@@ -808,10 +808,10 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                         <div className="grid grid-cols-2 gap-2">
                           {/* Intensity */}
                           <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-2.5 flex items-center gap-2">
-                            <Sparkles className="w-3.5 h-3.5 text-[#71717A] flex-shrink-0" />
+                            <Sparkles className="w-4 h-4 text-[#52525A] flex-shrink-0" />
                             <div>
-                              <div className="text-[10px] text-[#71717A] font-medium uppercase">Intensity</div>
-                              <div className="text-xs font-bold font-mono text-[#18181B]">
+                              <div className="text-[11px] text-[#52525A] font-semibold uppercase tracking-wider">Intensity</div>
+                              <div className="text-sm font-bold font-mono text-[#18181B]">
                                 {selectedPromo.scores?.intensity?.toFixed(0) || '5'} / 5
                               </div>
                             </div>
@@ -819,10 +819,10 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
 
                           {/* Relevance */}
                           <div className="bg-[#F8F8FA] border border-[#E5E5EA] rounded-xl p-2.5 flex items-center gap-2">
-                            <Star className="w-3.5 h-3.5 text-[#71717A] flex-shrink-0" />
+                            <Star className="w-4 h-4 text-[#52525A] flex-shrink-0" />
                             <div>
-                              <div className="text-[10px] text-[#71717A] font-medium uppercase">Relevance</div>
-                              <div className="text-xs font-bold font-mono text-[#18181B]">
+                              <div className="text-[11px] text-[#52525A] font-semibold uppercase tracking-wider">Relevance</div>
+                              <div className="text-sm font-bold font-mono text-[#18181B]">
                                 {selectedPromo.scores?.plot_relevance?.toFixed(0) || '4'} / 5
                               </div>
                             </div>
@@ -948,50 +948,50 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
               )}
 
               {/* Action / Decision Footer matching TwelveLabs Theme */}
-              <div className="pt-2 flex items-center justify-between gap-4 flex-wrap border-t border-[#E5E5EA]">
+              <div className="pt-3 flex items-center justify-between gap-4 flex-wrap border-t border-[#E5E5EA]">
                 {/* Keyboard Shortcuts Hint */}
-                <div className="flex items-center gap-3 text-xs text-[#71717A]">
-                  <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 rounded bg-[#18181B] text-white font-mono text-[10px] font-bold">J</kbd>
-                    <span>Previous</span>
+                <div className="flex items-center gap-3.5 text-xs text-[#52525A]">
+                  <span className="flex items-center gap-1.5">
+                    <kbd className="px-2 py-0.5 rounded-md bg-[#18181B] text-white font-mono text-xs font-bold shadow-2xs">J</kbd>
+                    <span className="font-medium text-[#27272A]">Previous</span>
                   </span>
-                  <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 rounded bg-[#18181B] text-white font-mono text-[10px] font-bold">K</kbd>
-                    <span>Next</span>
+                  <span className="flex items-center gap-1.5">
+                    <kbd className="px-2 py-0.5 rounded-md bg-[#18181B] text-white font-mono text-xs font-bold shadow-2xs">K</kbd>
+                    <span className="font-medium text-[#27272A]">Next</span>
                   </span>
-                  <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 rounded bg-[#18181B] text-white font-mono text-[10px] font-bold">A</kbd>
-                    <span>Approve</span>
+                  <span className="flex items-center gap-1.5">
+                    <kbd className="px-2 py-0.5 rounded-md bg-[#18181B] text-white font-mono text-xs font-bold shadow-2xs">A</kbd>
+                    <span className="font-medium text-[#27272A]">Approve</span>
                   </span>
-                  <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 rounded bg-[#18181B] text-white font-mono text-[10px] font-bold">R</kbd>
-                    <span>Reject</span>
+                  <span className="flex items-center gap-1.5">
+                    <kbd className="px-2 py-0.5 rounded-md bg-[#18181B] text-white font-mono text-xs font-bold shadow-2xs">R</kbd>
+                    <span className="font-medium text-[#27272A]">Reject</span>
                   </span>
                 </div>
 
                 {/* Approve & Reject Buttons (TwelveLabs Modern Styling) */}
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-3">
                   <button
                     onClick={handleOpenReject}
-                    className={`inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                    className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                       decisions[selectedPromo.pid] === 'reject'
                         ? 'bg-rose-600 text-white shadow-xs'
                         : 'bg-[#FEF2F2] text-[#DC2626] border border-[#FECACA] hover:bg-rose-100'
                     }`}
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                     <span>Reject</span>
                   </button>
 
                   <button
                     onClick={handleApprove}
-                    className={`inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl text-xs font-semibold text-white shadow-xs transition-all cursor-pointer ${
+                    className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white shadow-xs transition-all cursor-pointer ${
                       decisions[selectedPromo.pid] === 'accept'
                         ? 'bg-emerald-700 ring-2 ring-emerald-400'
                         : 'bg-[#18181B] hover:bg-black'
                     }`}
                   >
-                    <Check className="w-3.5 h-3.5" />
+                    <Check className="w-4 h-4" />
                     <span>Approve</span>
                   </button>
                 </div>
