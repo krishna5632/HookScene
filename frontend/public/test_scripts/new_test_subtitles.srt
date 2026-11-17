@@ -1,0 +1,35 @@
+1
+00:00:00,000 --> 00:00:02,800
+VICTORIA: "Sign the divorce papers, Liam. You are a penniless nobody in my father's empire."
+
+2
+00:00:05,000 --> 00:00:07,800
+LIAM: "After three years of keeping your family out of ruin, this is your loyalty?"
+
+3
+00:00:08,000 --> 00:00:11,200
+RICHARD: "You served drinks in our kitchen! Victoria is marrying a true titan tonight."
+
+4
+00:00:13,600 --> 00:00:16,800
+VICTORIA: "Take your one thousand dollar settlement and crawl out before security throws you out!"
+
+5
+00:00:17,000 --> 00:00:20,400
+LIAM: "Remember this moment. Once I sign, the Avalon Group ceases to exist."
+
+6
+00:00:28,800 --> 00:00:33,400
+ELDER TYCOON: "Stand aside, fools! We are here to escort the supreme Chairman of the Sovereign Global Syndicate!"
+
+7
+00:00:36,800 --> 00:00:41,200
+ELDER TYCOON: "Chairman Vance! Your three-year trial is over. Your global armada awaits your command."
+
+8
+00:00:44,500 --> 00:00:48,200
+VICTORIA: "C-Chairman Vance? Liam... who on earth are you?!"
+
+9
+00:00:48,500 --> 00:00:53,000
+LIAM: "You wanted a divorce, Victoria. Effective immediately, liquidate all Avalon assets."
