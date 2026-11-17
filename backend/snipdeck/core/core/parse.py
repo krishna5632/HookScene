@@ -13,7 +13,7 @@ TS = r"(\d{2}):(\d{2})\.(\d{2})"
 RE_TIME = re.compile(rf"^Start: \({TS}\) \| End: \({TS}\)\s*$")
 RE_HEADER = re.compile(r"^\*\*(.+?):\*\*\s*$")
 RE_SCENE = re.compile(r"^SCENE (\d+)\s*$")
-RE_EP_NUM = re.compile(r"^EPISODE NUMBER:\s*Episode\s+(\d+)", re.I)
+RE_EP_NUM = re.compile(r"^EPISODE NUMBER:\s*.*?(\d+)", re.I)
 
 # Dialogue header: NAME [(O.S.)] (Emotion)   e.g. "MATRIARCH (O.S.) (Firm)"
 RE_SPEAKER = re.compile(r"^(?P<name>[^()]+?)(?:\s*\((?P<tag>O\.S\.|V\.O\.|CONT'D)\))?\s*(?:\((?P<emo>[^()]*)\))?$")
@@ -163,10 +163,20 @@ def parse_episode(path: str | Path) -> Episode:
             )
             pending, pending_time = None, None
 
+    if num is None:
+        m = re.search(r"(?:ep|episode|e)[-_ ]*(\d+)", path.stem, re.I)
+        if not m:
+            m = re.search(r"(\d+)", path.stem)
+        if m:
+            num = int(m.group(1))
+
     ep.num = num or 0
     ep.logline, ep.continuity = logline, continuity
     for l in ep.lines:
         l.ep = ep.num
+        parts = l.id.split("_", 1)
+        if len(parts) == 2:
+            l.id = f"E{ep.num:02d}_{parts[1]}"
     return ep
 
 
@@ -175,5 +185,21 @@ def load_show(folder: str | Path) -> list[Episode]:
     files = sorted(folder.rglob("*.txt"))
     eps = [parse_episode(f) for f in files]
     eps = [e for e in eps if e.lines]
+
+    # Ensure all episodes have unique positive episode numbers so they never overwrite each other
+    seen_nums = set()
+    next_num = 1
+    for ep in eps:
+        if ep.num <= 0 or ep.num in seen_nums:
+            while next_num in seen_nums:
+                next_num += 1
+            ep.num = next_num
+            for l in ep.lines:
+                l.ep = ep.num
+                parts = l.id.split("_", 1)
+                if len(parts) == 2:
+                    l.id = f"E{ep.num:02d}_{parts[1]}"
+        seen_nums.add(ep.num)
+
     eps.sort(key=lambda e: e.num)
     return eps

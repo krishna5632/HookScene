@@ -247,6 +247,11 @@ async def run_pipeline(body: dict = Body(...)):
                     show_name = subs[0].stem
             else:
                 eps = load_show(temp_dir)
+                if not show_name or show_name == "Custom Series" or show_name.startswith("test-"):
+                    if len(eps) > 1:
+                        show_name = f"Uploaded Series ({len(eps)} Episodes)"
+                    elif len(eps) == 1:
+                        show_name = Path(eps[0].path).stem
                 if not show_name:
                     show_name = "Uploaded Show"
         else:

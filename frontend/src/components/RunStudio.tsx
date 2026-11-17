@@ -295,6 +295,8 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
         },
         show_name: isUsingBenchmark
           ? 'I Married a Broken Soldier. He was a Duke'
+          : stagedFiles.length > 1
+          ? `Uploaded Series (${stagedFiles.length} Episodes)`
           : stagedFiles[0]?.name.replace(/\.[^/.]+$/, '') || 'Custom Series',
       };
 
@@ -371,7 +373,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
               1
             </span>
             <h2 className="text-[17px] font-semibold text-[#18181B] tracking-tight">
-              Upload a screenplay asset
+              Upload screenplay files or show package
             </h2>
           </div>
           <ChevronDown size={18} className="text-[#8E8E93]" />
@@ -385,7 +387,7 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             e.preventDefault();
             if (e.dataTransfer.files.length) handleCustomFiles(e.dataTransfer.files);
           }}
-          className="border border-dashed border-[#D1D1D6] hover:border-[#8E8E93] rounded-2xl py-14 px-6 flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-[#F8F8FA] hover:bg-[#F3F3F5]"
+          className="border border-dashed border-[#D1D1D6] hover:border-[#8E8E93] rounded-2xl py-12 px-6 flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-[#F8F8FA] hover:bg-[#F3F3F5]"
         >
           <input
             type="file"
@@ -401,19 +403,22 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             <UploadCloud size={20} className="text-[#18181B]" />
           </div>
 
-          <div className="text-[15px] font-semibold text-[#18181B] mb-2 tracking-tight">
-            Upload screenplay asset
+          <div className="text-[15px] font-semibold text-[#18181B] mb-1 tracking-tight">
+            Upload screenplay files (single, multi-file, or ZIP)
           </div>
+          <p className="text-xs text-[#52525A] mb-3 max-w-md">
+            Drag & drop multiple .txt episodes together, select multiple files in the file picker, or upload a full show .zip archive.
+          </p>
 
-          <div className="flex items-center gap-2 mb-4 flex-wrap justify-center">
+          <div className="flex items-center gap-2 mb-3 flex-wrap justify-center">
             <span className="px-2.5 py-1 rounded-md bg-[#ECECEE] text-[#52525A] text-xs font-medium">
-              File size ≤ 20 MB
+              Multi-file .txt support
             </span>
             <span className="px-2.5 py-1 rounded-md bg-[#ECECEE] text-[#52525A] text-xs font-medium">
-              Duration 20s–60s
+              Full show .zip archives
             </span>
             <span className="px-2.5 py-1 rounded-md bg-[#ECECEE] text-[#52525A] text-xs font-medium">
-              .zip / .txt / .srt
+              File size ≤ 50 MB
             </span>
           </div>
 

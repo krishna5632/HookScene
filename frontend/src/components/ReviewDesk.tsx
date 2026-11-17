@@ -348,7 +348,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
             Promo Review
           </h1>
           <p className="text-sm font-normal text-[#52525A] mt-1">
-            {dataset?.show || 'I Married a Broken Soldier. He was a Duke'} • 50 Episodes
+            {dataset?.show || 'I Married a Broken Soldier. He was a Duke'} • {dataset?.episode_durations && Object.keys(dataset.episode_durations).length > 0 ? `${Object.keys(dataset.episode_durations).length} Episodes` : '50 Episodes'}
           </p>
         </div>
 
@@ -417,6 +417,21 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                   Episode {ep.toString().padStart(2, '0')}
                 </option>
               ))}
+            </select>
+            <ChevronDown className="w-3 h-3 text-[#8E8E93] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+
+          {/* Format Filter Dropdown */}
+          <div className="relative">
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value as any)}
+              className="bg-[#F8F8FA] border border-[#E5E5EA] hover:border-[#D1D1D6] rounded-xl px-4 py-2 text-xs font-medium text-[#27272A] shadow-xs cursor-pointer focus:outline-none focus:border-[#18181B] focus:bg-white pr-7 appearance-none transition-colors"
+            >
+              <option value="all">All Formats</option>
+              <option value="single">Single Cut</option>
+              <option value="montage">Montage</option>
+              <option value="attention">High Attention</option>
             </select>
             <ChevronDown className="w-3 h-3 text-[#8E8E93] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
