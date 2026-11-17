@@ -37,6 +37,7 @@ RUN pip install --no-cache-dir -r backend/requirements.txt
 # Copy application code and assets
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
+COPY results/ ./results/
 # Copy compiled React production dist from builder
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 COPY server.py ./server.py

@@ -353,6 +353,12 @@ def resolve_run_payload(run_id: str) -> dict[str, Any]:
         return stored
 
     results_dir = ROOT_DIR / "results"
+    if not results_dir.exists():
+        for cand in [Path("/app/results"), BACKEND_DIR.parent / "results", BACKEND_DIR / "results"]:
+            if cand.exists():
+                results_dir = cand
+                break
+
     target_dir = None
 
     if run_id in ("official", "official_run", "official-run-C"):
@@ -381,15 +387,16 @@ def resolve_run_payload(run_id: str) -> dict[str, Any]:
         except Exception as e:
             print(f"Failed to read result dir {target_dir}: {e}")
 
-    # Fallback to frontend/data/official.json
-    official_path = FRONTEND_DIR / "data" / "official.json"
-    if official_path.exists():
-        try:
-            data = json.loads(official_path.read_text(encoding="utf-8"))
-            data["run_id"] = run_id
-            return data
-        except Exception as e:
-            print(f"Failed to read official.json: {e}")
+    # Fallback to frontend/data/official.json ONLY for official runs
+    if run_id in ("official", "official_run", "official-run-C"):
+        official_path = FRONTEND_DIR / "data" / "official.json"
+        if official_path.exists():
+            try:
+                data = json.loads(official_path.read_text(encoding="utf-8"))
+                data["run_id"] = run_id
+                return data
+            except Exception as e:
+                print(f"Failed to read official.json: {e}")
 
     raise HTTPException(status_code=404, detail=f"Run payload for '{run_id}' not found.")
 

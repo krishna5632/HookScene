@@ -705,24 +705,32 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
           </div>
 
           {/* Two-run selector */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg p-1 text-xs font-mono">
-              <span className="text-slate-400 px-2 font-sans font-medium">Run A:</span>
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg p-1 text-xs font-mono whitespace-nowrap">
+              <span className="text-slate-500 px-2 font-sans font-medium">Run A:</span>
               <select
                 value={runA}
-                onChange={(e) => setRunA(e.target.value)}
-                className="font-semibold text-slate-800 bg-transparent pr-2 py-0.5 focus:outline-none cursor-pointer"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setRunA(val);
+                  fetchComparison(val, runB);
+                }}
+                className="font-semibold text-slate-800 bg-transparent pr-2 py-1 focus:outline-none cursor-pointer"
               >
                 {availableRuns.map((r) => (
                   <option key={r} value={r}>{r}</option>
                 ))}
               </select>
 
-              <span className="text-slate-400 px-1 font-sans font-medium">vs Run B:</span>
+              <span className="text-slate-500 px-2 font-sans font-medium border-l border-slate-200">vs Run B:</span>
               <select
                 value={runB}
-                onChange={(e) => setRunB(e.target.value)}
-                className="font-semibold text-indigo-700 bg-transparent pr-2 py-0.5 focus:outline-none cursor-pointer"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setRunB(val);
+                  fetchComparison(runA, val);
+                }}
+                className="font-semibold text-indigo-700 bg-transparent pr-2 py-1 focus:outline-none cursor-pointer"
               >
                 {availableRuns.map((r) => (
                   <option key={r} value={r}>{r}</option>
@@ -733,7 +741,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
             <button
               onClick={() => fetchComparison(runA, runB)}
               disabled={comparing}
-              className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium shadow-xs transition-colors cursor-pointer inline-flex items-center gap-1.5"
+              className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium shadow-xs transition-colors cursor-pointer inline-flex items-center gap-1.5 disabled:opacity-70"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${comparing ? 'animate-spin' : ''}`} />
               <span>{comparing ? 'Comparing...' : 'Compare'}</span>
@@ -756,7 +764,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
         )}
 
         {/* 3 Core Consistency KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div className={`grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 transition-opacity duration-200 ${comparing ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
             <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">
               Candidate-Set Consistency (Jaccard)
