@@ -1,0 +1,38 @@
+# secrets and caches
+.env
+.cache/
+.cache-*/
+__pycache__/
+*.pyc
+
+# Node dependencies and build outputs
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+
+# Test caches and database files
+.pytest_cache/
+*.db
+*.sqlite3
+
+# working data (the official runs are copied into results/)
+outputs/
+episodes/
+_subset/
+I Married a Broken Soldier*/
+
+# private working notes / local tooling
+CLAUDE.md
+HANDOFF.md
+.claude/
+private/
+
+# built in CI
+web/app.zip
+
+# LaTeX build files (the compiled report is SnipDeck.pdf at the root)
+docs/paper/*.aux
+docs/paper/*.log
+docs/paper/*.out
+docs/paper/snipdeck.pdf
