@@ -71,6 +71,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
   // Explainability & screenplay line highlighting (Feature 6)
   const [highlightedLine, setHighlightedLine] = useState<string | null>(null);
   const [workspaceView, setWorkspaceView] = useState<'review' | 'trace'>('review');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleNavigateToLine = (lineId: string) => {
     setHighlightedLine(lineId);
@@ -198,6 +199,15 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
     const nextDecision = isApproved ? '' : 'accept';
     setDecisions((prev) => ({ ...prev, [pid]: nextDecision }));
 
+    if (nextDecision === 'accept') {
+      setToastMessage(`Promo ${pid} approved! Added to Pending Export.`);
+    } else {
+      setToastMessage(`Approval cleared for ${pid}.`);
+    }
+    setTimeout(() => {
+      setToastMessage((cur) => (cur?.includes(pid) ? null : cur));
+    }, 4500);
+
     try {
       await fetch('/api/reviews/decision', {
         method: 'POST',
@@ -219,6 +229,10 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
     const pid = selectedPromo.pid;
     if (decisions[pid] === 'reject') {
       setDecisions((prev) => ({ ...prev, [pid]: '' }));
+      setToastMessage(`Rejection cleared for ${pid}.`);
+      setTimeout(() => {
+        setToastMessage((cur) => (cur?.includes(pid) ? null : cur));
+      }, 4500);
       fetch('/api/reviews/decision', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -238,6 +252,10 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
     const pid = selectedPromo.pid;
     setDecisions((prev) => ({ ...prev, [pid]: 'reject' }));
     setRejectModalOpen(false);
+    setToastMessage(`Promo ${pid} rejected (Logged in Feature 2 Failures).`);
+    setTimeout(() => {
+      setToastMessage((cur) => (cur?.includes(pid) ? null : cur));
+    }, 4500);
 
     try {
       await fetch('/api/reviews/decision', {
@@ -520,7 +538,7 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                   </h3>
                 </div>
 
-                {/* Bottom Row: Subtle Category Pills & Selection Indicator */}
+                {/* Bottom Row: Category Pills & Decision Indicators */}
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {/* Primary Signal Pill */}
@@ -529,11 +547,17 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                       <span>{sig.label}</span>
                     </span>
 
-                    {/* Secondary High Intensity Pill */}
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-medium bg-[#F0F0F2] text-[#27272A]">
-                      <span>⚡</span>
-                      <span>High Intensity</span>
-                    </span>
+                    {/* Decision Badge directly on card */}
+                    {decisionState === 'accept' && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                        <Check className="w-3 h-3 text-emerald-700" /> Approved
+                      </span>
+                    )}
+                    {decisionState === 'reject' && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                        <X className="w-3 h-3 text-rose-700" /> Rejected
+                      </span>
+                    )}
                   </div>
 
                   {/* Status Indicator */}
@@ -556,16 +580,6 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                       </span>
                     </div>
                   )}
-                  {!isSelected && decisionState === 'accept' && (
-                    <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-emerald-700">
-                      <Check className="w-3 h-3" /> Approved
-                    </span>
-                  )}
-                  {!isSelected && decisionState === 'reject' && (
-                    <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-rose-700">
-                      <X className="w-3 h-3" /> Rejected
-                    </span>
-                  )}
                 </div>
               </div>
             );
@@ -579,9 +593,28 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
               {/* Header: Promo #, Hook Title, Episode, and Overall Score */}
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div>
-                  <div className="inline-flex items-center gap-1 text-xs font-semibold text-[#71717A]">
-                    <Star className="w-3.5 h-3.5 fill-current text-[#B45309]" />
-                    <span>Promo #{selectedPromo.rank || selectedIndex + 1}</span>
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <div className="inline-flex items-center gap-1 text-xs font-semibold text-[#71717A]">
+                      <Star className="w-3.5 h-3.5 fill-current text-[#B45309]" />
+                      <span>Promo #{selectedPromo.rank || selectedIndex + 1}</span>
+                    </div>
+
+                    {/* Status Pill */}
+                    {decisions[selectedPromo.pid] === 'accept' && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
+                        <Check className="w-3 h-3 text-emerald-700" /> Approved for Export
+                      </span>
+                    )}
+                    {decisions[selectedPromo.pid] === 'reject' && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-300 shadow-2xs">
+                        <X className="w-3 h-3 text-rose-700" /> Rejected
+                      </span>
+                    )}
+                    {!decisions[selectedPromo.pid] && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#ECECEE] text-[#52525A]">
+                        Pending Review
+                      </span>
+                    )}
                   </div>
                   <h2 className="text-xl sm:text-2xl font-bold text-[#18181B] mt-1 tracking-tight leading-snug">
                     "{getHookText(selectedPromo)}"
@@ -626,6 +659,25 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                   </div>
                 </div>
               </div>
+
+              {/* Toast Feedback Notification Banner */}
+              {toastMessage && (
+                <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between gap-3 text-xs text-emerald-900 font-medium shadow-xs transition-all">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span className="font-semibold">{toastMessage}</span>
+                  </div>
+                  {selectedIndex < filteredPromos.length - 1 && (
+                    <button
+                      onClick={() => setSelectedPid(filteredPromos[selectedIndex + 1].pid)}
+                      className="px-3 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-semibold text-xs transition-colors cursor-pointer flex items-center gap-1"
+                    >
+                      <span>Next Promo</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              )}
 
               {/* View Switcher Tabs: Video/Teleprompter vs Feature 6 Explainability */}
               <div className="flex items-center justify-between border-b border-[#E5E5EA] pb-3 text-xs">
@@ -980,19 +1032,19 @@ export const ReviewDesk: React.FC<ReviewDeskProps> = ({
                     }`}
                   >
                     <X className="w-4 h-4" />
-                    <span>Reject</span>
+                    <span>{decisions[selectedPromo.pid] === 'reject' ? 'Rejected ✕' : 'Reject'}</span>
                   </button>
 
                   <button
                     onClick={handleApprove}
                     className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white shadow-xs transition-all cursor-pointer ${
                       decisions[selectedPromo.pid] === 'accept'
-                        ? 'bg-emerald-700 ring-2 ring-emerald-400'
+                        ? 'bg-emerald-600 hover:bg-emerald-700 ring-2 ring-emerald-300'
                         : 'bg-[#18181B] hover:bg-black'
                     }`}
                   >
                     <Check className="w-4 h-4" />
-                    <span>Approve</span>
+                    <span>{decisions[selectedPromo.pid] === 'accept' ? 'Approved ✓' : 'Approve'}</span>
                   </button>
                 </div>
               </div>
