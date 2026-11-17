@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ActiveTab, Dataset } from './types';
+import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { ReviewDesk } from './components/ReviewDesk';
 import { RunStudio } from './components/RunStudio';
@@ -8,7 +9,7 @@ import { Architecture } from './components/Architecture';
 import { EvaluationDashboard } from './components/EvaluationDashboard';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('review');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('run');
   const [dataset, setDataset] = useState<Dataset | null>(null);
   const [decisions, setDecisions] = useState<Record<string, string>>(() => {
     try {
@@ -46,96 +47,88 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col font-sans bg-[#F8FAFC] text-[#111827] selection:bg-[#FEF3C7] selection:text-[#92400E]">
-      {/* Top Professional Navigation Bar */}
-      <Header
+    <div className="flex h-screen overflow-hidden bg-[#F9F9FB] font-sans text-neutral-900 selection:bg-[#FEF3C7] selection:text-[#92400E]">
+      {/* TwelveLabs Left Sidebar Navigation */}
+      <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        dataset={dataset}
-        decisions={decisions}
+        onOpenApiKeyModal={() => setActiveTab('run')}
       />
 
-      {/* Main Workspace View */}
-      <main className="flex-1 w-full">
-        {activeTab === 'review' && (
-          <ReviewDesk
-            dataset={dataset}
-            decisions={decisions}
-            setDecisions={setDecisions}
-            setActiveTab={setActiveTab}
-          />
-        )}
+      {/* Main Workspace Column */}
+      <div className="flex-1 flex flex-col h-screen overflow-y-auto">
+        {/* TwelveLabs Top Minimal Header */}
+        <Header
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          dataset={dataset}
+          decisions={decisions}
+          onOpenApiKeyModal={() => setActiveTab('run')}
+        />
 
-        {activeTab === 'run' && (
-          <RunStudio
-            setDataset={setDataset}
-            setActiveTab={setActiveTab}
-          />
-        )}
+        {/* Dynamic Main Canvas */}
+        <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+          {activeTab === 'review' && (
+            <ReviewDesk
+              dataset={dataset}
+              decisions={decisions}
+              setDecisions={setDecisions}
+              setActiveTab={setActiveTab}
+            />
+          )}
 
-        {(activeTab === 'analytics' ||
-          activeTab === 'f1_quality' ||
-          activeTab === 'f2_failures' ||
-          activeTab === 'f3_consistency' ||
-          activeTab === 'f4_testing' ||
-          activeTab === 'f5_performance' ||
-          activeTab === 'f6_explainability') && (
-          <Analytics
-            dataset={dataset}
-            activeFeature={
-              activeTab === 'f1_quality'
-                ? 'f1'
-                : activeTab === 'f2_failures'
-                ? 'f2'
-                : activeTab === 'f3_consistency'
-                ? 'f3'
-                : activeTab === 'f4_testing'
-                ? 'f4'
-                : activeTab === 'f5_performance'
-                ? 'f5'
-                : activeTab === 'f6_explainability'
-                ? 'f6'
-                : 'all'
-            }
-            onSelectFeature={(feat) => {
-              if (feat === 'f1') setActiveTab('f1_quality');
-              else if (feat === 'f2') setActiveTab('f2_failures');
-              else if (feat === 'f3') setActiveTab('f3_consistency');
-              else if (feat === 'f4') setActiveTab('f4_testing');
-              else if (feat === 'f5') setActiveTab('f5_performance');
-              else if (feat === 'f6') setActiveTab('f6_explainability');
-              else setActiveTab('analytics');
-            }}
-          />
-        )}
+          {activeTab === 'run' && (
+            <RunStudio
+              setDataset={setDataset}
+              setActiveTab={setActiveTab}
+            />
+          )}
 
-        {activeTab === 'evaluation' && (
-          <EvaluationDashboard />
-        )}
+          {(activeTab === 'analytics' ||
+            activeTab === 'f1_quality' ||
+            activeTab === 'f2_failures' ||
+            activeTab === 'f3_consistency' ||
+            activeTab === 'f4_testing' ||
+            activeTab === 'f5_performance' ||
+            activeTab === 'f6_explainability') && (
+            <Analytics
+              dataset={dataset}
+              activeFeature={
+                activeTab === 'f1_quality'
+                  ? 'f1'
+                  : activeTab === 'f2_failures'
+                  ? 'f2'
+                  : activeTab === 'f3_consistency'
+                  ? 'f3'
+                  : activeTab === 'f4_testing'
+                  ? 'f4'
+                  : activeTab === 'f5_performance'
+                  ? 'f5'
+                  : activeTab === 'f6_explainability'
+                  ? 'f6'
+                  : 'all'
+              }
+              onSelectFeature={(feat) => {
+                if (feat === 'f1') setActiveTab('f1_quality');
+                else if (feat === 'f2') setActiveTab('f2_failures');
+                else if (feat === 'f3') setActiveTab('f3_consistency');
+                else if (feat === 'f4') setActiveTab('f4_testing');
+                else if (feat === 'f5') setActiveTab('f5_performance');
+                else if (feat === 'f6') setActiveTab('f6_explainability');
+                else setActiveTab('analytics');
+              }}
+            />
+          )}
 
-        {activeTab === 'method' && (
-          <Architecture />
-        )}
-      </main>
+          {activeTab === 'evaluation' && (
+            <EvaluationDashboard />
+          )}
 
-      {/* Minimal SaaS Footer */}
-      <footer className="border-t border-slate-200 bg-white py-4 text-xs font-mono text-slate-500">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#E8A72D]"></span>
-            <span className="text-slate-900 font-bold">HOOKSCENE</span>
-            <span>· Professional Microdrama Promo Intelligence & Editing Desk</span>
-          </div>
-
-          <div className="flex items-center gap-5 font-medium text-slate-600">
-            <button onClick={() => setActiveTab('review')} className="hover:text-slate-900 transition-colors cursor-pointer">Review Desk</button>
-            <button onClick={() => setActiveTab('run')} className="hover:text-slate-900 transition-colors cursor-pointer">Run Studio</button>
-            <button onClick={() => setActiveTab('analytics')} className="hover:text-slate-900 transition-colors cursor-pointer">Analytics</button>
-            <button onClick={() => setActiveTab('evaluation')} className="hover:text-slate-900 transition-colors cursor-pointer">Quality Eval</button>
-            <button onClick={() => setActiveTab('method')} className="hover:text-slate-900 transition-colors cursor-pointer">Architecture</button>
-          </div>
-        </div>
-      </footer>
+          {activeTab === 'method' && (
+            <Architecture />
+          )}
+        </main>
+      </div>
     </div>
   );
 };
