@@ -27,7 +27,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
-  // Only the exact options present in the HookScene navbar
+  // Primary studio tools
   const primaryItems = [
     {
       id: 'review' as ActiveTab,
@@ -38,11 +38,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'run' as ActiveTab,
       label: 'Run Studio',
       icon: Zap,
-    },
-    {
-      id: 'analytics' as ActiveTab,
-      label: 'Analytics',
-      icon: BarChart2,
     },
   ];
 
