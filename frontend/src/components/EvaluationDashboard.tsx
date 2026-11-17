@@ -29,6 +29,7 @@ import {
   RunConsistencyResult,
   AvailableRun
 } from '../types';
+import { getRunDisplayInfo, getRunLabel } from '../utils/runLabels';
 
 export const EvaluationDashboard: React.FC = () => {
   // Run Selection & State
@@ -235,14 +236,14 @@ export const EvaluationDashboard: React.FC = () => {
             >
               {availableRuns.map((r) => (
                 <option key={r.run_id} value={r.run_id}>
-                  {r.run_id} ({r.show_title || 'Dataset'})
+                  {getRunLabel(r.run_id)}
                 </option>
               ))}
               {availableRuns.length === 0 && (
                 <>
-                  <option value="official-run-C">official-run-C (Official Benchmark)</option>
-                  <option value="repeat-run-D">repeat-run-D (Stability Repeat)</option>
-                  <option value="rule-baseline">rule-baseline (Keyword Baseline)</option>
+                  <option value="official-run-C">Official AI Pipeline (Run C)</option>
+                  <option value="repeat-run-D">Repeat AI Pipeline (Run D)</option>
+                  <option value="rule-baseline">Rule-Based Baseline (No AI)</option>
                 </>
               )}
             </select>
@@ -672,16 +673,16 @@ export const EvaluationDashboard: React.FC = () => {
           <div className="flex items-center gap-3">
             <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg p-1 text-xs font-mono">
               <span className="text-slate-400 px-2">Compare:</span>
-              <span className="font-semibold text-slate-800 px-1">{selectedRunId}</span>
+              <span className="font-semibold text-slate-800 px-1">{getRunLabel(selectedRunId)}</span>
               <span className="text-slate-400 px-1">vs</span>
               <select
                 value={compareRunId}
                 onChange={(e) => setCompareRunId(e.target.value)}
                 className="font-semibold text-indigo-700 bg-transparent pr-2 py-0.5 focus:outline-none cursor-pointer"
               >
-                <option value="repeat-run-D">repeat-run-D</option>
-                <option value="official-run-C">official-run-C</option>
-                <option value="rule-baseline">rule-baseline</option>
+                <option value="repeat-run-D">Repeat AI Pipeline (Run D)</option>
+                <option value="official-run-C">Official AI Pipeline (Run C)</option>
+                <option value="rule-baseline">Rule-Based Baseline (No AI)</option>
               </select>
             </div>
 

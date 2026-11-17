@@ -3,6 +3,12 @@ import { Dataset, FailureAnalysisSummary, FailureRecord, DetailedRunComparison, 
 import { TestVerificationSection } from './TestVerificationSection';
 import { PerformanceCostSection } from './PerformanceCostSection';
 import {
+  getRunDisplayInfo,
+  getRunLabel,
+  getRunShortLabel,
+  getRunComparisonContext,
+} from '../utils/runLabels';
+import {
   ShieldCheck,
   TrendingUp,
   Zap,
@@ -425,7 +431,9 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
             >
               <option value="all">All Runs (Aggregated)</option>
               {availableRuns.map((r) => (
-                <option key={r} value={r}>{r}</option>
+                <option key={r} value={r}>
+                  {getRunDisplayInfo(r).label}
+                </option>
               ))}
             </select>
           </div>
@@ -636,8 +644,9 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
                   filteredFailures.map((f, idx) => (
                     <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
                       <td className="py-2.5 px-3 font-mono font-medium">
-                        <span className="text-slate-400 text-[11px] block">{f.run_id}</span>
+                        <span className="font-semibold text-slate-800 text-xs block font-sans">{getRunShortLabel(f.run_id)}</span>
                         <span className="font-bold text-slate-900">{f.candidate_id}</span>
+                        <span className="text-slate-400 text-[10px] block font-mono">{f.run_id}</span>
                       </td>
                       <td className="py-2.5 px-3 font-mono">
                         {f.episode ? `Ep. ${f.episode}` : '—'}
@@ -718,7 +727,9 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
                 className="font-semibold text-slate-800 bg-transparent pr-2 py-1 focus:outline-none cursor-pointer"
               >
                 {availableRuns.map((r) => (
-                  <option key={r} value={r}>{r}</option>
+                  <option key={r} value={r}>
+                    {getRunDisplayInfo(r).label}
+                  </option>
                 ))}
               </select>
 
@@ -733,7 +744,9 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
                 className="font-semibold text-indigo-700 bg-transparent pr-2 py-1 focus:outline-none cursor-pointer"
               >
                 {availableRuns.map((r) => (
-                  <option key={r} value={r}>{r}</option>
+                  <option key={r} value={r}>
+                    {getRunDisplayInfo(r).label}
+                  </option>
                 ))}
               </select>
             </div>
@@ -746,6 +759,27 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
               <RefreshCw className={`w-3.5 h-3.5 ${comparing ? 'animate-spin' : ''}`} />
               <span>{comparing ? 'Comparing...' : 'Compare'}</span>
             </button>
+          </div>
+        </div>
+
+        {/* Informative Run Context Header for Reviewers */}
+        <div className="mb-5 bg-gradient-to-r from-slate-50 via-indigo-50/30 to-slate-50 border border-slate-200/90 rounded-xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-bold text-slate-600 uppercase tracking-wider text-[10px]">Comparing:</span>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white border border-slate-200 font-semibold text-slate-800 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-slate-700"></span>
+              <span>{getRunDisplayInfo(runA).label}</span>
+              <span className="text-[10px] text-slate-500 font-normal">({getRunDisplayInfo(runA).badge})</span>
+            </div>
+            <span className="text-slate-400 font-bold">&rarr;</span>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white border border-indigo-200 font-semibold text-indigo-700 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-indigo-600"></span>
+              <span>{getRunDisplayInfo(runB).label}</span>
+              <span className="text-[10px] text-indigo-500 font-normal">({getRunDisplayInfo(runB).badge})</span>
+            </div>
+          </div>
+          <div className="text-[11px] text-slate-600 italic bg-white/80 px-2.5 py-1 rounded border border-slate-200/60 shrink-0">
+            {getRunComparisonContext(runA, runB)}
           </div>
         </div>
 
@@ -843,7 +877,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                Newly Appearing in {runB} ({comparison?.new_candidates?.length || 0})
+                Newly Appearing in {getRunShortLabel(runB)} ({comparison?.new_candidates?.length || 0})
               </button>
 
               <button
@@ -854,7 +888,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                Missing from {runB} ({comparison?.missing_candidates?.length || 0})
+                Missing from {getRunShortLabel(runB)} ({comparison?.missing_candidates?.length || 0})
               </button>
             </div>
 
@@ -869,8 +903,8 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
               <table className="w-full text-left text-xs">
                 <thead className="sticky top-0 z-10 bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px] shadow-xs">
                   <tr>
-                    <th className="py-2.5 px-3 bg-slate-50">Run A ({runA})</th>
-                    <th className="py-2.5 px-3 bg-slate-50">Run B ({runB})</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Run A ({getRunShortLabel(runA)})</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Run B ({getRunShortLabel(runB)})</th>
                     <th className="py-2.5 px-3 bg-slate-50">Episode</th>
                     <th className="py-2.5 px-3 bg-slate-50">Line Spans (A vs B)</th>
                     <th className="py-2.5 px-3 bg-slate-50">Temporal IoU</th>
@@ -934,7 +968,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
                   <tr>
                     <th className="py-2.5 px-3 bg-slate-50">PID</th>
                     <th className="py-2.5 px-3 bg-slate-50">Episode</th>
-                    <th className="py-2.5 px-3 bg-slate-50">Rank in {runB}</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Rank in {getRunShortLabel(runB)}</th>
                     <th className="py-2.5 px-3 bg-slate-50">Score</th>
                     <th className="py-2.5 px-3 bg-slate-50">Hook Dialogue Preview</th>
                   </tr>
@@ -943,7 +977,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
                   {(!comparison?.new_candidates || comparison.new_candidates.length === 0) ? (
                     <tr>
                       <td colSpan={5} className="py-6 text-center text-slate-400 font-sans">
-                        No newly appearing candidates in {runB}.
+                        No newly appearing candidates in {getRunShortLabel(runB)}.
                       </td>
                     </tr>
                   ) : (
@@ -970,7 +1004,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
                   <tr>
                     <th className="py-2.5 px-3 bg-slate-50">PID</th>
                     <th className="py-2.5 px-3 bg-slate-50">Episode</th>
-                    <th className="py-2.5 px-3 bg-slate-50">Rank in {runA}</th>
+                    <th className="py-2.5 px-3 bg-slate-50">Rank in {getRunShortLabel(runA)}</th>
                     <th className="py-2.5 px-3 bg-slate-50">Score</th>
                     <th className="py-2.5 px-3 bg-slate-50">Hook Dialogue Preview</th>
                   </tr>
@@ -979,7 +1013,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ dataset, activeFeature = '
                   {(!comparison?.missing_candidates || comparison.missing_candidates.length === 0) ? (
                     <tr>
                       <td colSpan={5} className="py-6 text-center text-slate-400 font-sans">
-                        No candidates missing from {runA}.
+                        No candidates missing from {getRunShortLabel(runA)}.
                       </td>
                     </tr>
                   ) : (

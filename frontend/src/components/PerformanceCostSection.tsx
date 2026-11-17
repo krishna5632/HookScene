@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { PerformanceCostSummary, StagePerformanceRecord } from '../types';
 import {
+  getRunDisplayInfo,
+  getRunLabel,
+  getRunShortLabel,
+} from '../utils/runLabels';
+import {
   Clock,
   Cpu,
   Layers,
@@ -136,7 +141,7 @@ export const PerformanceCostSection: React.FC<PerformanceCostSectionProps> = ({
             >
               {availableRuns.map((r) => (
                 <option key={r} value={r}>
-                  {r}
+                  {getRunDisplayInfo(r).label}
                 </option>
               ))}
             </select>
@@ -430,13 +435,18 @@ export const PerformanceCostSection: React.FC<PerformanceCostSectionProps> = ({
                             isCurrent ? 'bg-amber-50/40 font-medium' : ''
                           }`}
                         >
-                          <td className="py-2.5 px-4 font-mono font-bold text-slate-900 flex items-center gap-1.5">
-                            {r.run_id}
-                            {isCurrent && (
-                              <span className="text-[9px] bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded font-sans font-normal">
-                                Active
-                              </span>
-                            )}
+                          <td className="py-2.5 px-4">
+                            <div className="flex items-center gap-1.5 font-sans font-semibold text-slate-900">
+                              <span>{getRunDisplayInfo(r.run_id).label}</span>
+                              {isCurrent && (
+                                <span className="text-[9px] bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded font-sans font-normal">
+                                  Active
+                                </span>
+                              )}
+                            </div>
+                            <div className="font-mono text-[10px] text-slate-400">
+                              {r.run_id} &middot; <span className="italic">{getRunDisplayInfo(r.run_id).engine}</span>
+                            </div>
                           </td>
                           <td className="py-2.5 px-3 font-mono">{r.total_duration_s.toFixed(2)}s</td>
                           <td className="py-2.5 px-3 font-mono">{r.total_llm_calls}</td>
