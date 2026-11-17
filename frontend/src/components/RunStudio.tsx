@@ -663,6 +663,118 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
         </div>
       </div>
 
+      {/* REAL-TIME TELEMETRY & LOG VIEWER (Shown directly below Engine Configuration) */}
+      <div className="bg-white rounded-3xl border border-[#E5E5EA] p-6 md:p-8 shadow-xs">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <Terminal size={17} className="text-[#18181B]" />
+            <h3 className="text-[17px] font-semibold text-[#18181B] tracking-tight">
+              Live Pipeline Telemetry & Execution Log
+            </h3>
+            {loading && (
+              <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                Running Stage {activeStage} of 5
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={copyLogsToClipboard}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#D1D1D6] text-[#27272A] hover:bg-[#F0F0F2] text-xs font-medium transition-colors cursor-pointer"
+            >
+              <Copy size={13} />
+              <span>{copiedLogs ? 'Copied!' : 'Copy Logs'}</span>
+            </button>
+            <span className="text-xs font-mono text-[#52525A] bg-[#F0F0F2] border border-[#E5E5EA] px-2.5 py-1 rounded-xl">
+              ⏱ {elapsed}s
+            </span>
+          </div>
+        </div>
+
+        {/* Stepper Stage Bar */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">
+          {[
+            { id: 1, label: '1. Ingestion' },
+            { id: 2, label: '2. Narrative Arc' },
+            { id: 3, label: '3. Signals Scan' },
+            { id: 4, label: '4. Dual Judge' },
+            { id: 5, label: '5. Tournament' },
+          ].map((st) => {
+            const isDone = activeStage > st.id;
+            const isActive = activeStage === st.id;
+            return (
+              <div
+                key={st.id}
+                className={`p-2.5 rounded-xl border text-center transition-all ${
+                  isActive
+                    ? 'border-[#18181B] bg-[#18181B] text-white font-semibold shadow-xs'
+                    : isDone
+                    ? 'border-emerald-200 bg-emerald-50 text-emerald-800 font-medium'
+                    : 'border-[#E5E5EA] bg-[#F8F8FA] text-[#71717A]'
+                }`}
+              >
+                <div className="text-[11px] truncate">
+                  {isDone ? '✓ ' : ''}{st.label}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Clean Log Stream Console */}
+        <div
+          ref={logConsoleRef}
+          className="bg-[#09090B] text-[#E4E4E7] rounded-2xl p-4 font-mono text-xs max-h-72 overflow-y-auto space-y-1.5 shadow-inner border border-[#27272A]"
+        >
+          {filteredLogs.map((log) => (
+            <div key={log.id} className="flex items-start gap-2.5 leading-relaxed">
+              <span className="text-[#71717A] shrink-0 text-[11px]">{log.timestamp}</span>
+              <span
+                className={`px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 uppercase ${
+                  log.level === 'error'
+                    ? 'bg-rose-900/60 text-rose-300'
+                    : log.level === 'success'
+                    ? 'bg-emerald-900/60 text-emerald-300'
+                    : log.level === 'stage'
+                    ? 'bg-amber-900/60 text-amber-300'
+                    : 'bg-[#27272A] text-[#A1A1AA]'
+                }`}
+              >
+                {log.tag}
+              </span>
+              <span
+                className={`flex-1 break-words ${
+                  log.level === 'error'
+                    ? 'text-rose-300'
+                    : log.level === 'success'
+                    ? 'text-emerald-300'
+                    : log.level === 'stage'
+                    ? 'text-amber-200'
+                    : 'text-[#E4E4E7]'
+                }`}
+              >
+                {log.message}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Redirect Notice upon completion */}
+        {countdown !== null && (
+          <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs text-emerald-900 font-medium">
+            <span>🎉 Extraction complete! Redirecting to Review Desk in {countdown}s...</span>
+            <button
+              onClick={() => setActiveTab('review')}
+              className="px-3 py-1 bg-emerald-700 text-white rounded-lg font-semibold hover:bg-emerald-800"
+            >
+              Open Desk Now →
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* CARD 3: EXPLORE MORE EXAMPLES (TwelveLabs Exact Card 3 Design) */}
       <div className="bg-white rounded-3xl border border-[#E5E5EA] p-6 md:p-8 shadow-xs">
         <div className="flex items-center justify-between mb-6">
@@ -731,118 +843,6 @@ export const RunStudio: React.FC<RunStudioProps> = ({ setDataset, setActiveTab }
             </div>
           ))}
         </div>
-      </div>
-
-      {/* CARD 4: REAL-TIME TELEMETRY & LOG VIEWER (Clean, Professional, Easy to Read) */}
-      <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 md:p-8 shadow-xs">
-        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-          <div className="flex items-center gap-2">
-            <Terminal size={17} className="text-neutral-600" />
-            <h3 className="text-sm font-semibold text-neutral-900">
-              Live Pipeline Telemetry & Execution Log
-            </h3>
-            {loading && (
-              <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                Running Stage {activeStage} of 5
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={copyLogsToClipboard}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-lg border border-neutral-200 text-neutral-600 hover:text-neutral-900 text-xs font-medium hover:bg-neutral-50 transition-colors"
-            >
-              <Copy size={13} />
-              <span>{copiedLogs ? 'Copied!' : 'Copy Logs'}</span>
-            </button>
-            <span className="text-xs font-mono text-neutral-500 bg-neutral-100 px-2 py-1 rounded-lg">
-              ⏱ {elapsed}s
-            </span>
-          </div>
-        </div>
-
-        {/* Stepper Stage Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">
-          {[
-            { id: 1, label: '1. Ingestion' },
-            { id: 2, label: '2. Narrative Arc' },
-            { id: 3, label: '3. Signals Scan' },
-            { id: 4, label: '4. Dual Judge' },
-            { id: 5, label: '5. Tournament' },
-          ].map((st) => {
-            const isDone = activeStage > st.id;
-            const isActive = activeStage === st.id;
-            return (
-              <div
-                key={st.id}
-                className={`p-2 rounded-lg border text-center transition-all ${
-                  isActive
-                    ? 'border-neutral-900 bg-neutral-900 text-white font-semibold'
-                    : isDone
-                    ? 'border-emerald-200 bg-emerald-50 text-emerald-800 font-medium'
-                    : 'border-neutral-100 bg-neutral-50 text-neutral-400'
-                }`}
-              >
-                <div className="text-[11px] truncate">
-                  {isDone ? '✓ ' : ''}{st.label}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Clean Log Stream Console */}
-        <div
-          ref={logConsoleRef}
-          className="bg-neutral-950 text-neutral-200 rounded-xl p-4 font-mono text-xs max-h-72 overflow-y-auto space-y-1.5 shadow-inner"
-        >
-          {filteredLogs.map((log) => (
-            <div key={log.id} className="flex items-start gap-2.5 leading-relaxed">
-              <span className="text-neutral-500 shrink-0 text-[11px]">{log.timestamp}</span>
-              <span
-                className={`px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 uppercase ${
-                  log.level === 'error'
-                    ? 'bg-rose-900/60 text-rose-300'
-                    : log.level === 'success'
-                    ? 'bg-emerald-900/60 text-emerald-300'
-                    : log.level === 'stage'
-                    ? 'bg-amber-900/60 text-amber-300'
-                    : 'bg-neutral-800 text-neutral-300'
-                }`}
-              >
-                {log.tag}
-              </span>
-              <span
-                className={`flex-1 break-words ${
-                  log.level === 'error'
-                    ? 'text-rose-300'
-                    : log.level === 'success'
-                    ? 'text-emerald-300'
-                    : log.level === 'stage'
-                    ? 'text-amber-200'
-                    : 'text-neutral-300'
-                }`}
-              >
-                {log.message}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Redirect Notice upon completion */}
-        {countdown !== null && (
-          <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs text-emerald-900 font-medium">
-            <span>🎉 Extraction complete! Redirecting to Review Desk in {countdown}s...</span>
-            <button
-              onClick={() => setActiveTab('review')}
-              className="px-3 py-1 bg-emerald-700 text-white rounded-lg font-semibold hover:bg-emerald-800"
-            >
-              Open Desk Now →
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
