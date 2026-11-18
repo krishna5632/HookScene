@@ -1,4 +1,4 @@
-# SnipDeck architecture
+# HookScene architecture
 
 The LLM only ever returns line IDs (e.g. `E07_L042`); code computes, snaps and validates every timestamp.
 Steps are numbered as in the README (§4). Values are from `config.yaml`, as used for the official run (`results/official-run-C`).

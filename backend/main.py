@@ -29,21 +29,21 @@ FRONTEND_DIR = ROOT_DIR / "frontend"
 sys.path.insert(0, str(SRC_DIR))
 sys.path.insert(0, str(BACKEND_DIR))
 
-from snipdeck.core.parse import Episode, load_show
-from snipdeck.core.pipeline import arun
-from snipdeck.core.subtitles import SUBTITLE_EXT, load_subtitles
-from snipdeck.export import payload
-from snipdeck.providers import LLM, load_config
-from snipdeck.eval.runner import (
+from hookscene.core.parse import Episode, load_show
+from hookscene.core.pipeline import arun
+from hookscene.core.subtitles import SUBTITLE_EXT, load_subtitles
+from hookscene.export import payload
+from hookscene.providers import LLM, load_config
+from hookscene.eval.runner import (
     run_quality_evaluation,
     run_consistency_comparison,
     run_consistency_comparison_detailed,
 )
-from snipdeck.eval.schemas import HumanDecisionPayload, PerformanceCostSummary, CandidateDecisionTrace
-from snipdeck.eval.failure_tracker import track_run_failures_and_metadata
-from snipdeck.eval.pricing import get_all_configured_pricing, calculate_call_cost, get_model_pricing
-from snipdeck.eval.explainability import generate_decision_trace
-from snipdeck.eval.store import EvalStore
+from hookscene.eval.schemas import HumanDecisionPayload, PerformanceCostSummary, CandidateDecisionTrace
+from hookscene.eval.failure_tracker import track_run_failures_and_metadata
+from hookscene.eval.pricing import get_all_configured_pricing, calculate_call_cost, get_model_pricing
+from hookscene.eval.explainability import generate_decision_trace
+from hookscene.eval.store import EvalStore
 
 app = FastAPI(
     title="HookScene Studio API",
@@ -217,7 +217,7 @@ def validate_and_extract_upload(files_payload: list[dict], dest_dir: Path) -> No
 
 @app.post("/api/run")
 async def run_pipeline(body: dict = Body(...)):
-    """Execute the SnipDeck extraction pipeline on provided screenplays."""
+    """Execute the HookScene extraction pipeline on provided screenplays."""
     opts = body.get("options", {})
     files_payload = body.get("files", [])
     use_sample = body.get("use_sample", False)

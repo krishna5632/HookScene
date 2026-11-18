@@ -1,4 +1,4 @@
-"""SnipDeck CLI.
+"""HookScene CLI.
 
   python scripts/run.py run --input "<episodes dir>"            # full LLM pipeline (needs an API key)
   python scripts/run.py run --input "<episodes dir>" --no-llm   # rule-based baseline, zero API calls
@@ -20,10 +20,10 @@ sys.path.insert(0, str(ROOT_DIR))
 sys.path.insert(0, str(BACKEND_DIR))
 sys.path.insert(0, str(BACKEND_DIR / "src"))
 
-from snipdeck.core.parse import load_show  # noqa: E402
-from snipdeck.core.pipeline import run  # noqa: E402
-from snipdeck.export import write_all  # noqa: E402
-from snipdeck.providers import LLM, load_config  # noqa: E402
+from hookscene.core.parse import load_show  # noqa: E402
+from hookscene.core.pipeline import run  # noqa: E402
+from hookscene.export import write_all  # noqa: E402
+from hookscene.providers import LLM, load_config  # noqa: E402
 
 
 def check(config_path: str) -> int:
@@ -86,7 +86,7 @@ def main() -> int:
 
     cfg = load_config(a.config, a.profile)
     if Path(a.input).suffix.lower() in (".srt", ".vtt"):
-        from snipdeck.core.subtitles import load_subtitles
+        from hookscene.core.subtitles import load_subtitles
         eps = load_subtitles(a.input, max_seconds=a.max_minutes * 60 if a.max_minutes else None,
                              part_seconds=a.part_seconds, show=a.show)
     else:
@@ -106,7 +106,7 @@ def main() -> int:
     def progress(stage, i, n):
         print(f"  [{stage}] {i}/{n}", flush=True)
 
-    from snipdeck.providers import FatalProviderError
+    from hookscene.providers import FatalProviderError
     try:
         res = run(eps, cfg, llm=llm, use_llm=not a.no_llm, do_montage=not a.no_montage, progress=progress,
                   show=show)

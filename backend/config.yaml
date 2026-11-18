@@ -1,5 +1,5 @@
-# SnipDeck settings, read by src/snipdeck/providers/base.py (providers, stages, profiles) and
-# src/snipdeck/core/pipeline.py (rules, weights). Models are swapped here, never in code.
+# HookScene settings, read by backend/hookscene/providers/base.py (providers, stages, profiles) and
+# backend/hookscene/core/pipeline.py (rules, weights). Models are swapped here, never in code.
 
 # Any OpenAI-compatible endpoint. The key is read from the env var named in api_key_env (or from .env).
 providers:
@@ -89,14 +89,14 @@ rules:
   montage_min_composite: 0.5
   seed: 7
 
-# Weights of the judge scores in the composite ranking (percentage weights summing to 1.0).
+# Weights of the six judge scores in the composite.
 weights:
-  hook_3s: 0.25
-  cliffhanger: 0.25
-  standalone: 0.20
-  intensity: 0.20
-  plot_relevance: 0.10
-  trope_fit: 0.00
+  hook_3s: 3.0
+  cliffhanger: 3.0
+  standalone: 2.0
+  intensity: 1.0
+  plot_relevance: 1.0
+  trope_fit: 1.0
 
 # Speed profiles, merged over everything above (scripts/run.py --profile; the Speed menu on the website).
 # thorough = the settings used for results/official-run-C.
@@ -128,3 +128,18 @@ profiles:
       score:      {provider: anthropic, model: claude-sonnet-4-5, fallback_models: []}
       rank:       {provider: anthropic, model: claude-sonnet-4-5, fallback_models: []}
       montage:    {provider: anthropic, model: claude-sonnet-4-5, fallback_models: []}
+
+# Configurable Model Pricing (USD per 1 Million tokens)
+pricing:
+  gemini-flash-lite-latest: {input_per_m: 0.10, output_per_m: 0.40}
+  gemini-2.0-flash: {input_per_m: 0.10, output_per_m: 0.40}
+  gemini-2.0-flash-lite: {input_per_m: 0.075, output_per_m: 0.30}
+  gemini-3-flash-preview: {input_per_m: 0.10, output_per_m: 0.40}
+  gemini-3.1-flash-lite: {input_per_m: 0.075, output_per_m: 0.30}
+  gemini-1.5-flash: {input_per_m: 0.075, output_per_m: 0.30}
+  gpt-4o-mini: {input_per_m: 0.15, output_per_m: 0.60}
+  gpt-4o: {input_per_m: 2.50, output_per_m: 10.00}
+  claude-haiku-4-5: {input_per_m: 0.80, output_per_m: 4.00}
+  claude-sonnet-4-5: {input_per_m: 3.00, output_per_m: 15.00}
+  llama-3.3-70b-versatile: {input_per_m: 0.59, output_per_m: 0.79}
+

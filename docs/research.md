@@ -30,7 +30,7 @@ Paywalled pages (Variety, Deadline, Business Standard, eMarketer) were read only
 - **Hook/hold benchmarks (general video ads, not drama-specific):** hook rate = 3-second plays / impressions (~25–30% typical, 30%+ strong);
   hold rate = ThruPlays / 3-second plays. No published short-drama-specific benchmark was found.
   https://admanage.ai/blog/what-is-a-good-hook-rate-for-facebook-ads · https://insights.vaizle.com/hook-rate-hold-rate/
-- **No public source describes the scoring rubric editors use before posting.** Teams pick winners by live testing. SnipDeck's job is the first pass before that test.
+- **No public source describes the scoring rubric editors use before posting.** Teams pick winners by live testing. HookScene's job is the first pass before that test.
 
 ### Kuku specifically
 - FY26: revenue ₹1,484 cr, marketing ₹1,105 cr = 77.7% of total expenses. https://inc42.com/buzz/ipo-bound-kuku-technologies-turns-profitable-in-fy26-revenue-surges-6x-to-₹1484-cr/

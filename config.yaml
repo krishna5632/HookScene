@@ -1,5 +1,5 @@
-# SnipDeck settings, read by src/snipdeck/providers/base.py (providers, stages, profiles) and
-# src/snipdeck/core/pipeline.py (rules, weights). Models are swapped here, never in code.
+# HookScene settings, read by backend/hookscene/providers/base.py (providers, stages, profiles) and
+# backend/hookscene/core/pipeline.py (rules, weights). Models are swapped here, never in code.
 
 # Any OpenAI-compatible endpoint. The key is read from the env var named in api_key_env (or from .env).
 providers:
