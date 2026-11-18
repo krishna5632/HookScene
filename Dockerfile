@@ -52,9 +52,9 @@ RUN mkdir -p /app/backend/.cache /app/outputs
 # Expose server port
 EXPOSE 8080
 
-# Health check to ensure API is responsive
+# Health check to ensure API is responsive on any assigned port
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8080/api/health || exit 1
+    CMD sh -c 'curl -f http://localhost:${PORT:-8080}/api/health || exit 1'
 
 # Default startup command launches the HookScene FastAPI studio server
 CMD ["python", "backend/server.py"]
