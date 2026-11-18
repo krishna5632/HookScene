@@ -39,47 +39,33 @@ HookScene solves this with a **neuro-symbolic separation of concerns**:
 ## 3. Pipeline Architecture
 
 ```mermaid
-flowchart TD
-    subgraph IN["1. Ingestion"]
-        A["Screenplay Scripts<br/>(.txt / .zip / .srt)"] --> B["Tokenize Screenplay<br/>Line IDs: E01_L004 + safe cut map"]
+flowchart LR
+    subgraph PHASE1 ["PHASE 1: INGESTION & DISCOVERY"]
+        direction LR
+        S1["📄 <b>1. Ingestion & Parse</b><br/>• Parse .txt / .zip / .srt<br/>• Stable Line IDs (E01_L004)<br/>• Dialogue Boundary Map"]
+        S2["🛡️ <b>2. Story & Spoiler Shield</b><br/>• Map 50-episode narrative arc<br/>• Character stakes & dynamics<br/>• Lock climax episodes 44–50"]
+        S3["🎯 <b>3. Dramatic Peak Hunter</b><br/>• AI dialogue tension radar<br/>• Zero-cost keyword heuristic<br/>• <i>Line IDs only (No timestamps)</i>"]
+        S1 --> S2 --> S3
     end
 
-    subgraph SAFETY["2. Story & Spoilers"]
-        B --> C["Whole Series Arc Summary<br/>Map character motives & conflicts"]
-        C --> D["Anti-Spoiler Shield<br/>Lock climax episodes (Eps 44-50)"]
+    subgraph PHASE2 ["PHASE 2: VALIDATION, RANKING & DELIVERY"]
+        direction LR
+        S4["📏 <b>4. Code Quality Gates</b><br/>• Strict 20–60s length gate<br/>• Hook onset ≤ 3.0 seconds<br/>• Dialogue boundary validation"]
+        S5["⚖️ <b>5. Dual-Judge Scoring</b><br/>• 5 rubrics (Hook, Cliff, Clarity...)<br/>• Text attention & pacing meter<br/>• Listwise Borda count ranking"]
+        S6["🎬 <b>6. Studio Delivery & NLE</b><br/>• Continuous single cuts<br/>• Fast-paced jump montages<br/>• Export: EDL · XML · CSV · JSON"]
+        S4 --> S5 --> S6
     end
 
-    subgraph DISCOVERY["3. Candidate Discovery"]
-        D --> E["Dramatic Peak Hunter<br/>AI finds hooks & cliffhangers"]
-        B -. "Safety backstop" .-> F["Rule Heuristic<br/>Zero-cost keyword radar"]
-    end
+    S3 ==>|"Validated Line IDs"| S4
 
-    subgraph CODE_GATES["4. Code Quality Gates"]
-        E --> G["Deterministic Code Validation<br/>Strict 20-60s length · Hook onset <= 3.0s<br/>Cut before answer · Safe speech pauses"]
-        F --> G
-    end
-
-    subgraph SCORING["5. Multi-Rubric Ranking"]
-        G --> H["Dual-Judge Scoring (1-5)<br/>Hook · Cliff · Clarity · Intensity · Plot"]
-        H --> I["Listwise Borda Count<br/>Deduplication & Diversity filter"]
-    end
-
-    subgraph EXPORT["6. Studio Delivery"]
-        I --> J["Montage Synthesizer<br/>Intra-scene & cross-episode jump cuts"]
-        J --> K["Editorial Review Desk<br/>Approve / Reject & Timeline Export<br/>(EDL · XML · CSV · JSON)"]
-    end
-
-    classDef stage fill:#FFFFFF,stroke:#0F172A,stroke-width:1.5px,color:#0F172A;
-    classDef gate fill:#EFF6FF,stroke:#2563EB,stroke-width:2px,color:#1E3A8A;
-    classDef delivery fill:#F0FDF4,stroke:#16A34A,stroke-width:2px,color:#14532D;
-
-    class A,B,C,D,E,F stage;
-    class G,H,I gate;
-    class J,K delivery;
+    classDef phase fill:#F8FAFC,stroke:#0F172A,stroke-width:1.5px,color:#0F172A;
+    classDef card fill:#FFFFFF,stroke:#CBD5E1,stroke-width:1.5px,color:#1E293B;
+    class PHASE1,PHASE2 phase;
+    class S1,S2,S3,S4,S5,S6 card;
 ```
 
 ### The 6 Execution Stages:
-1. **Screenplay Ingestion & Tokenization:** Regex parser converts screenplay blocks into structured `Line` entities (`E01_L004`). Precomputes safe acoustic boundaries (`cut_ok`) where speech $\ge 0.1$s is silent.
+1. **Screenplay Ingestion & Tokenization:** Regex parser converts screenplay blocks into structured `Line` entities (`E01_L004`). Precomputes a safe dialogue boundary map (`cut_ok`) using screenplay timestamps to ensure cuts never clip dialogue or sound effects.
 2. **Narrative Arc & Anti-Spoiler Shield:** Maps the overall story and consensus-votes late climax episodes (Eps 44–50) so endings are never spoiled in ads.
 3. **Dramatic Peak Discovery:** Identifies the highest-tension moments (altar rejections, family disownments, slaps, identity reveals) returning only Line IDs.
 4. **Deterministic Code Quality Gates:** Python code converts Line IDs to timestamps and enforces hard rules: clip duration must be 20–60s, dramatic hook onset $\le 3.0$s, and cliffhanger cuts before the resolution.
