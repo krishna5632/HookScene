@@ -3,12 +3,12 @@
 > **Automated promo intelligence engine that transforms 50-episode microdrama screenplays into viral, broadcast-ready 20–60s video teasers.**
 
 [![Live Web App](https://img.shields.io/badge/Live_App-Render-2563EB?style=for-the-badge&logo=render)](https://hookscene.onrender.com/)
-[![Solution Document](https://img.shields.io/badge/Report-2_Page_PDF-0F172A?style=for-the-badge&logo=adobe-acrobat-reader)](HookScene_Solution_Document.pdf)
+[![Solution Document](https://img.shields.io/badge/Report-2_Page_PDF-0F172A?style=for-the-badge&logo=adobe-acrobat-reader)](HookScene_Solution_Document_Final.pdf)
 [![Pytest Suite](https://img.shields.io/badge/Pytest-80%2F80_Passed-16A34A?style=for-the-badge&logo=pytest)](https://hookscene.onrender.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
 * **Live Studio App:** [https://hookscene.onrender.com/](https://hookscene.onrender.com/)
-* **Official 2-Page Solution Document:** [HookScene_Solution_Document.pdf](HookScene_Solution_Document.pdf) *(source: [HookScene_Solution_Document.md](HookScene_Solution_Document.md))*
+* **Official 2-Page Solution Document:** [HookScene_Solution_Document_Final.pdf](HookScene_Solution_Document_Final.pdf) *(source: [HookScene_Solution_Document_Final.md](HookScene_Solution_Document_Final.md))*
 * **GitHub Repository:** [https://github.com/krishna5632/HookScene](https://github.com/krishna5632/HookScene)
 * **Kuku AI Generalist Assignment:** Built for Problem 1 ("Find the Promos").
 
@@ -197,7 +197,7 @@ The HookScene Studio UI (available locally or at [hookscene.onrender.com](https:
 
 ## 9. Submission Deliverables
 
-* **Solution Document:** [HookScene_Solution_Document.pdf](HookScene_Solution_Document.pdf) *(2-page PDF)*
+* **Solution Document:** [HookScene_Solution_Document_Final.pdf](HookScene_Solution_Document_Final.pdf) *(2-page PDF)*
 * **Live App Link:** [https://hookscene.onrender.com/](https://hookscene.onrender.com/)
 * **Code Repository:** [https://github.com/krishna5632/HookScene](https://github.com/krishna5632/HookScene)
 * **Raw Outputs Folder:** [results/official-run-C/](results/official-run-C/) (`promos.md`, `promos.json`, `promos.csv`)

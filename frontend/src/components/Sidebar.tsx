@@ -14,6 +14,7 @@ import {
   FileText,
   PanelLeftClose,
   PanelLeftOpen,
+  Clapperboard,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -91,21 +92,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={() => setActiveTab('review')}
           className="flex items-center gap-2.5 cursor-pointer group"
         >
-          {/* TwelveLabs Stepped Geometric Mark */}
-          <svg
-            className="w-7 h-7 text-[#18181B]"
-            viewBox="0 0 28 28"
-            fill="currentColor"
-          >
-            <rect x="2" y="6" width="6" height="2.2" rx="0.5" />
-            <rect x="5" y="9.5" width="8" height="2.2" rx="0.5" />
-            <rect x="3" y="13" width="12" height="2.2" rx="0.5" />
-            <rect x="7" y="16.5" width="9" height="2.2" rx="0.5" />
-            <rect x="11" y="20" width="5" height="2.2" rx="0.5" />
-            <rect x="18" y="7" width="5" height="2.2" rx="0.5" />
-            <rect x="19" y="10.5" width="4" height="2.2" rx="0.5" />
-            <rect x="20" y="14" width="3" height="2.2" rx="0.5" />
-          </svg>
+          {/* HookScene Modern Film & Scene Badge */}
+          <div className="w-8 h-8 rounded-xl bg-[#18181B] group-hover:bg-[#000000] flex items-center justify-center text-white shadow-xs transition-all">
+            <Clapperboard size={17} strokeWidth={2.2} className="text-white" />
+          </div>
 
           {!collapsed && (
             <span className="font-bold text-[#18181B] tracking-tight text-[17px] leading-none">

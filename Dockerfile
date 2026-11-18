@@ -38,6 +38,8 @@ RUN pip install --no-cache-dir -r backend/requirements.txt
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
 COPY results/ ./results/
+COPY docs/ ./docs/
+COPY HookScene_Solution_Document*.pdf ./
 # Copy compiled React production dist from builder
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 COPY server.py ./server.py

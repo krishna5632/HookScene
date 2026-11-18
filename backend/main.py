@@ -943,6 +943,23 @@ if assets_dir.exists():
     app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
 
 
+@app.get("/HookScene_Solution_Document_Final.pdf")
+@app.get("/HookScene_Solution_Document.pdf")
+@app.get("/solution-document")
+@app.get("/solution-doc")
+async def serve_solution_document():
+    candidates = [
+        ROOT_DIR / "HookScene_Solution_Document_Final.pdf",
+        ROOT_DIR / "frontend" / "public" / "HookScene_Solution_Document_Final.pdf",
+        ROOT_DIR / "docs" / "submission" / "HookScene_Solution_Document_Final.pdf",
+        ROOT_DIR / "HookScene_Solution_Document.pdf",
+    ]
+    for p in candidates:
+        if p.is_file():
+            return FileResponse(str(p), media_type="application/pdf", filename="HookScene_Solution_Document_Final.pdf")
+    raise HTTPException(status_code=404, detail="Solution document PDF not found")
+
+
 @app.get("/")
 async def serve_index():
     index_file = FRONTEND_DIR / "dist" / "index.html"

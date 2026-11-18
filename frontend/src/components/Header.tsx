@@ -154,6 +154,19 @@ export const Header: React.FC<HeaderProps> = ({
           )}
         </div>
 
+        {/* Solution Document PDF Button */}
+        <a
+          href="/HookScene_Solution_Document_Final.pdf"
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-blue-200 hover:border-blue-300 text-blue-700 hover:text-blue-900 text-xs font-semibold bg-blue-50/80 hover:bg-blue-100/90 transition-colors shadow-2xs"
+          title="Open Official 2-Page Solution Document (PDF)"
+        >
+          <FileText size={13} className="text-blue-600" />
+          <span>Solution PDF</span>
+          <ExternalLink size={11} className="text-blue-400" />
+        </a>
+
         {/* API Docs Button (TwelveLabs style) */}
         <a
           href="https://github.com/krishna5632/HookScene"
