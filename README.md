@@ -38,31 +38,9 @@ HookScene solves this with a **neuro-symbolic separation of concerns**:
 
 ## 3. Pipeline Architecture
 
-```mermaid
-flowchart LR
-    subgraph PHASE1 ["PHASE 1: INGESTION & DISCOVERY"]
-        direction LR
-        S1["📄 <b>1. Ingestion & Parse</b><br/>• Parse .txt / .zip / .srt<br/>• Stable Line IDs (E01_L004)<br/>• Dialogue Boundary Map"]
-        S2["🛡️ <b>2. Story & Spoiler Shield</b><br/>• Map 50-episode narrative arc<br/>• Character stakes & dynamics<br/>• Lock climax episodes 44–50"]
-        S3["🎯 <b>3. Dramatic Peak Hunter</b><br/>• AI dialogue tension radar<br/>• Zero-cost keyword heuristic<br/>• <i>Line IDs only (No timestamps)</i>"]
-        S1 --> S2 --> S3
-    end
-
-    subgraph PHASE2 ["PHASE 2: VALIDATION, RANKING & DELIVERY"]
-        direction LR
-        S4["📏 <b>4. Code Quality Gates</b><br/>• Strict 20–60s length gate<br/>• Hook onset ≤ 3.0 seconds<br/>• Dialogue boundary validation"]
-        S5["⚖️ <b>5. Dual-Judge Scoring</b><br/>• 5 rubrics (Hook, Cliff, Clarity...)<br/>• Text attention & pacing meter<br/>• Listwise Borda count ranking"]
-        S6["🎬 <b>6. Studio Delivery & NLE</b><br/>• Continuous single cuts<br/>• Fast-paced jump montages<br/>• Export: EDL · XML · CSV · JSON"]
-        S4 --> S5 --> S6
-    end
-
-    S3 ==>|"Validated Line IDs"| S4
-
-    classDef phase fill:#F8FAFC,stroke:#0F172A,stroke-width:1.5px,color:#0F172A;
-    classDef card fill:#FFFFFF,stroke:#CBD5E1,stroke-width:1.5px,color:#1E293B;
-    class PHASE1,PHASE2 phase;
-    class S1,S2,S3,S4,S5,S6 card;
-```
+<p align="center">
+  <img src="docs/pipeline_architecture.svg" alt="HookScene Pipeline Architecture" width="100%" />
+</p>
 
 ### The 6 Execution Stages:
 1. **Screenplay Ingestion & Tokenization:** Regex parser converts screenplay blocks into structured `Line` entities (`E01_L004`). Precomputes a safe dialogue boundary map (`cut_ok`) using screenplay timestamps to ensure cuts never clip dialogue or sound effects.
