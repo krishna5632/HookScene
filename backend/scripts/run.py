@@ -60,7 +60,7 @@ def check(config_path: str) -> int:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(prog="snipdeck")
+    ap = argparse.ArgumentParser(prog="hookscene")
     sub = ap.add_subparsers(dest="cmd", required=True)
     r = sub.add_parser("run", help="find and rank promos")
     r.add_argument("--input", required=True, help="folder of episode .txt screenplays, or one .srt/.vtt subtitle file")

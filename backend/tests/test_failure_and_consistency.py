@@ -6,23 +6,23 @@ from pathlib import Path
 
 import pytest
 
-from snipdeck.eval.consistency import (
+from hookscene.eval.consistency import (
     calculate_spearman_rho,
     compare_runs,
     compare_runs_detailed,
     same_moment,
     temporal_iou,
 )
-from snipdeck.eval.failure_tracker import (
+from hookscene.eval.failure_tracker import (
     compute_screenplay_hash,
     track_run_failures_and_metadata,
 )
-from snipdeck.eval.schemas import (
+from hookscene.eval.schemas import (
     FAILURE_CATEGORIES,
     HumanDecisionPayload,
     RunMetadata,
 )
-from snipdeck.eval.store import EvalStore
+from hookscene.eval.store import EvalStore
 
 
 @pytest.fixture

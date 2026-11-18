@@ -9,9 +9,9 @@ All tests use mock data with zero external API calls or credit spend.
 from __future__ import annotations
 
 import pytest
-from snipdeck.eval.explainability import generate_decision_trace
-from snipdeck.eval.schemas import CandidateDecisionTrace
-from snipdeck.eval.store import EvalStore
+from hookscene.eval.explainability import generate_decision_trace
+from hookscene.eval.schemas import CandidateDecisionTrace
+from hookscene.eval.store import EvalStore
 
 
 @pytest.fixture

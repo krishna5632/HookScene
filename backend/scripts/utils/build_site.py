@@ -72,7 +72,7 @@ def official() -> None:
     if not (OFFICIAL / "promos.json").exists():
         print("no official run outputs found: skipping official.json")
         return
-    from snipdeck.core.parse import load_show
+    from hookscene.core.parse import load_show
 
     rd = lambda n: json.loads((OFFICIAL / n).read_text(encoding="utf-8"))  # noqa: E731
     promos, cands, log = rd("promos.json"), rd("candidates_all.json"), rd("run_log.json")

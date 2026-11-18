@@ -17,18 +17,18 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 import pytest
 
-from snipdeck.core.parse import Episode, Line, parse_episode
-from snipdeck.core.schemas import RawCandidate, Promo, Segment
-from snipdeck.core.validate import build_single
-from snipdeck.core.heuristics import propose, detect_signals
-from snipdeck.core.stages import calculate_score_100, composite, check_judge_divergence
-from snipdeck.core.schemas import ScoreItem
-from snipdeck.eval.rules import evaluate_rules
-from snipdeck.eval.store import EvalStore
-from snipdeck.eval.schemas import HumanDecisionPayload
-from snipdeck.eval.failure_tracker import track_run_failures_and_metadata
-from snipdeck.eval.consistency import compare_runs_detailed, calculate_spearman_rho, temporal_iou
-from snipdeck.export import to_edl, to_fcpxml, to_csv, to_markdown, payload
+from hookscene.core.parse import Episode, Line, parse_episode
+from hookscene.core.schemas import RawCandidate, Promo, Segment
+from hookscene.core.validate import build_single
+from hookscene.core.heuristics import propose, detect_signals
+from hookscene.core.stages import calculate_score_100, composite, check_judge_divergence
+from hookscene.core.schemas import ScoreItem
+from hookscene.eval.rules import evaluate_rules
+from hookscene.eval.store import EvalStore
+from hookscene.eval.schemas import HumanDecisionPayload
+from hookscene.eval.failure_tracker import track_run_failures_and_metadata
+from hookscene.eval.consistency import compare_runs_detailed, calculate_spearman_rho, temporal_iou
+from hookscene.export import to_edl, to_fcpxml, to_csv, to_markdown, payload
 
 
 @pytest.fixture

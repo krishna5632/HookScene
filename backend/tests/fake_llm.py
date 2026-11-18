@@ -1,9 +1,9 @@
 """Deterministic stand-in for LLM so the pipeline wiring can be tested without an API key."""
 import re
 
-from snipdeck.core.heuristics import propose
-from snipdeck.core.schemas import (CandidateBatch, MontageBatch, RankItem, RankResult, ScoreBatch, ScoreItem)
-from snipdeck.core.stages import ShowSummary
+from hookscene.core.heuristics import propose
+from hookscene.core.schemas import (CandidateBatch, MontageBatch, RankItem, RankResult, ScoreBatch, ScoreItem)
+from hookscene.core.stages import ShowSummary
 
 
 class FakeLLM:

@@ -31,8 +31,9 @@ private/
 # built in CI
 web/app.zip
 
-# LaTeX build files (the compiled report is SnipDeck.pdf at the root)
+# LaTeX build files
 docs/paper/*.aux
 docs/paper/*.log
 docs/paper/*.out
 docs/paper/snipdeck.pdf
+SnipDeck.pdf

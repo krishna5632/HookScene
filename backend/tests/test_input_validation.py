@@ -12,8 +12,8 @@ import pytest
 from fastapi import HTTPException
 
 from backend.main import run_pipeline
-from snipdeck.core.parse import parse_episode, load_show
-from snipdeck.core.subtitles import load_subtitles, read_cues
+from hookscene.core.parse import parse_episode, load_show
+from hookscene.core.subtitles import load_subtitles, read_cues
 
 
 def test_empty_screenplay(tmp_path):

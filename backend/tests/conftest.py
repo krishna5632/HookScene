@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT_DIR))
 sys.path.insert(0, str(BACKEND_DIR))
 sys.path.insert(0, str(BACKEND_DIR / "src"))
 
-from snipdeck.core.parse import load_show  # noqa: E402
+from hookscene.core.parse import load_show  # noqa: E402
 
 
 def _ts(t):

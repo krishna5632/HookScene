@@ -11,7 +11,7 @@ from typing import Any
 from .schemas import FAILURE_CATEGORIES, FailureRecord, RunMetadata
 from .store import EvalStore
 
-logger = logging.getLogger("snipdeck.eval.failure_tracker")
+logger = logging.getLogger("hookscene.eval.failure_tracker")
 
 
 def compute_screenplay_hash(episodes_data: Any) -> str:

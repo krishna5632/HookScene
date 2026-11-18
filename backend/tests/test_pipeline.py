@@ -3,8 +3,8 @@ import yaml
 from pathlib import Path
 
 from fake_llm import FakeLLM
-from snipdeck.core.pipeline import run
-from snipdeck.export import write_all
+from hookscene.core.pipeline import run
+from hookscene.export import write_all
 
 CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config.yaml").read_text(encoding="utf-8"))
 

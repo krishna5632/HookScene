@@ -15,11 +15,11 @@ import tempfile
 from pathlib import Path
 from pydantic import BaseModel
 
-from snipdeck.eval.rules import evaluate_rules
-from snipdeck.eval.independent_judge import compute_weighted_score, classify_score, evaluate_independent_llm
-from snipdeck.eval.consistency import temporal_iou, same_moment, compare_runs
-from snipdeck.eval.store import EvalStore
-from snipdeck.eval.schemas import (
+from hookscene.eval.rules import evaluate_rules
+from hookscene.eval.independent_judge import compute_weighted_score, classify_score, evaluate_independent_llm
+from hookscene.eval.consistency import temporal_iou, same_moment, compare_runs
+from hookscene.eval.store import EvalStore
+from hookscene.eval.schemas import (
     CandidateEvaluationRecord,
     EditorialMetricsSummary,
     EvaluationRunSummary,
@@ -27,7 +27,7 @@ from snipdeck.eval.schemas import (
     IndependentLLMBatch,
     IndependentLLMScoreItem,
 )
-from snipdeck.eval.runner import run_quality_evaluation
+from hookscene.eval.runner import run_quality_evaluation
 
 
 # 1. Duration and Hook Validation Test

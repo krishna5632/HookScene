@@ -33,8 +33,8 @@ sys.path.insert(0, str(BACKEND_DIR))
 sys.path.insert(0, str(BACKEND_DIR / "src"))
 
 from evaluate import iou, rule_checks  # noqa: E402
-from snipdeck.core.parse import load_show  # noqa: E402
-from snipdeck.providers import LLM, load_config  # noqa: E402
+from hookscene.core.parse import load_show  # noqa: E402
+from hookscene.providers import LLM, load_config  # noqa: E402
 
 
 class PairJ(BaseModel):

@@ -2,7 +2,7 @@
 hung model for the rest of the run."""
 from pathlib import Path
 
-from snipdeck.providers import LLM, HTTPError, load_config
+from hookscene.providers import LLM, HTTPError, load_config
 
 ROOT = Path(__file__).resolve().parents[1]
 

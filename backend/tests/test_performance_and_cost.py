@@ -11,20 +11,20 @@ import time
 import pytest
 from unittest.mock import MagicMock, AsyncMock, patch
 
-from snipdeck.core.pipeline import PipelineTimer
-from snipdeck.eval.pricing import (
+from hookscene.core.pipeline import PipelineTimer
+from hookscene.eval.pricing import (
     DEFAULT_PRICING_PER_M,
     calculate_call_cost,
     get_all_configured_pricing,
     get_model_pricing,
 )
-from snipdeck.eval.schemas import (
+from hookscene.eval.schemas import (
     LLMCallRecord,
     PerformanceCostSummary,
     StagePerformanceRecord,
 )
-from snipdeck.eval.store import EvalStore
-from snipdeck.providers.base import LLM
+from hookscene.eval.store import EvalStore
+from hookscene.providers.base import LLM
 
 
 # ============================================================================

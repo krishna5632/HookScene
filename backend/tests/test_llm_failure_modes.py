@@ -17,11 +17,11 @@ import json
 import pytest
 from pydantic import BaseModel, Field, ValidationError
 
-from snipdeck.providers.base import HTTPError, FatalProviderError, _extract_json, FATAL_HINTS
-from snipdeck.core.stages import check_judge_divergence, calculate_score_100
-from snipdeck.core.schemas import ScoreItem, ScoreBatch, RawCandidate
-from snipdeck.eval.independent_judge import classify_score, compute_weighted_score
-from snipdeck.eval.schemas import IndependentLLMScoreItem, IndependentLLMBatch
+from hookscene.providers.base import HTTPError, FatalProviderError, _extract_json, FATAL_HINTS
+from hookscene.core.stages import check_judge_divergence, calculate_score_100
+from hookscene.core.schemas import ScoreItem, ScoreBatch, RawCandidate
+from hookscene.eval.independent_judge import classify_score, compute_weighted_score
+from hookscene.eval.schemas import IndependentLLMScoreItem, IndependentLLMBatch
 
 
 class MockCandidateSchema(BaseModel):

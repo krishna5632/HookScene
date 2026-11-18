@@ -1,6 +1,6 @@
 """Anthropic-specific provider behaviour that needs no network: config block, json_mode/max_tokens wiring, and
 automatic recovery when the OpenAI-compatible endpoint rejects response_format or requires max_tokens."""
-from snipdeck.providers import LLM, anthropic_provider_block, load_config
+from hookscene.providers import LLM, anthropic_provider_block, load_config
 
 
 class _Msg:

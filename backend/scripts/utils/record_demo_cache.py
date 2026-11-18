@@ -22,9 +22,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / "src"), str(ROOT / "web")]
 
 import bridge  # noqa: E402  (the web app's glue: we reuse its configuration so cache keys match the browser)
-from snipdeck.core.parse import load_show  # noqa: E402
-from snipdeck.core.pipeline import arun  # noqa: E402
-from snipdeck.providers import LLM  # noqa: E402
+from hookscene.core.parse import load_show  # noqa: E402
+from hookscene.core.pipeline import arun  # noqa: E402
+from hookscene.providers import LLM  # noqa: E402
 
 bridge.APP = ROOT  # in the browser config.yaml sits next to bridge.py; here it is at the repo root
 

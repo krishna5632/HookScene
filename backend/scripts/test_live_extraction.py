@@ -5,10 +5,10 @@ from pathlib import Path
 # Add backend to path
 sys.path.insert(0, "/app/backend")
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
-from snipdeck.core.parse import parse_episode
-from snipdeck.core.pipeline import arun
-from snipdeck.providers import LLM, load_config
-from snipdeck.export import payload
+from hookscene.core.parse import parse_episode
+from hookscene.core.pipeline import arun
+from hookscene.providers import LLM, load_config
+from hookscene.export import payload
 
 async def main():
     root = Path("/app") if Path("/app").exists() else Path(__file__).resolve().parent.parent

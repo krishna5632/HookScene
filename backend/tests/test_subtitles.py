@@ -1,5 +1,5 @@
 """Subtitle import (synthetic captions, not real show content)."""
-from snipdeck.core.subtitles import load_subtitles
+from hookscene.core.subtitles import load_subtitles
 
 SRT = """1
 00:00:01,000 --> 00:00:04,000

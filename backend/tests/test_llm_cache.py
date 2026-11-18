@@ -1,7 +1,7 @@
 """LLM client behaviour that needs no network: caching, fresh stages, model fallback order, dead-model skip."""
 import time
 
-from snipdeck.providers import LLM
+from hookscene.providers import LLM
 
 CFG = {
     "providers": {"p": {"base_url": "http://x", "api_key_env": "NOPE", "retries": 1, "min_interval_s": 0}},
@@ -72,7 +72,7 @@ def test_dead_model_is_skipped(tmp_path):
 
 def test_no_credit_stops_the_run_with_a_plain_message(tmp_path):
     import pytest
-    from snipdeck.providers import FatalProviderError
+    from hookscene.providers import FatalProviderError
 
     class NoCredit(FakeClient):
         def __init__(self):

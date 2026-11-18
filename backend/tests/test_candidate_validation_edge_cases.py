@@ -10,11 +10,11 @@ Tests the actual business rules:
 from __future__ import annotations
 
 import pytest
-from snipdeck.core.parse import Episode, Line
-from snipdeck.core.schemas import RawCandidate, Promo, Segment
-from snipdeck.core.validate import build_single, Invalid, snap_segment
-from snipdeck.core.stages import is_duplicate_moment, _same_moment, calculate_overlap_ratio
-from snipdeck.eval.rules import evaluate_rules
+from hookscene.core.parse import Episode, Line
+from hookscene.core.schemas import RawCandidate, Promo, Segment
+from hookscene.core.validate import build_single, Invalid, snap_segment
+from hookscene.core.stages import is_duplicate_moment, _same_moment, calculate_overlap_ratio
+from hookscene.eval.rules import evaluate_rules
 
 
 @pytest.fixture
